@@ -1,5 +1,5 @@
 <?php
-namespace TestApp\Model\Entity;
+namespace TestApp\Authorization\Model\Entity;
 
 use Cake\ORM\Entity;
 

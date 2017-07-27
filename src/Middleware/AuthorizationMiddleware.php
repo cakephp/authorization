@@ -21,6 +21,10 @@ class AuthorizationMiddleware
         // In your application's queue.
         $response = $next($request, $response);
 
+        if (!class_exists('Cake\Authorization\Identity')) {
+        	trigger_error('The AuthorizationMiddleware requires that you are using the Cake\Authorization plugin.', E_WARNING);
+        }
+
         $bouncer = new $this->$bouncerClass(function () use ($request) {
             return $request->getAttribute('identity');
         });

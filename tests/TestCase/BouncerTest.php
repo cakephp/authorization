@@ -3,11 +3,11 @@ namespace Cake\Authorization\Test;
 
 use Cake\TestSuite\TestCase;
 use Cake\Authorization\Bouncer;
-use TestApp\Authorization\Policy\Articles;
-use TestApp\Model\Entity\Article;
+use TestApp\Authorization\Policy\Model\Entity\Article as ArticlePolicy;
+use TestApp\Authorization\Model\Entity\Article;
 
 /**
- * @property \Cake\Authorization\Gate $Gate
+ * @property \Cake\Authorization\Bouncer $Gate
  */
 class BouncerTest extends TestCase
 {
@@ -36,7 +36,7 @@ class BouncerTest extends TestCase
         };
 
         $gate = new Bouncer($resolver, [
-            Article::class => Articles::class
+            Article::class => ArticlePolicy::class
         ]);
 
         $article = new Article([]);
@@ -48,6 +48,7 @@ class BouncerTest extends TestCase
                 'role' => 'admin'
             ];
         };
+
         $gate->setIdentityResolver($resolver);
         $this->assertTrue($gate->allows('add', [$article]));
     }

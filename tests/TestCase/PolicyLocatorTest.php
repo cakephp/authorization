@@ -6,7 +6,7 @@ use Cake\TestSuite\TestCase;
 use Cake\Authorization\Bouncer;
 use TestApp\Authorization\Controller\ArticlesController;
 use TestApp\Authorization\Policy\Articles;
-use TestApp\Model\Entity\Article;
+use TestApp\Authorization\Model\Entity\Article;
 
 /**
  * @property \Cake\Authorization\Gate $Gate
@@ -25,6 +25,6 @@ class PolicyLocatorTest extends TestCase
 
         $locator = new PolicyLocator();
         $result = $locator->locate($controller);
-        dd($result);
+        //dd($result);
     }
 }
