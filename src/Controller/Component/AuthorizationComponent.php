@@ -1,22 +1,40 @@
 <?php
 namespace Authorization\Controller\Component;
 
-use Cake\Authorization\Gate;
+use Authorization\BouncerInterface;
+use Cake\Authorization\Bouncer;
 use Cake\Controller\Component;
 use Cake\Network\Exception\MethodNotAllowedException;
-use Doctrine\Tests\Common\Annotations\Bar\Name;
 
 class AuthorizationComponent extends Component {
 
     protected $_defaultConfig = [
-        'gateClass' => Gate::class
+        'gateClass' => Bouncer::class,
+        'redirect' => false,
+        'redirectMessage' => '',
+        'notAllowedException' => MethodNotAllowedException::class
     ];
 
+    /**
+     * Gate Instance
+     *
+     * @var \Cake\Authorization\Gate
+     */
     protected $gate;
 
-    public function initilize(array $config)
+    /**
+     * @inheritDoc
+     */
+    public function initialize(array $config)
     {
         parent::initialize($config);
+	    $controller = $this->getController();
+		$bouner =  $controller->request->getAttribute('authorization');
+		if ($bouner instanceof BouncerInterface) {
+			$this->gate = $bouner;
+			return;
+		}
+
         $this->gate = $this->buildGate();
     }
 
@@ -24,6 +42,7 @@ class AuthorizationComponent extends Component {
     {
         $controller = $this->getController();
         $request = $controller->request;
+
         $gate = new $this->getConfig('gateClass');
 
         $policy = $this->getPolicyForController();
@@ -41,16 +60,15 @@ class AuthorizationComponent extends Component {
 
     protected function getPolicyForController()
     {
-        $controller = $this->getController();
-        $request = $controller->request;
-
+        $request = $this->getController()->request;
         $class = $request->getParam('controller');
         $plugin = $request->getParam('plugin');
+
         if ($plugin) {
             $class = $plugin . '.' . $class;
         }
 
-        $policyClass = App::className($class, 'Authorization/Policy', 'Policy');
+        $policyClass = App::className($class, 'Policy', 'Policy');
         if (class_exists($policyClass)) {
             return new $policyClass();
         }
@@ -75,9 +93,14 @@ class AuthorizationComponent extends Component {
         $controller = $this->getController();
         $request = $controller->request;
 
+        $redirect = $this->getConfig('redirect');
+        if ($redirect) {
+            $this->getController()->redirect($redirect);
+        }
+
         if ($this->gate->allows($request->getParam('action'), [$controller])) {
-            throw new MethodNotAllowedException();
-        };
+            throw new $this->getConfig('notAllowedException');
+        }
     }
 
     /**
@@ -89,10 +112,6 @@ class AuthorizationComponent extends Component {
      */
     public function __call($name, $arguments)
     {
-        if (!method_exists($this->gate, $name)) {
-            return;
-        }
-
         return call_user_func_array([$this->gate, $name], $arguments);
     }
 
