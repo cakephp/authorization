@@ -1,6 +1,7 @@
 <?php
 namespace Cake\Authorization;
 
+use Cake\Event\EventDispatcherTrait;
 use RuntimeException;
 
 /**
@@ -9,27 +10,24 @@ use RuntimeException;
 class CakeBouncer extends Bouncer
 {
 
+    use EventDispatcherTrait;
+
     public function __construct($identityResolver = null, array $policies = [])
     {
         parent::__construct($identityResolver, $policies);
 
         if (!class_exists('\Cake\Event\EventManager')) {
-            throw new RuntimeException('Cake is not present');
+            throw new RuntimeException('\Cake\Event namespace is not present');
         }
 
         $this->addCakeBeforeCheckEvent();
         $this->addCakeAfterCheckEvent();
     }
 
-    protected function addCakeBeforeCheckEvent($event)
+    protected function addCakeBeforeCheckEvent()
     {
-        $callback = function($user, $ability) use ($event) {
-            $event = new \Cake\Event\Event(
-                'Authorization.' . $event,
-                $this,
-                compact('user', 'ability')
-            );
-            \Cake\Event\EventManager::instance()->dispatch($event);
+        $callback = function($user, $ability) {
+            $event = $this->dispatchEvent('Authorization.beforeResolve', compact('user', 'ability'));
 
             if ($event->isStopped()) {
                 return false;
@@ -46,15 +44,10 @@ class CakeBouncer extends Bouncer
         $this->addBeforeCallback($callback);
     }
 
-    protected function addCakeAfterCheckEvent($event)
+    protected function addCakeAfterCheckEvent()
     {
-        $callback = function($user, $ability) use ($event) {
-            $event = new \Cake\Event\Event(
-                'Authorization.' . $event,
-                $this,
-                compact('user', 'ability')
-            );
-            \Cake\Event\EventManager::instance()->dispatch($event);
+        $callback = function($user, $ability) {
+            $event = $this->dispatchEvent('Authorization.afterResolve', compact('user', 'ability'));
 
             if ($event->isStopped()) {
                 return false;
@@ -67,7 +60,7 @@ class CakeBouncer extends Bouncer
 
             return $result;
         };
-        
+
         $this->addAfterCallback($callback);
     }
 }

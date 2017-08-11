@@ -16,10 +16,24 @@ class Bouncer implements BouncerInterface
 
     protected $policies = [];
 
+    protected $beforeCallbacks = [];
+
+    protected $afterCallBacks = [];
+
     public function __construct(callable $identityResolver = null, array $policies = [])
     {
         $this->policies = $policies;
         static::$identityResolver = $identityResolver;
+    }
+
+    public function addAfterCallback(callable $callback)
+    {
+        $this->afterCallbacks[$callback];
+    }
+
+    public function addBeforeCallback($callback)
+    {
+        $this->beforeCallbacks[$callback];
     }
 
     /**
@@ -103,10 +117,10 @@ class Bouncer implements BouncerInterface
     /**
      * Resolve the callback for a policy check.
      *
-     * @param array $user
-     * @param string  $ability
-     * @param array  $arguments
-     * @param mixed  $policy
+     * @param array $identity Identity
+     * @param string  $ability Ability
+     * @param array  $arguments Arguments
+     * @param mixed  $policy Policy
      * @return callable
      */
     protected function resolvePolicyCallback($identity, $ability, array $arguments, $policy)
@@ -125,6 +139,13 @@ class Bouncer implements BouncerInterface
         };
     }
 
+    /**
+     * Add a policy for an object
+     *
+     * @param string|object $object Object
+     * @param string $policy Policy class
+     * @return $this
+     */
     public function addPolicyFor($object, $policy)
     {
         if (is_object($object)) {

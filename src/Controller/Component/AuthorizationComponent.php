@@ -6,10 +6,19 @@ use Cake\Authorization\Bouncer;
 use Cake\Controller\Component;
 use Cake\Network\Exception\MethodNotAllowedException;
 
+/**
+ * Authorization component
+ */
 class AuthorizationComponent extends Component {
 
+    /**
+     * Default config
+     *
+     * @var array
+     */
     protected $_defaultConfig = [
         'gateClass' => Bouncer::class,
+        'policyClass' => null,
         'redirect' => false,
         'redirectMessage' => '',
         'notAllowedException' => MethodNotAllowedException::class
@@ -28,16 +37,21 @@ class AuthorizationComponent extends Component {
     public function initialize(array $config)
     {
         parent::initialize($config);
-	    $controller = $this->getController();
-		$bouner =  $controller->request->getAttribute('authorization');
-		if ($bouner instanceof BouncerInterface) {
-			$this->gate = $bouner;
-			return;
-		}
+        $controller = $this->getController();
+        $bouncer =  $controller->request->getAttribute('authorization');
+        if ($bouncer instanceof BouncerInterface) {
+            $this->gate = $bouncer;
+            return;
+        }
 
         $this->gate = $this->buildGate();
     }
 
+    /**
+     * Builds the gate object
+     *
+     * @return \Authorization\BouncerInterface
+     */
     public function buildGate()
     {
         $controller = $this->getController();
@@ -45,21 +59,31 @@ class AuthorizationComponent extends Component {
 
         $gate = new $this->getConfig('gateClass');
 
-        $policy = $this->getPolicyForController();
+        $policy = $this->getPolicyClassForController();
         if ($policy) {
             $gate->addPolicy(get_class($controller), $policy);
         }
 
         $identity = $request->getAttribute('identity');
         if (!empty($identity)) {
-            $gate->setIdentity();
+            $gate->setIdentity($identity);
         }
 
         return $gate;
     }
 
-    protected function getPolicyForController()
+    /**
+     * Gets the policy class for the controller
+     *
+     * @return bool|string
+     */
+    protected function getPolicyClassForController()
     {
+        $policyClass = $this->getConfig('policyClass');
+        if (!empty($policyClass)) {
+            return $policyClass;
+        }
+
         $request = $this->getController()->request;
         $class = $request->getParam('controller');
         $plugin = $request->getParam('plugin');
@@ -68,14 +92,16 @@ class AuthorizationComponent extends Component {
             $class = $plugin . '.' . $class;
         }
 
-        $policyClass = App::className($class, 'Policy', 'Policy');
+        $policyClass = App::className($class, 'Policy/Controller', 'Policy');
         if (class_exists($policyClass)) {
             return new $policyClass();
         }
+
+        return false;
     }
 
     /**
-     * startup
+     * Startup
      *
      * @return void
      */
@@ -85,6 +111,8 @@ class AuthorizationComponent extends Component {
     }
 
     /**
+     * Checks if the current action is allowed for the user
+     *
      * @throws MethodNotAllowedException
      * @return void
      */
@@ -92,21 +120,27 @@ class AuthorizationComponent extends Component {
     {
         $controller = $this->getController();
         $request = $controller->request;
+        $config = $this->$this->getConfig();
 
-        $redirect = $this->getConfig('redirect');
-        if ($redirect) {
-            $this->getController()->redirect($redirect);
+        $granted = $this->gate->allows(
+            $request->getParam('action'), 
+            [$controller]
+        );
+        
+        if (!$granted && !empty($config['notAllowedException'])) {
+            throw new $config['notAllowedException']();
         }
 
-        if ($this->gate->allows($request->getParam('action'), [$controller])) {
-            throw new $this->getConfig('notAllowedException');
+        if (!$granted && !empty($config['redirect'])) {
+            $this->_registry->get('Flash')->error($config['redirectMessage']);
+            $this->getController()->redirect($config['redirect']);
         }
     }
 
     /**
-     * Magic call
+     * Magic call, delegates the method calls to the gate object
      *
-     * @param $name Name
+     * @param $name Method name
      * @param array $arguments Arguments
      * @return mixed
      */

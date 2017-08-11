@@ -4,7 +4,6 @@ namespace Authorization;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 
 /**
