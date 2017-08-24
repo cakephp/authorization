@@ -23,9 +23,9 @@ class AuthorizationMiddleware
     /**
      * Constructor
      *
-     * @param string|\Cake\Authorization\BouncerInterface|null
+     * @param string|\Cake\Authorization\BouncerInterface
      */
-    public function __construct($bouncer = null)
+    public function __construct($bouncer)
     {
         $this->bouncer = $bouncer;
     }
