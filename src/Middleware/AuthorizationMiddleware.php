@@ -40,19 +40,10 @@ class AuthorizationMiddleware
      */
     public function __invoke($request, $response, $next)
     {
-        $response = $next($request, $response);
         $bouncer = $this->bouncer;
 
         if (is_string($bouncer)) {
-            $bouncer = new $this->$bouncer();
-
-            if (!class_exists('Cake\Authorization\Identity')) {
-                trigger_error('The AuthorizationMiddleware requires that you are using the Cake\Authorization plugin.', E_WARNING);
-            }
-
-            $bouncer->setIdentityResolver(function () use ($request) {
-                return $request->getAttribute('identity');
-            });
+            $bouncer = new $bouncer();
         }
 
         if (!$bouncer instanceof BouncerInterface) {
@@ -61,6 +52,6 @@ class AuthorizationMiddleware
 
         $response = $response->withAttribute('authorization', $bouncer);
 
-        return $response;
+        return $next($request, $response);
     }
 }
