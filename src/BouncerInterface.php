@@ -7,5 +7,5 @@ interface BouncerInterface
 
     public function denies($ability, array $arguments = []);
 
-    public static function setIdentityResolver(callable $resolver);
+    public function setIdentityResolver(callable $resolver);
 }

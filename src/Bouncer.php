@@ -11,7 +11,7 @@ class Bouncer implements BouncerInterface
 
     protected $identity;
 
-    protected static $identityResolver;
+    protected $identityResolver;
 
     protected $policies = [];
 
@@ -22,7 +22,7 @@ class Bouncer implements BouncerInterface
     public function __construct(callable $identityResolver = null, array $policies = [])
     {
         $this->policies = $policies;
-        static::$identityResolver = $identityResolver;
+        $this->identityResolver = $identityResolver;
     }
 
     public function addAfterCallback(callable $callback)
@@ -191,9 +191,11 @@ class Bouncer implements BouncerInterface
      * @param callable
      * @return void
      */
-    public static function setIdentityResolver(callable $resolver)
+    public function setIdentityResolver(callable $resolver)
     {
-        static::$identityResolver = $resolver;
+        $this->identityResolver = $resolver;
+
+        return $this;
     }
 
     /**
@@ -203,7 +205,7 @@ class Bouncer implements BouncerInterface
      */
     public function resolveIdentity()
     {
-        $callable = static::$identityResolver;
+        $callable = $this->identityResolver;
 
         return $callable();
     }
