@@ -1,8 +1,8 @@
 <?php
 namespace Cake\Authorization\Test;
 
+use Authorization\Bouncer;
 use Cake\TestSuite\TestCase;
-use Cake\Authorization\Bouncer;
 use TestApp\Authorization\Policy\Model\Entity\Article as ArticlePolicy;
 use TestApp\Authorization\Model\Entity\Article;
 

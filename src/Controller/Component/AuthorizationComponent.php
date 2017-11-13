@@ -45,6 +45,8 @@ class AuthorizationComponent extends Component {
         }
 
         $this->gate = $this->buildGate();
+
+        $this->gate->allows($controller->request->getParam('action'));
     }
 
     /**
@@ -123,10 +125,10 @@ class AuthorizationComponent extends Component {
         $config = $this->$this->getConfig();
 
         $granted = $this->gate->allows(
-            $request->getParam('action'), 
+            $request->getParam('action'),
             [$controller]
         );
-        
+
         if (!$granted && !empty($config['notAllowedException'])) {
             throw new $config['notAllowedException']();
         }
