@@ -3,6 +3,9 @@ namespace Authorization;
 
 use Cake\Core\Exception\Exception;
 
+/**
+ * Authorization Exception
+ */
 class AuthorizationException extends Exception {
 
     /**

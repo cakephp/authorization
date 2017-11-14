@@ -5,8 +5,19 @@ use Authorization\BouncerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * IdentityResolverMiddleware
+ */
 class IdentityResolverMiddleware
 {
+    /**
+     * Invoke
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request
+     * @param \Psr\Http\Message\ResponseInterface $response Response
+     * @param callable $next
+     * @return callable
+     */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         /* @var $bouncer BouncerInterface */

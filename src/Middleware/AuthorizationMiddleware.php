@@ -33,9 +33,9 @@ class AuthorizationMiddleware
     /**
      * Invoke
      *
-     * @param \Cake\Http\ServerRequest $request Request
-     * @param \Cake\Http\Response $response Response
-     * @param callable $next Next middleware
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request
+     * @param \Psr\Http\Message\ResponseInterface $response Response
+     * @param callable $next
      * @return callable
      */
     public function __invoke($request, $response, $next)

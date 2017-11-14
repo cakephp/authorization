@@ -12,12 +12,9 @@
 		"cakephp/core": "~3.4"
 	},
 	"require-dev": {
-		"cakephp/cakephp": "~3.4",
+		"cakephp/cakephp": "~3.5",
 		"cakephp/cakephp-codesniffer": "^3.0",
 		"phpunit/phpunit": "<6.0"
-	},
-	"suggest": {
-		"cakephp/utility": "Provides CakePHP security methods. Required for the JWT adapter and Legacy password hasher."
 	},
 	"license": "MIT",
 	"minimum-stability": "stable",

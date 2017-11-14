@@ -24,6 +24,15 @@ trait BouncerTrait {
     protected $bouncer;
 
     /**
+     *
+     */
+    protected function getPolicy() {
+        $locator = new PolicyLocator();
+
+        return $locator->locate($this);
+    }
+
+    /**
      * Get Bouncer
      *
      * @return \Authorization\BouncerInterface
@@ -35,9 +44,8 @@ trait BouncerTrait {
         }
 
         $this->bouncer = new $this->bouncerClass();
+        $policyClass = $this->getPolicy();
 
-        $locator = new PolicyLocator();
-        $policyClass = $locator->locate($this);
         if (!empty($policyClass)) {
             $this->bouncer->addPolicyFor($this, $policyClass);
         }

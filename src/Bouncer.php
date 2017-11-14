@@ -9,16 +9,35 @@ use RuntimeException;
 class Bouncer implements BouncerInterface
 {
 
+    /**
+     * Identity
+     *
+     * @mixed
+     */
     protected $identity;
 
+    /**
+     * Identity Resolver
+     *
+     * @var callable
+     */
     protected $identityResolver;
 
+    /**
+     * Policies
+     *
+     * @var array
+     */
     protected $policies = [];
 
     protected $beforeCallbacks = [];
 
     protected $afterCallBacks = [];
 
+    /**
+     * @param callable$identityResolver Identity Resolver Callback
+     * @param array $policies An array of policies
+     */
     public function __construct(callable $identityResolver = null, array $policies = [])
     {
         $this->policies = $policies;
@@ -222,7 +241,9 @@ class Bouncer implements BouncerInterface
             return $identity;
         };
 
-        return new static($callback, $this->policies);
-    }
+        $clone = clone $this;
+        $clone->setIdentityResolver($callback);
 
+        return $clone;
+    }
 }

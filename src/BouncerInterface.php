@@ -1,6 +1,9 @@
 <?php
 namespace Authorization;
 
+/**
+ * Bouncer Interface
+ */
 interface BouncerInterface
 {
     public function allows($ability, array $arguments = []);
