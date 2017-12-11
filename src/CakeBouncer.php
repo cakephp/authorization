@@ -1,5 +1,5 @@
 <?php
-namespace Cake\Authorization;
+namespace Authorization;
 
 use Cake\Event\EventDispatcherTrait;
 use RuntimeException;
