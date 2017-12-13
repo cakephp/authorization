@@ -2,8 +2,8 @@
 namespace Authorization\Test;
 
 use ArrayObject;
-use Authorization\IdentityDecorator;
 use Authorization\AuthorizationServiceInterface;
+use Authorization\IdentityDecorator;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use stdClass;
