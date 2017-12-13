@@ -13,6 +13,7 @@
 namespace Authorization;
 
 use ArrayAccess;
+use BadMethodCallException;
 use InvalidArgumentException;
 
 /**
@@ -75,6 +76,9 @@ class IdentityDecorator implements IdentityInterface
      */
     public function __call($method, $args)
     {
+        if (!is_object($this->identity)) {
+            throw new BadMethodCallException("Cannot call `{$method}`. Identity data is not an object.");
+        }
         $call = [$this->identity, $method];
 
         return $call(...$args);

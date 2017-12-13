@@ -4,6 +4,7 @@ namespace Authorization\Test;
 use ArrayObject;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\IdentityDecorator;
+use BadMethodCallException;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use stdClass;
@@ -63,6 +64,15 @@ class IdentityDecoratorTest extends TestCase
         $identity = new IdentityDecorator($auth, $data);
         $this->assertFalse(method_exists($identity, 'isDirty'), 'method not defined on decorator');
         $this->assertTrue($identity->isDirty('id'), 'method is callable though.');
+    }
+
+    public function testCallArray()
+    {
+        $this->setExpectedException(BadMethodCallException::class);
+        $data = ['id' => 1];
+        $auth = $this->createMock(AuthorizationServiceInterface::class);
+        $identity = new IdentityDecorator($auth, $data);
+        $identity->boom();
     }
 
     public function testArrayAccessImplementation()
