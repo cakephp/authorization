@@ -31,4 +31,14 @@ interface IdentityInterface extends ArrayAccess
      * @return bool
      */
     public function can($action, $resource);
+
+    /**
+     * Get the decorated identity
+     *
+     * If the decorated identity implements `getOriginalData()`
+     * that method should be invoked to expose the original data.
+     *
+     * @return array|ArrayAccess
+     */
+    public function getOriginalData();
 }

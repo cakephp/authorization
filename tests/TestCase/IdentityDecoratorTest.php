@@ -10,6 +10,9 @@ use InvalidArgumentException;
 use stdClass;
 use TestApp\Authorization\Model\Entity\Article;
 
+/**
+ * Test case for IdentityDecorator.
+ */
 class IdentityDecoratorTest extends TestCase
 {
     public function constructorDataProvider()
@@ -90,5 +93,22 @@ class IdentityDecoratorTest extends TestCase
 
         $identity['id'] = 99;
         $this->assertSame(99, $identity['id'], 'Properties can be set.');
+    }
+
+    public function testGetOriginalData()
+    {
+        $data = ['id' => 2];
+        $auth = $this->createMock(AuthorizationServiceInterface::class);
+        $identity = new IdentityDecorator($auth, $data);
+        $this->assertSame($data, $identity->getOriginalData());
+    }
+
+    public function testGetOriginalDataWrappedObjectHasOriginalData()
+    {
+        $data = ['id' => 2];
+        $auth = $this->createMock(AuthorizationServiceInterface::class);
+        $inner = new IdentityDecorator($auth, $data);
+        $identity = new IdentityDecorator($auth, $inner);
+        $this->assertSame($data, $identity->getOriginalData());
     }
 }

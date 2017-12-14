@@ -68,6 +68,18 @@ class IdentityDecorator implements IdentityInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getOriginalData()
+    {
+        if ($this->identity && method_exists($this->identity, 'getOriginalData')) {
+            return $this->identity->getOriginalData();
+        }
+
+        return $this->identity;
+    }
+
+    /**
      * Delegate unknown methods to decorated identity.
      *
      * @param string $method The method being invoked.
