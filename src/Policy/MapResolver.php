@@ -49,18 +49,30 @@ class MapResolver implements ResolverInterface
      * Maps a resource class to the policy class name.
      *
      * @param string $resourceClass A resource class name.
-     * @param string $policyClass A policy class name.
+     * @param string|object|callable $policy A policy class name, an object or a callable factory.
      * @return $this
-     * @throws \InvalidArgumentException When a policy class does not exist.
+     * @throws \InvalidArgumentException When a resource class does not exist or policy is invalid.
      */
-    public function map($resourceClass, $policyClass)
+    public function map($resourceClass, $policy)
     {
-        if (!class_exists($policyClass)) {
-            $message = sprintf('Policy class `%s` does not exist.', $policyClass);
+        if (!class_exists($resourceClass)) {
+            $message = sprintf('Resource class `%s` does not exist.', $resourceClass);
             throw new InvalidArgumentException($message);
         }
 
-        $this->map[$resourceClass] = $policyClass;
+        if (!is_string($policy) && !is_object($policy) && !is_callable($policy)) {
+            $message = sprintf(
+                'Policy must be a valid class name, an object or a callable, `%s` given.',
+                gettype($policy)
+            );
+            throw new InvalidArgumentException($message);
+        }
+        if (is_string($policy) && !class_exists($policy)) {
+            $message = sprintf('Policy class `%s` does not exist.', $policy);
+            throw new InvalidArgumentException($message);
+        }
+
+        $this->map[$resourceClass] = $policy;
 
         return $this;
     }
@@ -84,6 +96,16 @@ class MapResolver implements ResolverInterface
             throw new MissingPolicyException([$class]);
         }
 
-        return new $this->map[$class];
+        $policy = $this->map[$class];
+
+        if (is_callable($policy)) {
+            return $policy($resource, $this);
+        }
+
+        if (is_object($policy)) {
+            return $policy;
+        }
+
+        return new $policy();
     }
 }

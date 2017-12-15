@@ -23,17 +23,65 @@ use TestApp\Authorization\Policy\Model\Entity\Article as ArticlePolicy;
 
 class MapResolverTest extends TestCase
 {
-    public function testGetPolicy()
+    public function testGetPolicyClassName()
     {
         $resolver = new MapResolver();
 
         $resolver->map(Article::class, ArticlePolicy::class);
 
-        $policy = $resolver->getPolicy(new Article());
-        $this->assertInstanceOf(ArticlePolicy::class, $policy);
+        $result = $resolver->getPolicy(new Article());
+        $this->assertInstanceOf(ArticlePolicy::class, $result);
     }
 
-    public function testMapMissing()
+    public function testGetPolicyObject()
+    {
+        $resolver = new MapResolver();
+        $policy = new ArticlePolicy();
+
+        $resolver->map(Article::class, $policy);
+
+        $result = $resolver->getPolicy(new Article());
+        $this->assertSame($policy, $result);
+    }
+
+    public function testGetPolicyCallable()
+    {
+        $resolver = new MapResolver();
+        $resource = new Article();
+        $policy = new ArticlePolicy();
+
+        $resolver->map(Article::class, function ($arg1, $arg2) use ($policy, $resolver, $resource) {
+            $this->assertSame($resource, $arg1);
+            $this->assertSame($resolver, $arg2);
+
+            return $policy;
+        });
+
+        $result = $resolver->getPolicy($resource);
+        $this->assertSame($policy, $result);
+    }
+
+    public function testMapMissingResource()
+    {
+        $resolver = new MapResolver();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Resource class `Foo` does not exist.');
+
+        $resolver->map('Foo', 'Bar');
+    }
+
+    public function testMapInvalidPolicy()
+    {
+        $resolver = new MapResolver();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Policy must be a valid class name, an object or a callable, `array` given.');
+
+        $resolver->map(Article::class, []);
+    }
+
+    public function testMapMissingPolicy()
     {
         $resolver = new MapResolver();
 
