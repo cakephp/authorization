@@ -16,6 +16,10 @@ namespace Authorization\Policy;
 
 use Authorization\IdentityInterface;
 
+/**
+ * This interface should be implemented if a policy class needs to perform a
+ * pre-authorization check before the action access check takes place.
+ */
 interface BeforePolicyInterface
 {
 

@@ -17,6 +17,10 @@ namespace Authorization\Policy;
 use Authorization\Policy\Exception\MissingPolicyException;
 use InvalidArgumentException;
 
+/**
+ * Policy resolver that allows to map policy classes, objects or factories to
+ * individual resource classes.
+ */
 class MapResolver implements ResolverInterface
 {
     /**

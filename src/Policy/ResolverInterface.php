@@ -14,6 +14,9 @@
  */
 namespace Authorization\Policy;
 
+/**
+ * Policy resolver interface.
+ */
 interface ResolverInterface
 {
 
