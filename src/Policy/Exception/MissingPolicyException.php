@@ -18,5 +18,10 @@ use Cake\Core\Exception\Exception;
 
 class MissingPolicyException extends Exception
 {
+    /**
+     * Template string that has attributes sprintf()'ed into it.
+     *
+     * @var string
+     */
     protected $_messageTemplate = 'Policy for `%s` has not been defined.';
 }

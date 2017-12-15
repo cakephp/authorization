@@ -14,8 +14,8 @@
  */
 namespace Authorization\Policy;
 
-use InvalidArgumentException;
 use Authorization\Policy\Exception\MissingPolicyException;
+use InvalidArgumentException;
 
 class MapResolver implements ResolverInterface
 {
