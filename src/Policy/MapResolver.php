@@ -33,19 +33,21 @@ class MapResolver implements ResolverInterface
     /**
      * Constructor.
      *
-     * Takes a resource to policy class name map, for example:
+     * Takes a resource class name as a key and a policy as a value, for example:
      * ```
      * [
-     *     \App\Service\Resource::class => \App\Policy\ResourcePolicy::class
+     *     \App\Service\Resource1::class => \App\Policy\ResourcePolicy::class,
+     *     \App\Service\Resource2::class => $policyObject,
+     *     \App\Service\Resource3::class => function() {},
      * ]
      * ```
      *
-     * @param array $map Resource to policy class name map.
+     * @param array $map Resource class name to policy map.
      */
     public function __construct(array $map = [])
     {
-        foreach ($map as $resourceClass => $policyClass) {
-            $this->map($resourceClass, $policyClass);
+        foreach ($map as $resourceClass => $policy) {
+            $this->map($resourceClass, $policy);
         }
     }
 
