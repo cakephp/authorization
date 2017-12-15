@@ -15,7 +15,7 @@
 namespace Authorization\Policy;
 
 use InvalidArgumentException;
-use RuntimeException;
+use Authorization\Policy\Exception\MissingPolicyException;
 
 class MapResolver implements ResolverInterface
 {
@@ -51,7 +51,7 @@ class MapResolver implements ResolverInterface
      * @param string $resourceClass A resource class name.
      * @param string $policyClass A policy class name.
      * @return $this
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException When a policy class does not exist.
      */
     public function map($resourceClass, $policyClass)
     {
@@ -67,14 +67,21 @@ class MapResolver implements ResolverInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @throws \InvalidArgumentException When a resource is not an object.
+     * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for a resource has not been defined.
      */
     public function getPolicy($resource)
     {
+        if (!is_object($resource)) {
+            $message = sprintf('Resource must be an object, `%s` given.', gettype($resource));
+            throw new InvalidArgumentException($message);
+        }
+
         $class = get_class($resource);
 
         if (!isset($this->map[$class])) {
-            $message = sprintf('Policy for `%s` has not been defined.', $class);
-            throw new RuntimeException($message);
+            throw new MissingPolicyException([$class]);
         }
 
         return new $this->map[$class];
