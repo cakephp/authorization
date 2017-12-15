@@ -12,16 +12,10 @@
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Authorization\Policy\Exception;
+namespace Authorization\Exception;
 
-use Authorization\Exception\Exception;
+use Cake\Core\Exception\Exception as CakeException;
 
-class MissingPolicyException extends Exception
+class Exception extends CakeException
 {
-    /**
-     * Template string that has attributes sprintf()'ed into it.
-     *
-     * @var string
-     */
-    protected $_messageTemplate = 'Policy for `%s` has not been defined.';
 }
