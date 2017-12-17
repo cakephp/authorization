@@ -1,7 +1,7 @@
 <?php
-namespace TestApp\Authorization\Policy\Model\Entity;
+namespace TestApp\Authorization\Policy;
 
-class Article
+class ArticlePolicy
 {
 
     /**

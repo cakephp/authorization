@@ -19,13 +19,13 @@ use Authorization\Policy\MapResolver;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use TestApp\Authorization\Model\Entity\Article;
-use TestApp\Authorization\Policy\Model\Entity\Article as ArticlePolicy;
+use TestApp\Authorization\Policy\ArticlePolicy;
 
 class MapResolverTest extends TestCase
 {
     public function testGetPolicyClassName()
     {
-        $resolver = new MapResolver();
+        $resolver = new MapResolver('TestApp\Authorization');
 
         $resolver->map(Article::class, ArticlePolicy::class);
 
