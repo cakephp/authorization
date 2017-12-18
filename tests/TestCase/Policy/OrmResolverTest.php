@@ -22,6 +22,7 @@ use InvalidArgumentException;
 use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
+use TestApp\Policy\ArticlesTablePolicy;
 use TestApp\Policy\TestPlugin\BookmarkPolicy;
 use TestPlugin\Model\Entity\Bookmark;
 use TestPlugin\Model\Entity\Tag;
@@ -76,16 +77,18 @@ class OrmResolverTest extends TestCase
 
     public function testGetPolicyDefinedTable()
     {
-        $this->markTestIncomplete();
+        $articles = new ArticlesTable();
+        $resolver = new OrmResolver('TestApp');
+        $policy = $resolver->getPolicy($articles);
+        $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
     }
 
     public function testGetPolicyUnknownTable()
     {
-        $this->markTestIncomplete();
-    }
+        $this->setExpectedException(MissingPolicyException::class);
 
-    public function testFallbackPolicy()
-    {
-        $this->markTestIncomplete();
+        $articles = $this->createMock('Cake\Datasource\RepositoryInterface');
+        $resolver = new OrmResolver('TestApp');
+        $policy = $resolver->getPolicy($articles);
     }
 }
