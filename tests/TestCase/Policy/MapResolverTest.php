@@ -18,14 +18,14 @@ use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\MapResolver;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
-use TestApp\Authorization\Model\Entity\Article;
-use TestApp\Authorization\Policy\ArticlePolicy;
+use TestApp\Model\Entity\Article;
+use TestApp\Policy\ArticlePolicy;
 
 class MapResolverTest extends TestCase
 {
     public function testGetPolicyClassName()
     {
-        $resolver = new MapResolver('TestApp\Authorization');
+        $resolver = new MapResolver();
 
         $resolver->map(Article::class, ArticlePolicy::class);
 
@@ -106,7 +106,7 @@ class MapResolverTest extends TestCase
         $resolver = new MapResolver();
 
         $this->expectException(MissingPolicyException::class);
-        $this->expectExceptionMessage('Policy for `TestApp\Authorization\Model\Entity\Article` has not been defined.');
+        $this->expectExceptionMessage('Policy for `TestApp\Model\Entity\Article` has not been defined.');
 
         $resolver->getPolicy(new Article());
     }

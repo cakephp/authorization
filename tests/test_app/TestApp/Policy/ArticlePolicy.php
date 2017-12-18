@@ -1,5 +1,5 @@
 <?php
-namespace TestApp\Authorization\Policy;
+namespace TestApp\Policy;
 
 class ArticlePolicy
 {

@@ -42,7 +42,7 @@ define('CONFIG', ROOT . DS . 'config'. DS);
 
 Configure::write('debug', true);
 Configure::write('App', [
-    'namespace' => 'TestApp\\Authorization',
+    'namespace' => 'TestApp',
     'paths' => [
         'plugins' => [ROOT . 'Plugin' . DS],
         'templates' => [ROOT . 'App' . DS . 'Template' . DS]

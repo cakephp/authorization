@@ -19,9 +19,9 @@ use Authorization\Policy\OrmResolver;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
-use TestApp\Authorization\Model\Entity\Article;
-use TestApp\Authorization\Model\Table\ArticlesTable;
-use TestApp\Authorization\Policy\ArticlePolicy;
+use TestApp\Model\Entity\Article;
+use TestApp\Model\Table\ArticlesTable;
+use TestApp\Policy\ArticlePolicy;
 
 class OrmResolverTest extends TestCase
 {
@@ -30,7 +30,7 @@ class OrmResolverTest extends TestCase
         $this->setExpectedException(InvalidArgumentException::class);
 
         $entity = new \stdClass();
-        $resolver = new OrmResolver('TestApp/Authorization');
+        $resolver = new OrmResolver('TestApp');
         $resolver->getPolicy($entity);
     }
 
@@ -39,14 +39,14 @@ class OrmResolverTest extends TestCase
         $this->setExpectedException(MissingPolicyException::class);
 
         $entity = new Entity();
-        $resolver = new OrmResolver('TestApp/Authorization');
+        $resolver = new OrmResolver('TestApp');
         $resolver->getPolicy($entity);
     }
 
     public function testGetPolicyDefinedEntity()
     {
         $article = new Article();
-        $resolver = new OrmResolver('TestApp/Authorization');
+        $resolver = new OrmResolver('TestApp');
         $policy = $resolver->getPolicy($article);
         $this->assertInstanceOf(ArticlePolicy::class, $policy);
     }
@@ -54,7 +54,7 @@ class OrmResolverTest extends TestCase
     public function testGetPolicyDefinedPluginEntityAppOveride()
     {
         $article = new Article();
-        $resolver = new OrmResolver('TestApp/Authorization');
+        $resolver = new OrmResolver('TestApp');
         $policy = $resolver->getPolicy($article);
         $this->assertInstanceOf(ArticlePolicy::class, $policy);
     }

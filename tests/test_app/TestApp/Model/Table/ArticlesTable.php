@@ -1,5 +1,5 @@
 <?php
-namespace TestApp\Authorization\Model\Table;
+namespace TestApp\Model\Table;
 
 use Authorization\AuthorizationAwareInterface;
 use Cake\Authorization\BouncerTrait;
