@@ -61,7 +61,7 @@ class OrmResolver implements ResolverInterface
             return $this->getRepositoryPolicy($resource);
         }
         $type = gettype($resource);
-        throw new InvalidArgumentException( "Unable to resolve a policy class for '$type'.");
+        throw new InvalidArgumentException("Unable to resolve a policy class for '$type'.");
     }
 
     /**
@@ -123,6 +123,7 @@ class OrmResolver implements ResolverInterface
         if ($policyClass === false) {
             throw new MissingPolicyException([$class]);
         }
+
         return new $policyClass();
     }
 }
