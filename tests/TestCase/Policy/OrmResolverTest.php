@@ -32,7 +32,7 @@ class OrmResolverTest extends TestCase
 {
     public function testGetPolicyUnknownObject()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $entity = new \stdClass();
         $resolver = new OrmResolver('TestApp');
@@ -41,7 +41,7 @@ class OrmResolverTest extends TestCase
 
     public function testGetPolicyUnknownEntity()
     {
-        $this->setExpectedException(MissingPolicyException::class);
+        $this->expectException(MissingPolicyException::class);
 
         $entity = new Entity();
         $resolver = new OrmResolver('TestApp');
@@ -85,7 +85,7 @@ class OrmResolverTest extends TestCase
 
     public function testGetPolicyUnknownTable()
     {
-        $this->setExpectedException(MissingPolicyException::class);
+        $this->expectException(MissingPolicyException::class);
 
         $articles = $this->createMock('Cake\Datasource\RepositoryInterface');
         $resolver = new OrmResolver('TestApp');
