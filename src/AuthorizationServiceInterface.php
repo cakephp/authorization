@@ -25,5 +25,5 @@ interface AuthorizationServiceInterface
      * @param mixed $resource The resource being operated on.
      * @return bool
      */
-    public function can($user, $action, $resource);
+    public function can(IdentityInterface $user, $action, $resource);
 }
