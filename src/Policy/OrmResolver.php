@@ -75,13 +75,18 @@ class OrmResolver implements ResolverInterface
         $namespace = str_replace('\\', '/', substr($class, 0, strpos($class, $entityNamespace)));
         $name = substr($class, strpos($class, $entityNamespace) + strlen($entityNamespace));
 
-        // plugin entities have additional lookup rules.
+        $policyClass = false;
+
+        // plugin entities can have application overides defined.
         if ($namespace != $this->appNamespace) {
-            // TODO
+            $policyClass = App::className($name, 'Policy\\' . $namespace, 'Policy');
         }
 
-        // Check the application/plugin
-        $policyClass = App::className($namespace . '.' . $name, 'Policy', 'Policy');
+        // Check the application/plugin.
+        if ($policyClass === false) {
+            $policyClass = App::className($namespace . '.' . $name, 'Policy', 'Policy');
+        }
+
         if ($policyClass === false) {
             throw new MissingPolicyException([$class]);
         }

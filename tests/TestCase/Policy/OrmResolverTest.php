@@ -22,6 +22,8 @@ use InvalidArgumentException;
 use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
+use TestApp\Policy\TestPlugin\BookmarkPolicy;
+use TestPlugin\Model\Entity\Bookmark;
 
 class OrmResolverTest extends TestCase
 {
@@ -53,10 +55,11 @@ class OrmResolverTest extends TestCase
 
     public function testGetPolicyDefinedPluginEntityAppOveride()
     {
-        $article = new Article();
+        $bookmark = new Bookmark();
         $resolver = new OrmResolver('TestApp');
-        $policy = $resolver->getPolicy($article);
-        $this->assertInstanceOf(ArticlePolicy::class, $policy);
+        $policy = $resolver->getPolicy($bookmark);
+        $this->assertInstanceOf(BookmarkPolicy::class, $policy);
+        $this->assertContains('TestApp\Policy\TestPlugin', BookmarkPolicy::class, 'class has moved');
     }
 
     public function testGetPolicyDefinedTable()
