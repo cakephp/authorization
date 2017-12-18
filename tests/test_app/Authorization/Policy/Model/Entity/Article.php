@@ -1,6 +1,8 @@
 <?php
 namespace TestApp\Authorization\Policy\Model\Entity;
 
+use TestApp\Authorization\Model\Entity\Article as ArticleEntity;
+
 class Article
 {
 
@@ -10,12 +12,12 @@ class Article
      * @param array $user
      * @return bool
      */
-    public function add($user)
+    public function canAdd($user)
     {
         return in_array($user['role'], ['admin', 'author']);
     }
 
-    public function edit($user, Article $article)
+    public function canEdit($user, ArticleEntity $article)
     {
         if (in_array($user['role'], ['admin', 'author'])) {
             return true;
@@ -31,7 +33,7 @@ class Article
      * @param Article $article
      * @return bool
      */
-    public function delete($user, Article $article)
+    public function canDelete($user, ArticleEntity $article)
     {
         if ($user['role'] === 'admin') {
             return true;
