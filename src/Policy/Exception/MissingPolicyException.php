@@ -24,4 +24,21 @@ class MissingPolicyException extends Exception
      * @var string
      */
     protected $_messageTemplate = 'Policy for `%s` has not been defined.';
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param object|string|array $message Either the resource instance, a string of the error message, or an array of attributes
+     *   that are made available in the view, and sprintf()'d into Exception::$_messageTemplate
+     * @param int|null $code The code of the error, is also the HTTP status code for the error.
+     * @param \Exception|null $previous the previous exception.
+     */
+    public function __construct($message = '', $code = null, $previous = null)
+    {
+        if (is_object($message)) {
+            $message = [get_class($message)];
+        }
+
+        parent::__construct($message, $code, $previous);
+    }
 }

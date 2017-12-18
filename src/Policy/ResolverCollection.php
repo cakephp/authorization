@@ -63,6 +63,6 @@ class ResolverCollection implements ResolverInterface
             }
         }
 
-        throw new MissingPolicyException([get_class($resource)]);
+        throw new MissingPolicyException($resource);
     }
 }
