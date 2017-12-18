@@ -24,6 +24,8 @@ use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\TestPlugin\BookmarkPolicy;
 use TestPlugin\Model\Entity\Bookmark;
+use TestPlugin\Model\Entity\Tag;
+use TestPlugin\Policy\TagPolicy;
 
 class OrmResolverTest extends TestCase
 {
@@ -62,17 +64,22 @@ class OrmResolverTest extends TestCase
         $this->assertContains('TestApp\Policy\TestPlugin', BookmarkPolicy::class, 'class has moved');
     }
 
+    public function testGetPolicyDefinedPluginEntity()
+    {
+        $bookmark = new Tag();
+        $resolver = new OrmResolver('TestApp');
+        $policy = $resolver->getPolicy($bookmark);
+        $this->assertInstanceOf(TagPolicy::class, $policy);
+        $this->assertContains('TestPlugin\Policy', TagPolicy::class, 'class has moved');
+        $this->assertNotContains('TestApp', TagPolicy::class, 'class has moved');
+    }
+
     public function testGetPolicyDefinedTable()
     {
         $this->markTestIncomplete();
     }
 
     public function testGetPolicyUnknownTable()
-    {
-        $this->markTestIncomplete();
-    }
-
-    public function testMap()
     {
         $this->markTestIncomplete();
     }
