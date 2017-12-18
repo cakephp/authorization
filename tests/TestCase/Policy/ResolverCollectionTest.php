@@ -40,7 +40,7 @@ class ResolverCollectionTest extends TestCase
         $resolver->expects($this->once())
             ->method('getPolicy')
             ->with($resource)
-            ->willThrowException(new MissingPolicyException());
+            ->willThrowException(new MissingPolicyException($resource));
 
         $collection = new ResolverCollection([
             $resolver
@@ -60,7 +60,7 @@ class ResolverCollectionTest extends TestCase
         $resolver1->expects($this->once())
             ->method('getPolicy')
             ->with($resource)
-            ->willThrowException(new MissingPolicyException());
+            ->willThrowException(new MissingPolicyException($resource));
 
         $resolver2 = $this->createMock(ResolverInterface::class);
         $resolver2->expects($this->once())

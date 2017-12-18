@@ -28,17 +28,17 @@ class MissingPolicyException extends Exception
     /**
      * {@inheritDoc}
      *
-     * @param object|string|array $message Either the resource instance, a string of the error message, or an array of attributes
+     * @param object|string|array $resource Either the resource instance, a string of the error message, or an array of attributes
      *   that are made available in the view, and sprintf()'d into Exception::$_messageTemplate
      * @param int|null $code The code of the error, is also the HTTP status code for the error.
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct($message = '', $code = null, $previous = null)
+    public function __construct($resource, $code = null, $previous = null)
     {
-        if (is_object($message)) {
-            $message = [get_class($message)];
+        if (is_object($resource)) {
+            $resource = [get_class($resource)];
         }
 
-        parent::__construct($message, $code, $previous);
+        parent::__construct($resource, $code, $previous);
     }
 }
