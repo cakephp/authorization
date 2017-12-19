@@ -15,11 +15,12 @@
 namespace Authorization\Test\TestCase\Policy;
 
 use Authorization\Policy\Exception\MissingPolicyException;
+use Authorization\Policy\MapResolver;
 use Authorization\Policy\ResolverCollection;
 use Authorization\Policy\ResolverInterface;
 use Cake\TestSuite\TestCase;
-use TestApp\Authorization\Model\Entity\Article;
-use TestApp\Authorization\Policy\Model\Entity\Article as ArticlePolicy;
+use TestApp\Model\Entity\Article;
+use TestApp\Policy\ArticlePolicy;
 
 class ResolverCollectionTest extends TestCase
 {
@@ -56,21 +57,10 @@ class ResolverCollectionTest extends TestCase
         $resource = new Article;
         $policy = new ArticlePolicy;
 
-        $resolver1 = $this->createMock(ResolverInterface::class);
-        $resolver1->expects($this->once())
-            ->method('getPolicy')
-            ->with($resource)
-            ->willThrowException(new MissingPolicyException($resource));
+        $resolver1 = new MapResolver();
+        $resolver2 = new MapResolver([Article::class => $policy]);
 
-        $resolver2 = $this->createMock(ResolverInterface::class);
-        $resolver2->expects($this->once())
-            ->method('getPolicy')
-            ->with($resource)
-            ->willReturn($policy);
-
-        $collection = new ResolverCollection([
-            $resolver1, $resolver2
-        ]);
+        $collection = new ResolverCollection([$resolver1, $resolver2]);
 
         $result = $collection->getPolicy($resource);
         $this->assertSame($policy, $result);
