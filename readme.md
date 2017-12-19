@@ -1,13 +1,19 @@
 # CakePHP Authorization
 
-Proof of concept abstract authorization layer plugin for CakePHP
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
+[![Build Status](https://img.shields.io/travis/cakephp/authorization/master.svg?style=flat-square)](https://travis-ci.org/cakephp/authorization)
+[![Coverage Status](https://img.shields.io/codecov/c/github/cakephp/authorization.svg?style=flat-square)](https://codecov.io/github/cakephp/authorization)
 
-**This is work in progress!**
+Authorization stack for the CakePHP framework.
 
-## Policies
+This plugin is for CakePHP 3.6+.
 
-Policies are classes that resolve permissions for a given object. There is usually one policy that corresponds to another object in the system.
+**This is work in progress! Don't use it in a live app!**
 
-## License
+## Authorization is not Authentication
 
-MIT License
+This plugin intentionally **does not** handle authentication. It was [decoupled](https://en.wikipedia.org/wiki/Coupling_(computer_programming)) from authentication on purpose for a clear [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns). See also [Computer access control](https://en.wikipedia.org/wiki/Computer_access_control). This plugin handles only *authorization*. For *authentication* use the [CakePHP Authentication plugin](https://github.com/cakephp/authentication).
+
+## Documentation
+
+ * [Quick Start and Introduction to the basics](docs/Quick-start-and-introduction.md)
