@@ -18,7 +18,7 @@ use Authorization\AuthorizationService;
 use Authorization\IdentityDecorator;
 use Authorization\Policy\BeforePolicyInterface;
 use Authorization\Policy\Exception\MissingMethodException;
-use Authorization\Policy\ResolverInterface;
+use Authorization\Policy\MapResolver;
 use Cake\TestSuite\TestCase;
 use TestApp\Authorization\Model\Entity\Article;
 use TestApp\Authorization\Policy\Model\Entity\Article as ArticlePolicy;
@@ -27,14 +27,9 @@ class AuthorizationServiceTest extends TestCase
 {
     public function testCan()
     {
-        $resolver = $this->createMock(ResolverInterface::class);
-        $entity = new Article();
-        $policy = new ArticlePolicy();
-
-        $resolver->expects($this->once())
-            ->method('getPolicy')
-            ->with($entity)
-            ->willReturn($policy);
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class
+        ]);
 
         $service = new AuthorizationService($resolver);
 
@@ -42,27 +37,26 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin'
         ]);
 
-        $result = $service->can($user, 'add', $entity);
+        $result = $service->can($user, 'add', new Article);
         $this->assertTrue($result);
     }
 
     public function testBeforeFalse()
     {
-        $resolver = $this->createMock(ResolverInterface::class);
         $entity = new Article();
+
         $policy = $this->getMockBuilder(BeforePolicyInterface::class)
             ->setMethods(['before', 'canAdd'])
             ->getMock();
-
-        $resolver->expects($this->once())
-            ->method('getPolicy')
-            ->with($entity)
-            ->willReturn($policy);
 
         $policy->expects($this->once())
             ->method('before')
             ->with($this->isInstanceOf(IdentityDecorator::class), $entity)
             ->willReturn(false);
+
+        $resolver = new MapResolver([
+            Article::class => $policy
+        ]);
 
         $policy->expects($this->never())
             ->method('canAdd');
@@ -79,16 +73,11 @@ class AuthorizationServiceTest extends TestCase
 
     public function testBeforeTrue()
     {
-        $resolver = $this->createMock(ResolverInterface::class);
         $entity = new Article();
+
         $policy = $this->getMockBuilder(BeforePolicyInterface::class)
             ->setMethods(['before', 'canAdd'])
             ->getMock();
-
-        $resolver->expects($this->once())
-            ->method('getPolicy')
-            ->with($entity)
-            ->willReturn($policy);
 
         $policy->expects($this->once())
             ->method('before')
@@ -99,6 +88,10 @@ class AuthorizationServiceTest extends TestCase
             ->method('canAdd')
             ->with($this->isInstanceOf(IdentityDecorator::class), $entity)
             ->willReturn(true);
+
+        $resolver = new MapResolver([
+            Article::class => $policy
+        ]);
 
         $service = new AuthorizationService($resolver);
 
@@ -112,14 +105,11 @@ class AuthorizationServiceTest extends TestCase
 
     public function testMissingMethod()
     {
-        $resolver = $this->createMock(ResolverInterface::class);
         $entity = new Article();
-        $policy = new ArticlePolicy();
 
-        $resolver->expects($this->once())
-            ->method('getPolicy')
-            ->with($entity)
-            ->willReturn($policy);
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class
+        ]);
 
         $service = new AuthorizationService($resolver);
 
