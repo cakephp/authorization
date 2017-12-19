@@ -16,6 +16,28 @@ namespace Authorization\Policy;
 
 use Authorization\Policy\Exception\MissingPolicyException;
 
+/**
+ * `ResolverCollection` is used for aggregating multiple resolvers when more than
+ * one resolver is necessary. The collection will iterate over configured resolvers
+ * and try to resolve a policy on each one. The first successfully resolved policy
+ * will be returned.
+ *
+ * Configured resolvers must throw `Authorization\Policy\Exception\MissingPolicyException`
+ * if a policy cannot be resolved.
+ *
+ * Example configuration:
+ *
+ * ```
+ * $collection = new ResolverCollection([
+ *     new OrmResolver(),
+ *     new MapResolver([
+ *         Service::class => ServicePolicy::class
+ *     ])
+ * ]);
+ *
+ * $service = new AuthenticationService($collection);
+ * ```
+ */
 class ResolverCollection implements ResolverInterface
 {
 
