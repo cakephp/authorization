@@ -43,11 +43,19 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $policy = $this->resolver->getPolicy($resource);
 
-        if ($policy instanceof BeforePolicyInterface && !$policy->before($user, $resource)) {
-            return false;
-        }
+        if ($policy instanceof BeforePolicyInterface) {
+            if (!$policy->before($user, $resource)) {
+                return false;
+            }
 
-        $handler = $this->getHandler($policy, $action);
+            try {
+                $handler = $this->getHandler($policy, $action);
+            } catch (MissingMethodException $e) {
+                return true;
+            }
+        } else {
+            $handler = $this->getHandler($policy, $action);
+        }
 
         return $handler($user, $resource);
     }

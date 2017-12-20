@@ -103,6 +103,33 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function testBeforeTrueAndMissingMethod()
+    {
+        $entity = new Article();
+
+        $policy = $this->getMockBuilder(BeforePolicyInterface::class)
+            ->setMethods(['before'])
+            ->getMock();
+
+        $policy->expects($this->once())
+            ->method('before')
+            ->with($this->isInstanceOf(IdentityDecorator::class), $entity)
+            ->willReturn(true);
+
+        $resolver = new MapResolver([
+            Article::class => $policy
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin'
+        ]);
+
+        $result = $service->can($user, 'add', $entity);
+        $this->assertTrue($result);
+    }
+
     public function testMissingMethod()
     {
         $entity = new Article();
