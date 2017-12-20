@@ -129,10 +129,10 @@ class AuthorizationMiddleware
 
         if (!$service instanceof AuthorizationServiceInterface) {
             throw new RuntimeException(sprintf(
-                'Invalid service returned from `%s` method. `%s` expected, `%s` given.',
+                'Invalid service returned from `%s` method. `%s` does not implement `%s`.',
                 $method,
-                AuthorizationServiceInterface::class,
-                is_object($service) ? get_class($service) : gettype($service)
+                is_object($service) ? get_class($service) : gettype($service),
+                AuthorizationServiceInterface::class
             ));
         }
 
@@ -158,8 +158,8 @@ class AuthorizationMiddleware
 
         if (!$identity instanceof IdentityInterface) {
             throw new RuntimeException(sprintf(
-                'Object `%s` does not implement `%s`.',
-                get_class($identity),
+                'Invalid identity returned by decorator. `%s` does not implement `%s`.',
+                is_object($identity) ? get_class($identity) : gettype($identity),
                 IdentityInterface::class
             ));
         }

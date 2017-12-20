@@ -131,7 +131,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'Invalid service returned from `authorization` method. ' .
-            '`Authorization\AuthorizationServiceInterface` expected, `stdClass` given.'
+            '`stdClass` does not implement `Authorization\AuthorizationServiceInterface`.'
         );
 
         $result = $middleware($request, $response, $next);
@@ -248,7 +248,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ]);
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Object `stdClass` does not implement `Authorization\IdentityInterface`.');
+        $this->expectExceptionMessage('Invalid identity returned by decorator. `stdClass` does not implement `Authorization\IdentityInterface`.');
 
         $result = $middleware($request, $response, $next);
     }
