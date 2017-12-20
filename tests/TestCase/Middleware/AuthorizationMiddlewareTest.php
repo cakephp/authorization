@@ -102,6 +102,41 @@ class AuthorizationMiddlewareTest extends TestCase
         $result = $middleware($request, $response, $next);
     }
 
+    public function testInvokeAppInvalid()
+    {
+        $application = $this->getMockBuilder(HttpApplicationInterface::class)
+            ->setMethods(['middleware', 'routes', 'bootstrap', '__invoke'])
+            ->getMock();
+
+        $application = $this->getMockBuilder(HttpApplicationInterface::class)
+            ->setMethods(['authorization', 'middleware', 'routes', 'bootstrap', '__invoke'])
+            ->getMock();
+        $application
+            ->expects($this->once())
+            ->method('authorization')
+            ->with(
+                $this->isInstanceOf(ServerRequestInterface::class),
+                $this->isInstanceOf(ResponseInterface::class)
+            )
+            ->willReturn(new stdClass());
+
+        $request = new ServerRequest();
+        $response = new Response();
+        $next = function ($request) {
+            return $request;
+        };
+
+        $middleware = new AuthorizationMiddleware($application);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Invalid service returned from `authorization` method. ' .
+            '`Authorization\AuthorizationServiceInterface` expected, `stdClass` given.'
+        );
+
+        $result = $middleware($request, $response, $next);
+    }
+
     public function testInvokeInvalid()
     {
         $service = $this->createMock(AuthorizationServiceInterface::class);

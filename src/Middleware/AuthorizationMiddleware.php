@@ -125,7 +125,18 @@ class AuthorizationMiddleware
             throw new RuntimeException($message);
         }
 
-        return $this->subject->$method($request, $response);
+        $service = $this->subject->$method($request, $response);
+
+        if (!$service instanceof AuthorizationServiceInterface) {
+            throw new RuntimeException(sprintf(
+                'Invalid service returned from `%s` method. `%s` expected, `%s` given.',
+                $method,
+                AuthorizationServiceInterface::class,
+                is_object($service) ? get_class($service) : gettype($service)
+            ));
+        }
+
+        return $service;
     }
 
     /**
