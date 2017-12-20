@@ -55,8 +55,8 @@ class AuthorizationMiddleware
     /**
      * Constructor.
      *
-     * @param \Authorization\AuthorizationServiceInterface|\Cake\Core\HttpApplicationInterface $subject
-     * @param array $config
+     * @param \Authorization\AuthorizationServiceInterface|\Cake\Core\HttpApplicationInterface $subject Authorization service or application instance.
+     * @param array $config Config array.
      * @throws InvalidArgumentException
      */
     public function __construct($subject, array $config = [])

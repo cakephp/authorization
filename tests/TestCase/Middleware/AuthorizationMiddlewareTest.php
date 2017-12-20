@@ -150,7 +150,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity = new IdentityDecorator($service, [
             'id' => 1
         ]);
-        
+
         $request = (new ServerRequest)->withAttribute('identity', $identity);
         $response = new Response();
         $next = function ($request) {
@@ -181,7 +181,7 @@ class AuthorizationMiddlewareTest extends TestCase
         };
 
         $middleware = new AuthorizationMiddleware($service, [
-            'identityDecorator' => function($service, $identity) {
+            'identityDecorator' => function ($service, $identity) {
                 return new IdentityDecorator($service, $identity);
             },
             'identityAttribute' => 'user'
