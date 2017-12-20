@@ -14,7 +14,10 @@
 	"require-dev": {
 		"cakephp/cakephp": "~3.5",
 		"cakephp/cakephp-codesniffer": "^3.0",
-		"phpunit/phpunit": "<6.0"
+		"phpunit/phpunit": "^5.7|^6.0"
+	},
+	"suggest": {
+		"cakephp/orm": "To use \"OrmResolver\" (Not needed separately if using full CakePHP framework)."
 	},
 	"license": "MIT",
 	"minimum-stability": "stable",
@@ -32,9 +35,25 @@
 		}
 	},
 	"authors": [
-			{
-				"name": "CakePHP Community",
-				"homepage": "https://github.com/cakephp/authorization/graphs/contributors"
-			}
-	]
+		{
+			"name": "CakePHP Community",
+			"homepage": "https://github.com/cakephp/authorization/graphs/contributors"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/cakephp/authorization/issues",
+		"forum": "https://stackoverflow.com/tags/cakephp",
+		"irc": "irc://irc.freenode.org/cakephp",
+		"source": "https://github.com/cakephp/authorization"
+	},
+	"scripts": {
+		"check": [
+			"@cs-check",
+			"@test"
+		],
+		"cs-check": "phpcs --colors -p ./src ./tests",
+		"cs-fix": "phpcbf --colors ./src ./tests",
+		"test": "phpunit",
+		"test-coverage": "phpunit --coverage-clover=clover.xml"
+	}
 }
