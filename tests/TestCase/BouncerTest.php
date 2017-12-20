@@ -40,7 +40,7 @@ class BouncerTest extends TestCase
         ]);
 
         $article = new Article([]);
-        $this->assertFalse($gate->allows('add', [$article]));
+        $this->assertFalse($gate->allows('canAdd', [$article]));
 
         $resolver = function() {
             return [
@@ -50,6 +50,6 @@ class BouncerTest extends TestCase
         };
 
         $gate->setIdentityResolver($resolver);
-        $this->assertTrue($gate->allows('add', [$article]));
+        $this->assertTrue($gate->allows('canAdd', [$article]));
     }
 }

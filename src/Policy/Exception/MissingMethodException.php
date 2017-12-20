@@ -12,20 +12,16 @@
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Authorization;
+namespace Authorization\Policy\Exception;
 
-/**
- * Interface for Authorization service
- */
-interface AuthorizationServiceInterface
+use Authorization\Exception\Exception;
+
+class MissingMethodException extends Exception
 {
     /**
-     * Check whether the provided user can perform an action on a resource.
+     * Template string that has attributes sprintf()'ed into it.
      *
-     * @param \Authorization\IdentityInterface $user The user to check permissions for.
-     * @param string $action The action/operation being performed.
-     * @param mixed $resource The resource being operated on.
-     * @return bool
+     * @var string
      */
-    public function can(IdentityInterface $user, $action, $resource);
+    protected $_messageTemplate = 'Method `%s` for invoking action `%s` has not been defined in `%s`.';
 }
