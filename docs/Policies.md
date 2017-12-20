@@ -19,7 +19,7 @@ The default ORM resolver uses the following conventions for policy classes:
 1. The entity classname is used to generate the policy class name. e.g
    `App\Model\Entity\Article` will map to `App\Policy\ArticlePolicy`.
 2. Plugin entities will first check for an application policy e.g
-   `App\Policy\Blog\ArticlePolicy` for `Bookmarks\Model\Entity\Article`.
+   `App\Policy\Blog\ArticlePolicy` for `Blog\Model\Entity\Article`.
 3. If no application override policy can be found, a plugin policy will be
    checked. e.g. `Blog\Policy\ArticlePolicy`.
 4. If no policy can be found an exception will be raised.
