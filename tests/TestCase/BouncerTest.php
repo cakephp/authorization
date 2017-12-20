@@ -3,8 +3,8 @@ namespace Cake\Authorization\Test;
 
 use Authorization\Bouncer;
 use Cake\TestSuite\TestCase;
-use TestApp\Authorization\Policy\Model\Entity\Article as ArticlePolicy;
-use TestApp\Authorization\Model\Entity\Article;
+use TestApp\Model\Entity\Article;
+use TestApp\Policy\ArticlePolicy;
 
 /**
  * @property \Cake\Authorization\Bouncer $Gate

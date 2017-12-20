@@ -1,9 +1,9 @@
 <?php
-namespace TestApp\Authorization\Policy\Model\Entity;
+namespace TestApp\Policy;
 
-use TestApp\Authorization\Model\Entity\Article as ArticleEntity;
+use TestApp\Model\Entity\Article;
 
-class Article
+class ArticlePolicy
 {
 
     /**
@@ -17,7 +17,7 @@ class Article
         return in_array($user['role'], ['admin', 'author']);
     }
 
-    public function canEdit($user, ArticleEntity $article)
+    public function canEdit($user, Article $article)
     {
         if (in_array($user['role'], ['admin', 'author'])) {
             return true;
@@ -33,7 +33,7 @@ class Article
      * @param Article $article
      * @return bool
      */
-    public function canDelete($user, ArticleEntity $article)
+    public function canDelete($user, Article $article)
     {
         if ($user['role'] === 'admin') {
             return true;

@@ -20,8 +20,8 @@ use Authorization\Policy\BeforePolicyInterface;
 use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\MapResolver;
 use Cake\TestSuite\TestCase;
-use TestApp\Authorization\Model\Entity\Article;
-use TestApp\Authorization\Policy\Model\Entity\Article as ArticlePolicy;
+use TestApp\Model\Entity\Article;
+use TestApp\Policy\ArticlePolicy;
 
 class AuthorizationServiceTest extends TestCase
 {
@@ -118,7 +118,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $this->expectException(MissingMethodException::class);
-        $this->expectExceptionMessage('Method `canModify` for invoking action `modify` has not been defined in `TestApp\Authorization\Policy\Model\Entity\Article`.');
+        $this->expectExceptionMessage('Method `canModify` for invoking action `modify` has not been defined in `TestApp\Policy\ArticlePolicy`.');
 
         $service->can($user, 'modify', $entity);
     }

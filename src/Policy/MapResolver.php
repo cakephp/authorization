@@ -99,7 +99,7 @@ class MapResolver implements ResolverInterface
         $class = get_class($resource);
 
         if (!isset($this->map[$class])) {
-            throw new MissingPolicyException([$class]);
+            throw new MissingPolicyException($resource);
         }
 
         $policy = $this->map[$class];

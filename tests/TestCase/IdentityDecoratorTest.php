@@ -8,7 +8,7 @@ use BadMethodCallException;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use stdClass;
-use TestApp\Authorization\Model\Entity\Article;
+use TestApp\Model\Entity\Article;
 
 /**
  * Test case for IdentityDecorator.
