@@ -57,13 +57,15 @@ class AuthorizationService implements AuthorizationServiceInterface
             $handler = $this->getHandler($policy, $action);
         }
 
-        return $handler($user, $resource);
+        $result = $handler($user, $resource);
+
+        return $result === true;
     }
 
     /**
      * Returns a policy action handler.
      *
-     * @param object $policy Policy object.
+     * @param mixed $policy Policy object.
      * @param string $action Action name.
      * @return callable
      * @throws \Authorization\Policy\Exception\MissingMethodException
