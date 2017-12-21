@@ -42,6 +42,9 @@ class PolicyTask extends SimpleBakeTask
      */
     public function fileName($name)
     {
+        if ($this->param('type') === 'table') {
+            $name .= 'Table';
+        }
         return $name . 'Policy.php';
     }
 

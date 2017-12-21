@@ -51,7 +51,7 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
         }
     }
 
-    public function testMainDefaultType()
+    public function testMainDefaultToEntity()
     {
         $this->generatedFile = APP . 'Policy/BookmarkPolicy.php';
 
@@ -77,10 +77,38 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
 
     public function testMainObjectType()
     {
-        $this->markTestIncomplete();
+        $this->generatedFile = APP . 'Policy/ThingPolicy.php';
+
+        $this->exec('bake policy --type object Thing');
+        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertOutputContains('Creating file ' . $this->generatedFile);
+        $this->assertFileExists($this->generatedFile);
+        $this->assertFileEquals(
+            $this->comparisonDir . 'ThingPolicy.php',
+            $this->generatedFile
+        );
     }
 
     public function testMainTableType()
+    {
+        $this->generatedFile = APP . 'Policy/BookmarksTablePolicy.php';
+
+        $this->exec('bake policy --type table Bookmarks');
+        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertOutputContains('Creating file ' . $this->generatedFile);
+        $this->assertFileExists($this->generatedFile);
+        $this->assertFileEquals(
+            $this->comparisonDir . 'BookmarksTablePolicy.php',
+            $this->generatedFile
+        );
+    }
+
+    public function testMainPluginEntity()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testMainPluginTable()
     {
         $this->markTestIncomplete();
     }
