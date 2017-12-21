@@ -7,7 +7,8 @@ use Authorization\PolicyLocator;
 /**
  * Bouncer Trait
  */
-trait BouncerTrait {
+trait BouncerTrait
+{
 
     /**
      * Default Bouncer Class
@@ -26,7 +27,8 @@ trait BouncerTrait {
     /**
      *
      */
-    protected function getPolicy() {
+    protected function getPolicy()
+    {
         $locator = new PolicyLocator();
 
         return $locator->locate($this);

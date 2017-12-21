@@ -9,14 +9,15 @@ use Cake\ORM\Table;
 /**
  * Policy Locator
  */
-class PolicyLocator {
+class PolicyLocator
+{
 
-	/**
-	 * Locates the policy class for an object
-	 *
-	 * @param object $object Object
-	 * @return string|bool
-	 */
+    /**
+     * Locates the policy class for an object
+     *
+     * @param object $object Object
+     * @return string|bool
+     */
     public function locate($object)
     {
         $objectClass = get_class($object);

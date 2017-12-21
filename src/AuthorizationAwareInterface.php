@@ -17,5 +17,5 @@ interface AuthorizationAwareInterface
      *
      * @return \Authorization\BouncerInterface
      */
-    public function getBouncer(): BouncerInterface;
+    public function getBouncer();
 }

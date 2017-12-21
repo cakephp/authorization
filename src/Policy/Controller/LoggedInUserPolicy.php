@@ -1,7 +1,8 @@
 <?php
 namespace Cake\Authorization\Policy\Controller;
 
-class LoggedInUserPolicy {
+class LoggedInUserPolicy
+{
 
     public function isLoggedIn($identity)
     {
@@ -12,5 +13,4 @@ class LoggedInUserPolicy {
     {
         $this->isLoggedIn(...$args);
     }
-
 }

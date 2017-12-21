@@ -6,7 +6,7 @@ use Cake\Event\Event;
 /**
  * Table Authorization Listener
  */
-class  TableAuthorizationListener
+class TableAuthorizationListener
 {
     /**
      * Bouncer

@@ -12,8 +12,9 @@ use TestApp\Policy\ArticlePolicy;
 class BouncerTest extends TestCase
 {
 
-    protected function getIdentityResolver() {
-        return function() {
+    protected function getIdentityResolver()
+    {
+        return function () {
             return [
                 'id' => 1,
                 'role' => 'admin'
@@ -28,7 +29,7 @@ class BouncerTest extends TestCase
 
     public function testAllows()
     {
-        $resolver = function() {
+        $resolver = function () {
             return [
                 'id' => 1,
                 'role' => 'user'
@@ -42,7 +43,7 @@ class BouncerTest extends TestCase
         $article = new Article([]);
         $this->assertFalse($gate->allows('canAdd', [$article]));
 
-        $resolver = function() {
+        $resolver = function () {
             return [
                 'id' => 1,
                 'role' => 'admin'

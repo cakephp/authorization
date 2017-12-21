@@ -39,5 +39,4 @@ class Articles
 
         return $user['id'] === $article->get('user_id');
     }
-
 }

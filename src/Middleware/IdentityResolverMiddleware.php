@@ -23,7 +23,7 @@ class IdentityResolverMiddleware
         /* @var $bouncer BouncerInterface */
         $bouncer = $request->getAttribute('authorization');
 
-        $bouncer->setIdentityResolver(function() use ($request) {
+        $bouncer->setIdentityResolver(function () use ($request) {
             return $request->getAttribute('identity');
         });
 

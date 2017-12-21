@@ -41,5 +41,4 @@ class ArticlePolicy
 
         return $user['id'] === $article->get('user_id');
     }
-
 }

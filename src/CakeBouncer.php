@@ -26,7 +26,7 @@ class CakeBouncer extends Bouncer
 
     protected function addCakeBeforeCheckEvent()
     {
-        $callback = function($user, $ability) {
+        $callback = function ($user, $ability) {
             $event = $this->dispatchEvent('Authorization.beforeResolve', compact('user', 'ability'));
 
             if ($event->isStopped()) {
@@ -46,7 +46,7 @@ class CakeBouncer extends Bouncer
 
     protected function addCakeAfterCheckEvent()
     {
-        $callback = function($user, $ability) {
+        $callback = function ($user, $ability) {
             $event = $this->dispatchEvent('Authorization.afterResolve', compact('user', 'ability'));
 
             if ($event->isStopped()) {

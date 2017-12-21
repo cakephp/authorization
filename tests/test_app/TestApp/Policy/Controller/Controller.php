@@ -1,7 +1,8 @@
 <?php
-class Controller {
+class Controller
+{
 
-    public function __call($method, $args) {
-
+    public function __call($method, $args)
+    {
     }
 }
