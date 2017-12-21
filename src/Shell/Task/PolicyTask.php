@@ -45,6 +45,7 @@ class PolicyTask extends SimpleBakeTask
         if ($this->param('type') === 'table') {
             $name .= 'Table';
         }
+
         return $name . 'Policy.php';
     }
 
@@ -93,6 +94,7 @@ class PolicyTask extends SimpleBakeTask
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
+
         return $parser
             ->description('Bake policy classes for various supported object types.')
             ->addOption('type', [
@@ -106,10 +108,11 @@ class PolicyTask extends SimpleBakeTask
     /**
      * Do nothing (for now)
      *
+     * @param string $className The class to bake a test for.
      * @return void
      */
     public function bakeTest($className)
     {
-        // TODO
+        // Do nothing as TestTask is not aware of policies for now.
     }
 }

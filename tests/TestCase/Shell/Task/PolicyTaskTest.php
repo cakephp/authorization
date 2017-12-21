@@ -15,8 +15,8 @@
 namespace Authorization\Test\TestCase\Shell\Task;
 
 use Bake\Shell\Task\BakeTemplateTask;
-use Cake\Core\Configure;
 use Cake\Console\Shell;
+use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\TestSuite\ConsoleIntegrationTestCase;
 
