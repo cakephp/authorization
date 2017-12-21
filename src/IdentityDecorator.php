@@ -85,7 +85,7 @@ class IdentityDecorator implements IdentityInterface
      * Delegate unknown methods to decorated identity.
      *
      * @param string $method The method being invoked.
-     * @param arry $args The arguments for the method.
+     * @param array $args The arguments for the method.
      * @return mixed
      */
     public function __call($method, $args)
