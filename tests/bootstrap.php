@@ -44,6 +44,7 @@ define('CACHE', TMP . 'cache' . DS);
 Configure::write('debug', true);
 Configure::write('App', [
     'namespace' => 'TestApp',
+    'encoding' => 'UTF-8',
     'paths' => [
         'plugins' => [ROOT . 'Plugin' . DS],
         'templates' => [ROOT . 'TestApp' . DS . 'Template' . DS]
