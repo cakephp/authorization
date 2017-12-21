@@ -16,14 +16,14 @@ class AuthorizationMiddleware
     /**
      * Bouncer class or instance
      *
-     * @var string||\Cake\Authorization\BouncerInterface
+     * @var string|\Cake\Authorization\BouncerInterface
      */
     protected $bouncer = Bouncer::class;
 
     /**
      * Constructor
      *
-     * @param string|\Cake\Authorization\BouncerInterface
+     * @param string|\Cake\Authorization\BouncerInterface $bouncer The bouncer instance
      */
     public function __construct($bouncer)
     {
@@ -35,7 +35,7 @@ class AuthorizationMiddleware
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Request
      * @param \Psr\Http\Message\ResponseInterface $response Response
-     * @param callable $next
+     * @param callable $next The next middleware to invoke
      * @return callable
      */
     public function __invoke($request, $response, $next)
