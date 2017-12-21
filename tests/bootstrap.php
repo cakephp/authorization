@@ -36,16 +36,17 @@ require_once 'vendor/cakephp/cakephp/src/basics.php';
 require_once 'vendor/autoload.php';
 
 define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
-define('APP', ROOT . 'App' . DS);
+define('APP', ROOT . 'TestApp' . DS);
 define('TMP', sys_get_temp_dir() . DS);
 define('CONFIG', ROOT . DS . 'config'. DS);
+define('CACHE', TMP . 'cache' . DS);
 
 Configure::write('debug', true);
 Configure::write('App', [
     'namespace' => 'TestApp',
     'paths' => [
         'plugins' => [ROOT . 'Plugin' . DS],
-        'templates' => [ROOT . 'App' . DS . 'Template' . DS]
+        'templates' => [ROOT . 'TestApp' . DS . 'Template' . DS]
     ]
 ]);
 
@@ -54,6 +55,8 @@ if (!getenv('db_dsn')) {
 }
 ConnectionManager::config('test', ['url' => getenv('db_dsn')]);
 
-//Plugin::load('Auth', [
-//    'path' => dirname(dirname(__FILE__)) . DS,
-//]);
+Plugin::load('Authorization', [
+    'path' => dirname(dirname(__FILE__)) . DS,
+]);
+// For policy task tests.
+Plugin::load('Bake');
