@@ -66,9 +66,17 @@ class PolicyTask extends SimpleBakeTask
 
         $name = $this->_getName($this->args[0]);
         $type = $this->param('type');
+
         $suffix = '';
         if ($type === 'table') {
             $suffix = 'Table';
+        }
+
+        $className = $data['namespace'] . '\\' . $name;
+        if ($type === 'table') {
+            $className = "{$data['namespace']}\Model\\Table\\${name}${suffix}";
+        } elseif ($type === 'entity') {
+            $className = "{$data['namespace']}\Model\\Entity\\${name}";
         }
 
         $variable = Inflector::variable($name);
@@ -81,6 +89,7 @@ class PolicyTask extends SimpleBakeTask
             'type' => $type,
             'suffix' => $suffix,
             'variable_name' => $variable,
+            'classname' => $className,
         ];
 
         return array_merge($data, $vars);

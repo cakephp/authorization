@@ -16,7 +16,13 @@
 <?php
 namespace {{ namespace }}\Policy;
 
-use Authorization\IdentityInterface;
+{% set imports = [
+    'Authorization\\IdentityInterface',
+    classname,
+] %}
+{% for import in imports|sort %}
+use {{ import }};
+{% endfor %}
 
 /**
  * {{ name }} policy

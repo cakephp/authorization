@@ -2,6 +2,7 @@
 namespace TestApp\Policy;
 
 use Authorization\IdentityInterface;
+use TestApp\Model\Entity\Bookmark;
 
 /**
  * Bookmark policy
@@ -15,7 +16,7 @@ class BookmarkPolicy
      * @param TestApp\Model\Entity\Bookmark $bookmark
      * @return bool
      */
-    public function canCreate(IdentityInterface $user, $bookmark)
+    public function canCreate(IdentityInterface $user, Bookmark $bookmark)
     {
     }
 
@@ -26,7 +27,7 @@ class BookmarkPolicy
      * @param TestApp\Model\Entity\Bookmark $bookmark
      * @return bool
      */
-    public function canUpdate(IdentityInterface $user, $bookmark)
+    public function canUpdate(IdentityInterface $user, Bookmark $bookmark)
     {
     }
 
@@ -37,7 +38,7 @@ class BookmarkPolicy
      * @param TestApp\Model\Entity\Bookmark $bookmark
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, $bookmark)
+    public function canDelete(IdentityInterface $user, Bookmark $bookmark)
     {
     }
 
@@ -48,7 +49,7 @@ class BookmarkPolicy
      * @param TestApp\Model\Entity\Bookmark $bookmark
      * @return bool
      */
-    public function canView(IdentityInterface $user, $bookmark)
+    public function canView(IdentityInterface $user, Bookmark $bookmark)
     {
     }
 }

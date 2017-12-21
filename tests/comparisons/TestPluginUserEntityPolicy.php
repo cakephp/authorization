@@ -2,6 +2,7 @@
 namespace TestPlugin\Policy;
 
 use Authorization\IdentityInterface;
+use TestPlugin\Model\Entity\User;
 
 /**
  * User policy
@@ -15,7 +16,7 @@ class UserPolicy
      * @param TestPlugin\Model\Entity\User $resource
      * @return bool
      */
-    public function canCreate(IdentityInterface $user, $resource)
+    public function canCreate(IdentityInterface $user, User $resource)
     {
     }
 
@@ -26,7 +27,7 @@ class UserPolicy
      * @param TestPlugin\Model\Entity\User $resource
      * @return bool
      */
-    public function canUpdate(IdentityInterface $user, $resource)
+    public function canUpdate(IdentityInterface $user, User $resource)
     {
     }
 
@@ -37,7 +38,7 @@ class UserPolicy
      * @param TestPlugin\Model\Entity\User $resource
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, $resource)
+    public function canDelete(IdentityInterface $user, User $resource)
     {
     }
 
@@ -48,7 +49,7 @@ class UserPolicy
      * @param TestPlugin\Model\Entity\User $resource
      * @return bool
      */
-    public function canView(IdentityInterface $user, $resource)
+    public function canView(IdentityInterface $user, User $resource)
     {
     }
 }
