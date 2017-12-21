@@ -63,18 +63,23 @@ class PolicyTask extends SimpleBakeTask
     {
         $data = parent::templateData();
 
-        $name = $this->args[0];
+        $name = $this->_getName($this->args[0]);
         $type = $this->param('type');
         $suffix = '';
         if ($type === 'table') {
             $suffix = 'Table';
         }
 
+        $variable = Inflector::variable($name);
+        if ($variable == 'user') {
+            $variable = 'resource';
+        }
+
         $vars = [
             'name' => $name,
             'type' => $type,
             'suffix' => $suffix,
-            'variable_name' => Inflector::variable($name),
+            'variable_name' => $variable,
         ];
 
         return array_merge($data, $vars);

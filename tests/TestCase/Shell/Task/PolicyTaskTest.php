@@ -40,11 +40,13 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
         parent::setUp();
 
         $this->comparisonDir = dirname(dirname(dirname(__DIR__))) . DS . 'comparisons' . DS;
+        Plugin::load('TestPlugin');
     }
 
     public function tearDown()
     {
         parent::tearDown();
+
         if ($this->generatedFile && file_exists($this->generatedFile)) {
             unlink($this->generatedFile);
             $this->generatedFile = '';
@@ -105,11 +107,29 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
 
     public function testMainPluginEntity()
     {
-        $this->markTestIncomplete();
+        $this->generatedFile = ROOT . 'Plugin/TestPlugin/src/Policy/UserPolicy.php';
+
+        $this->exec('bake policy TestPlugin.User');
+        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertOutputContains('Creating file ' . $this->generatedFile);
+        $this->assertFileExists($this->generatedFile);
+        $this->assertFileEquals(
+            $this->comparisonDir . 'TestPluginUserEntityPolicy.php',
+            $this->generatedFile
+        );
     }
 
     public function testMainPluginTable()
     {
-        $this->markTestIncomplete();
+        $this->generatedFile = ROOT . 'Plugin/TestPlugin/src/Policy/UsersTablePolicy.php';
+
+        $this->exec('bake policy --type table TestPlugin.Users');
+        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertOutputContains('Creating file ' . $this->generatedFile);
+        $this->assertFileExists($this->generatedFile);
+        $this->assertFileEquals(
+            $this->comparisonDir . 'TestPluginUsersTablePolicy.php',
+            $this->generatedFile
+        );
     }
 }
