@@ -46,7 +46,7 @@ class OrmResolver implements ResolverInterface
     /**
      * Get a policy for an ORM Table or Entity.
      *
-     * @param \Cake\ORM\RepositoryInterface|\Cake\Datasource\EntityInterface $resource The resource.
+     * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\EntityInterface $resource The resource.
      * @return object
      * @throws \InvalidArgumentException When a resource is not an ORM object.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
@@ -67,7 +67,7 @@ class OrmResolver implements ResolverInterface
     /**
      * Get a policy for an entity
      *
-     * @param \Cake\Datasouce\EntityInterface $entity The entity to get a policy for
+     * @param \Cake\Datasource\EntityInterface $entity The entity to get a policy for
      * @return object
      */
     protected function getEntityPolicy(EntityInterface $entity)
@@ -83,7 +83,7 @@ class OrmResolver implements ResolverInterface
     /**
      * Get a policy for a table
      *
-     * @param \Cake\Datasouce\RepositoryInterface $table The table/repository to get a policy for.
+     * @param \Cake\Datasource\RepositoryInterface $table The table/repository to get a policy for.
      * @return object
      */
     protected function getRepositoryPolicy(RepositoryInterface $table)

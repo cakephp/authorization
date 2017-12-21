@@ -42,7 +42,7 @@ class IdentityDecoratorTest extends TestCase
 
     public function testConstructorInvalidData()
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $auth = $this->createMock(AuthorizationServiceInterface::class);
         new IdentityDecorator($auth, 'bad');
     }
@@ -71,7 +71,7 @@ class IdentityDecoratorTest extends TestCase
 
     public function testCallArray()
     {
-        $this->setExpectedException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $data = ['id' => 1];
         $auth = $this->createMock(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($auth, $data);

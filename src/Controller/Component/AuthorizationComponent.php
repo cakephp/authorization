@@ -9,7 +9,8 @@ use Cake\Network\Exception\MethodNotAllowedException;
 /**
  * Authorization component
  */
-class AuthorizationComponent extends Component {
+class AuthorizationComponent extends Component
+{
 
     /**
      * Default config
@@ -32,15 +33,16 @@ class AuthorizationComponent extends Component {
     protected $gate;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function initialize(array $config)
     {
         parent::initialize($config);
         $controller = $this->getController();
-        $bouncer =  $controller->request->getAttribute('authorization');
+        $bouncer = $controller->request->getAttribute('authorization');
         if ($bouncer instanceof BouncerInterface) {
             $this->gate = $bouncer;
+
             return;
         }
 
@@ -142,7 +144,7 @@ class AuthorizationComponent extends Component {
     /**
      * Magic call, delegates the method calls to the gate object
      *
-     * @param $name Method name
+     * @param string $name Method name
      * @param array $arguments Arguments
      * @return mixed
      */
@@ -150,5 +152,4 @@ class AuthorizationComponent extends Component {
     {
         return call_user_func_array([$this->gate, $name], $arguments);
     }
-
 }
