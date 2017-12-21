@@ -11,3 +11,9 @@ Load the plugin by adding the following statement in your project's `config/boot
 ```php
 Plugin::load('Authorization');
 ```
+
+## Next Steps
+
+With the plugin installed, you can:
+
+* [Create a Policy](docs/Policies.md)
