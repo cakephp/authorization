@@ -14,6 +14,7 @@
 	"require-dev": {
 		"cakephp/cakephp": "~3.5",
 		"cakephp/cakephp-codesniffer": "^3.0",
+		"cakephp/bake": "~1.5",
 		"phpunit/phpunit": "^5.7|^6.0"
 	},
 	"suggest": {
