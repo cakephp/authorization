@@ -9,7 +9,8 @@
 	],
 	"type": "cakephp-plugin",
 	"require": {
-		"cakephp/core": "~3.5"
+		"cakephp/core": "~3.5",
+		"psr/http-message": "^1.0",
 	},
 	"require-dev": {
 		"cakephp/cakephp": "~3.5",
