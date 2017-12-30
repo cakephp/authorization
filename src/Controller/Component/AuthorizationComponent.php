@@ -1,13 +1,31 @@
 <?php
+/**
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
+ * @since         1.0.0
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
+ */
 namespace Authorization\Controller\Component;
 
-use Authorization\BouncerInterface;
-use Cake\Authorization\Bouncer;
+use Authorization\IdentityInterface;
 use Cake\Controller\Component;
-use Cake\Network\Exception\MethodNotAllowedException;
+use Cake\Network\Exception\ForbiddenException;
+use InvalidArgumentException;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Authorization component
+ * Authorization Component
+ *
+ * Makes it easier to check authorization in CakePHP controllers.
+ * Applies conventions on matching policy methods to controller actions,
+ * and raising errors when authorization fails.
  */
 class AuthorizationComponent extends Component
 {
@@ -18,138 +36,54 @@ class AuthorizationComponent extends Component
      * @var array
      */
     protected $_defaultConfig = [
-        'gateClass' => Bouncer::class,
-        'policyClass' => null,
-        'redirect' => false,
-        'redirectMessage' => '',
-        'notAllowedException' => MethodNotAllowedException::class
+        'identityAttribute' => 'identity',
+        'forbiddenException' => ForbiddenException::class,
     ];
 
     /**
-     * Gate Instance
+     * Check the policy for $resource, raising an exception on error.
      *
-     * @var \Cake\Authorization\Gate
-     */
-    protected $gate;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function initialize(array $config)
-    {
-        parent::initialize($config);
-        $controller = $this->getController();
-        $bouncer = $controller->request->getAttribute('authorization');
-        if ($bouncer instanceof BouncerInterface) {
-            $this->gate = $bouncer;
-
-            return;
-        }
-
-        $this->gate = $this->buildGate();
-
-        $this->gate->allows($controller->request->getParam('action'));
-    }
-
-    /**
-     * Builds the gate object
+     * If $action is left undefined, the current controller action will
+     * be used.
      *
-     * @return \Authorization\BouncerInterface
+     * @param object $resource The resource to check authorization on.
+     * @param string|null $action The action to check authorization for.
+     * @return void
+     * @throws \Authorization\Exception\ForbiddenException when policy check fails.
      */
-    public function buildGate()
+    public function authorize($resource, $action = null)
     {
-        $controller = $this->getController();
-        $request = $controller->request;
-
-        $gate = new $this->getConfig('gateClass');
-
-        $policy = $this->getPolicyClassForController();
-        if ($policy) {
-            $gate->addPolicy(get_class($controller), $policy);
-        }
-
-        $identity = $request->getAttribute('identity');
-        if (!empty($identity)) {
-            $gate->setIdentity($identity);
-        }
-
-        return $gate;
-    }
-
-    /**
-     * Gets the policy class for the controller
-     *
-     * @return bool|string
-     */
-    protected function getPolicyClassForController()
-    {
-        $policyClass = $this->getConfig('policyClass');
-        if (!empty($policyClass)) {
-            return $policyClass;
-        }
-
         $request = $this->getController()->request;
-        $class = $request->getParam('controller');
-        $plugin = $request->getParam('plugin');
-
-        if ($plugin) {
-            $class = $plugin . '.' . $class;
+        if ($action === null) {
+            $action = $request->getParam('action');
         }
-
-        $policyClass = App::className($class, 'Policy/Controller', 'Policy');
-        if (class_exists($policyClass)) {
-            return new $policyClass();
-        }
-
-        return false;
-    }
-
-    /**
-     * Startup
-     *
-     * @return void
-     */
-    public function startup()
-    {
-        $this->checkAction();
-    }
-
-    /**
-     * Checks if the current action is allowed for the user
-     *
-     * @throws MethodNotAllowedException
-     * @return void
-     */
-    protected function checkAction()
-    {
-        $controller = $this->getController();
-        $request = $controller->request;
-        $config = $this->$this->getConfig();
-
-        $granted = $this->gate->allows(
-            $request->getParam('action'),
-            [$controller]
-        );
-
-        if (!$granted && !empty($config['notAllowedException'])) {
-            throw new $config['notAllowedException']();
-        }
-
-        if (!$granted && !empty($config['redirect'])) {
-            $this->_registry->get('Flash')->error($config['redirectMessage']);
-            $this->getController()->redirect($config['redirect']);
+        $identity = $this->getIdentity($request);
+        if (!$identity->can($action, $resource)) {
+            $class = $this->getConfig('forbiddenException');
+            throw new $class();
         }
     }
 
     /**
-     * Magic call, delegates the method calls to the gate object
+     * Get the identity from a request.
      *
-     * @param string $name Method name
-     * @param array $arguments Arguments
-     * @return mixed
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request
+     * @return \Authorization\IdentityInterface
      */
-    public function __call($name, $arguments)
+    protected function getIdentity(ServerRequestInterface $request)
     {
-        return call_user_func_array([$this->gate, $name], $arguments);
+        $identityAttribute = $this->getConfig('identityAttribute');
+        $identity = $request->getAttribute($identityAttribute);
+        if (!$identity instanceof IdentityInterface) {
+            $type = is_object($identity) ? get_class($identity) : gettype($identity);
+            throw new InvalidArgumentException(sprintf(
+                'Expected that `%s` would be an instance of %s, but got %s',
+                $identityAttribute,
+                IdentityInterface::class,
+                $type
+            ));
+        }
+
+        return $identity;
     }
 }

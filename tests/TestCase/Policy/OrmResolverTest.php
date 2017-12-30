@@ -18,7 +18,6 @@ use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
-use InvalidArgumentException;
 use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
@@ -32,7 +31,7 @@ class OrmResolverTest extends TestCase
 {
     public function testGetPolicyUnknownObject()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MissingPolicyException::class);
 
         $entity = new \stdClass();
         $resolver = new OrmResolver('TestApp');

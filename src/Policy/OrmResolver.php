@@ -48,9 +48,8 @@ class OrmResolver implements ResolverInterface
      *
      * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\EntityInterface $resource The resource.
      * @return object
-     * @throws \InvalidArgumentException When a resource is not an ORM object.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
-     *   resource has not been defined.
+     *   resource has not been defined or cannot be resolved.
      */
     public function getPolicy($resource)
     {
@@ -60,8 +59,8 @@ class OrmResolver implements ResolverInterface
         if ($resource instanceof RepositoryInterface) {
             return $this->getRepositoryPolicy($resource);
         }
-        $type = gettype($resource);
-        throw new InvalidArgumentException("Unable to resolve a policy class for '$type'.");
+        $name = is_object($resource) ? get_class($resource) : gettype($resource);
+        throw new MissingPolicyException([$name]);
     }
 
     /**
