@@ -35,6 +35,15 @@ interface IdentityInterface extends ArrayAccess
     public function can($action, $resource);
 
     /**
+     * Apply authorization scope conditions/restrictions.
+     *
+     * @param string $action The action/operation being performed.
+     * @param mixed $resource The resource being operated on.
+     * @return mixed The modified resource.
+     */
+    public function applyScope($action, $resource);
+
+    /**
      * Get the decorated identity
      *
      * If the decorated identity implements `getOriginalData()`

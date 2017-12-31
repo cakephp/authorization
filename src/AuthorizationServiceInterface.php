@@ -22,10 +22,28 @@ interface AuthorizationServiceInterface
     /**
      * Check whether the provided user can perform an action on a resource.
      *
+     * This method is intended to allow your application to build
+     * conditional logic around authorization checks.
+     *
      * @param \Authorization\IdentityInterface $user The user to check permissions for.
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
      * @return bool
      */
     public function can(IdentityInterface $user, $action, $resource);
+
+    /**
+     * Apply authorization scope conditions/restrictions.
+     *
+     * This method is intended for applying authorization to objects that
+     * are then used to access authorized collections of objects. The typical
+     * use case for scopes are restricting a query to only return records
+     * visible to the current user.
+     *
+     * @param \Authorization\IdentityInterface $user The user to check permissions for.
+     * @param string $action The action/operation being performed.
+     * @param mixed $resource The resource being operated on.
+     * @return mixed The modified resource.
+     */
+    public function applyScope(IdentityInterface $user, $action, $resource);
 }

@@ -42,6 +42,40 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function testApplyScope()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class
+        ]);
+        $service = new AuthorizationService($resolver);
+        $user = new IdentityDecorator($service, [
+            'id' => 9,
+            'role' => 'admin'
+        ]);
+
+        $article = new Article();
+        $result = $service->applyScope($user, 'index', $article);
+        $this->assertSame($article, $result);
+        $this->assertSame($article->user_id, $user->getOriginalData()['id']);
+    }
+
+    public function testApplyScopeMethodMissing()
+    {
+        $this->expectException(MissingMethodException::class);
+
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class
+        ]);
+        $service = new AuthorizationService($resolver);
+        $user = new IdentityDecorator($service, [
+            'id' => 9,
+            'role' => 'admin'
+        ]);
+
+        $article = new Article();
+        $result = $service->applyScope($user, 'nope', $article);
+    }
+
     public function testBeforeFalse()
     {
         $entity = new Article();

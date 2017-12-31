@@ -55,10 +55,21 @@ class AuthorizationService implements AuthorizationServiceInterface
             }
         }
 
-        $handler = $this->getHandler($policy, $action);
+        $handler = $this->getCanHandler($policy, $action);
         $result = $handler($user, $resource);
 
         return $result === true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function applyScope(IdentityInterface $user, $action, $resource)
+    {
+        $policy = $this->resolver->getPolicy($resource);
+        $handler = $this->getScopeHandler($policy, $action);
+
+        return $handler($user, $resource);
     }
 
     /**
@@ -69,9 +80,28 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @return callable
      * @throws \Authorization\Policy\Exception\MissingMethodException
      */
-    protected function getHandler($policy, $action)
+    protected function getCanHandler($policy, $action)
     {
         $method = 'can' . ucfirst($action);
+
+        if (!method_exists($policy, $method)) {
+            throw new MissingMethodException([$method, $action, get_class($policy)]);
+        }
+
+        return [$policy, $method];
+    }
+
+    /**
+     * Returns a policy scope action handler.
+     *
+     * @param mixed $policy Policy object.
+     * @param string $action Action name.
+     * @return callable
+     * @throws \Authorization\Policy\Exception\MissingMethodException
+     */
+    protected function getScopeHandler($policy, $action)
+    {
+        $method = 'scope' . ucfirst($action);
 
         if (!method_exists($policy, $method)) {
             throw new MissingMethodException([$method, $action, get_class($policy)]);
