@@ -38,6 +38,8 @@ class AuthorizationComponent extends Component
     protected $_defaultConfig = [
         'identityAttribute' => 'identity',
         'forbiddenException' => ForbiddenException::class,
+        'authorizationEvent' => 'Controller.initialize',
+        'authorizeModel' => true,
     ];
 
     /**
@@ -85,5 +87,31 @@ class AuthorizationComponent extends Component
         }
 
         return $identity;
+    }
+
+    /**
+     * Model authorization handler.
+     *
+     * @return void
+     */
+    public function authorizeModel()
+    {
+        $this->authorize($this->getController()->loadModel());
+    }
+
+    /**
+     * Returns model authorization handler if model authorization is enabled.
+     *
+     * @return array
+     */
+    public function implementedEvents()
+    {
+        if (!$this->getConfig('authorizeModel')) {
+            return [];
+        }
+
+        return [
+            $this->getConfig('authorizationEvent') => 'authorizeModel'
+        ];
     }
 }

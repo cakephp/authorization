@@ -17,7 +17,6 @@ namespace Authorization\Test\TestCase\Controller\Component;
 use Authorization\AuthorizationService;
 use Authorization\Controller\Component\AuthorizationComponent;
 use Authorization\IdentityDecorator;
-use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
 use BadMethodCallException;
@@ -103,5 +102,51 @@ class AuthorizationComponentTest extends TestCase
 
         $article = new Article(['user_id' => 99]);
         $this->Auth->authorize($article);
+    }
+
+    public function testAuthorizeModelSuccess()
+    {
+        $service = new AuthorizationService(new OrmResolver());
+        $identity = new IdentityDecorator($service, ['can_edit' => true]);
+        $this->Controller->request = $this->Controller->request
+            ->withAttribute('identity', $identity);
+
+        $this->Auth->authorizeModel();
+        $this->assertTrue(true);
+    }
+
+    public function testAuthorizeModelFailure()
+    {
+        $service = new AuthorizationService(new OrmResolver());
+        $identity = new IdentityDecorator($service, ['can_edit' => false]);
+        $this->Controller->request = $this->Controller->request
+            ->withAttribute('identity', $identity);
+
+        $this->expectException(ForbiddenException::class);
+        $this->Auth->authorizeModel();
+    }
+
+    public function testImplementedEvents()
+    {
+        $events = $this->Auth->implementedEvents();
+        $this->assertEquals([
+            'Controller.initialize' => 'authorizeModel'
+        ], $events);
+    }
+
+    public function testImplementedCustom()
+    {
+        $this->Auth->setConfig('authorizationEvent', 'Controller.startup');
+        $events = $this->Auth->implementedEvents();
+        $this->assertEquals([
+            'Controller.startup' => 'authorizeModel'
+        ], $events);
+    }
+
+    public function testImplementedDisabled()
+    {
+        $this->Auth->setConfig('authorizeModel', false);
+        $events = $this->Auth->implementedEvents();
+        $this->assertEquals([], $events);
     }
 }
