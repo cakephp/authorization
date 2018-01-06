@@ -9,7 +9,7 @@ class ArticlePolicy
     /**
      * Create articles if you're an admin or author
      *
-     * @param array $user
+     * @param \Authorization\IdentityInterface $user
      * @return bool
      */
     public function canAdd($user)
@@ -29,7 +29,7 @@ class ArticlePolicy
     /**
      * Delete only own articles or any if you're an admin
      *
-     * @param array $user
+     * @param \Authorization\IdentityInterface $user
      * @param Article $article
      * @return bool
      */
@@ -40,5 +40,19 @@ class ArticlePolicy
         }
 
         return $user['id'] === $article->get('user_id');
+    }
+
+    /**
+     * Scope method for index
+     *
+     * @param \Authorization\IdentityInterface $user
+     * @param Article $article
+     * @return bool
+     */
+    public function scopeIndex($user, Article $article)
+    {
+        $article->user_id = $user->getOriginalData()['id'];
+
+        return $article;
     }
 }
