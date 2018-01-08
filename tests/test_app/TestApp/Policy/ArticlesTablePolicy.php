@@ -9,4 +9,9 @@ class ArticlesTablePolicy
     {
         return $identity['can_edit'];
     }
+
+    public function canModify(IdentityInterface $identity)
+    {
+        return $identity['can_edit'];
+    }
 }
