@@ -17,6 +17,7 @@ namespace Authorization\Policy;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\QueryInterface;
 use Cake\Datasource\RepositoryInterface;
 use InvalidArgumentException;
 
@@ -58,6 +59,9 @@ class OrmResolver implements ResolverInterface
         }
         if ($resource instanceof RepositoryInterface) {
             return $this->getRepositoryPolicy($resource);
+        }
+        if ($resource instanceof QueryInterface) {
+            return $this->getRepositoryPolicy($resource->repository());
         }
         $name = is_object($resource) ? get_class($resource) : gettype($resource);
         throw new MissingPolicyException([$name]);

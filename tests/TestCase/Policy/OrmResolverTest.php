@@ -17,6 +17,7 @@ namespace Authorization\Test\TestCase\Policy;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
@@ -29,6 +30,8 @@ use TestPlugin\Policy\TagPolicy;
 
 class OrmResolverTest extends TestCase
 {
+    public $fixtures = ['core.articles'];
+
     public function testGetPolicyUnknownObject()
     {
         $this->expectException(MissingPolicyException::class);
@@ -76,9 +79,17 @@ class OrmResolverTest extends TestCase
 
     public function testGetPolicyDefinedTable()
     {
-        $articles = new ArticlesTable();
+        $articles = TableRegistry::get('Articles');
         $resolver = new OrmResolver('TestApp');
         $policy = $resolver->getPolicy($articles);
+        $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
+    }
+
+    public function testGetPolicyQueryForDefinedTable()
+    {
+        $articles = TableRegistry::get('Articles');
+        $resolver = new OrmResolver('TestApp');
+        $policy = $resolver->getPolicy($articles->find());
         $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
     }
 
