@@ -111,8 +111,8 @@ class AuthorizationComponentTest extends TestCase
         $this->Controller->request = $this->Controller->request
             ->withAttribute('identity', $identity);
 
-        $this->Auth->authorizeModel();
-        $this->assertTrue(true);
+        $result = $this->Auth->authorizeModel();
+        $this->assertNull($result);
     }
 
     public function testAuthorizeModelFailure()
