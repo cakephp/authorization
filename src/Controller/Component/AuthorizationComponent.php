@@ -19,6 +19,7 @@ use Cake\Controller\Component;
 use Cake\Network\Exception\ForbiddenException;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
+use UnexpectedValueException;
 
 /**
  * Authorization Component
@@ -38,6 +39,9 @@ class AuthorizationComponent extends Component
     protected $_defaultConfig = [
         'identityAttribute' => 'identity',
         'forbiddenException' => ForbiddenException::class,
+        'authorizationEvent' => 'Controller.initialize',
+        'authorizeModel' => true,
+        'actionMap' => []
     ];
 
     /**
@@ -85,5 +89,63 @@ class AuthorizationComponent extends Component
         }
 
         return $identity;
+    }
+
+    /**
+     * Model authorization handler.
+     *
+     * @return void
+     */
+    public function authorizeModel()
+    {
+        $action = $this->getController()->request->getParam('action');
+        $name = $this->getActionName($action);
+
+        if ($name !== null) {
+            $this->authorize($this->getController()->loadModel(), $name);
+        }
+    }
+
+    /**
+     * Returns mapped action name.
+     * If mapped action name is `false`, null is returned.
+     *
+     * @param string $action The action to check authorization for.
+     * @return string|null
+     * @throws UnexpectedValueException When invalid action type encountered.
+     */
+    protected function getActionName($action)
+    {
+        $name = $this->getConfig('actionMap.' . $action);
+
+        if ($name === null) {
+            return $action;
+        }
+        if (is_bool($name)) {
+            return $name ? $action : null;
+        }
+        if (!is_string($name)) {
+            $type = is_object($name) ? get_class($name) : gettype($name);
+            $message = sprintf('Invalid action type for `%s`. Expected `string`, `null` or `bool`, got `%s`.', $action, $type);
+            throw new UnexpectedValueException($message);
+        }
+
+        return $name;
+    }
+
+    /**
+     * Returns model authorization handler if model authorization is enabled.
+     *
+     * @return array
+     */
+    public function implementedEvents()
+    {
+        if (!$this->getConfig('authorizeModel')) {
+            return [];
+        }
+
+        return [
+            $this->getConfig('authorizationEvent') => 'authorizeModel'
+        ];
     }
 }
