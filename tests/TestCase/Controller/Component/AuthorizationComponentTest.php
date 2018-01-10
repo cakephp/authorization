@@ -113,7 +113,7 @@ class AuthorizationComponentTest extends TestCase
         $query->expects($this->once())
             ->method('where')
             ->with([
-                'user_ID' => 1
+                'identity_id' => 1
             ])
             ->willReturn($query);
 

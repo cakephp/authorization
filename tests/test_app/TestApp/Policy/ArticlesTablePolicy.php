@@ -26,7 +26,7 @@ class ArticlesTablePolicy
     public function scopeModify(IdentityInterface $user, QueryInterface $query)
     {
         return $query->where([
-            'user_ID' => $user['id']
+            'identity_id' => $user['id']
         ]);
     }
 }
