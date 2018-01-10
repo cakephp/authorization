@@ -69,6 +69,27 @@ class AuthorizationComponent extends Component
     }
 
     /**
+     * Applies a scope for $resource.
+     *
+     * If $action is left undefined, the current controller action will
+     * be used.
+     *
+     * @param object $resource The resource to apply a scope to.
+     * @param string|null $action The action to apply a scope for.
+     * @return object
+     */
+    public function applyScope($resource, $action = null)
+    {
+        $request = $this->getController()->request;
+        if ($action === null) {
+            $action = $request->getParam('action');
+        }
+        $identity = $this->getIdentity($request);
+
+        return $identity->applyScope($action, $resource);
+    }
+
+    /**
      * Get the identity from a request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request

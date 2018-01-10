@@ -23,6 +23,7 @@ use Authorization\Policy\OrmResolver;
 use BadMethodCallException;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
+use Cake\Datasource\QueryInterface;
 use Cake\Http\ServerRequest;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\TestSuite\TestCase;
@@ -80,6 +81,46 @@ class AuthorizationComponentTest extends TestCase
     {
         $article = new Article(['user_id' => 1]);
         $this->assertNull($this->Auth->authorize($article));
+    }
+
+    public function testApplyScopeImplictAction()
+    {
+        $articles = new ArticlesTable();
+        $query = $this->createMock(QueryInterface::class);
+        $query->method('repository')
+            ->willReturn($articles);
+
+        $query->expects($this->once())
+            ->method('where')
+            ->with([
+                'user_id' => 1
+            ])
+            ->willReturn($query);
+
+        $result = $this->Auth->applyScope($query);
+
+        $this->assertInstanceOf(QueryInterface::class, $result);
+        $this->assertSame($query, $result);
+    }
+
+    public function testApplyScopExplictAction()
+    {
+        $articles = new ArticlesTable();
+        $query = $this->createMock(QueryInterface::class);
+        $query->method('repository')
+            ->willReturn($articles);
+
+        $query->expects($this->once())
+            ->method('where')
+            ->with([
+                'identity_id' => 1
+            ])
+            ->willReturn($query);
+
+        $result = $this->Auth->applyScope($query, 'modify');
+
+        $this->assertInstanceOf(QueryInterface::class, $result);
+        $this->assertSame($query, $result);
     }
 
     public function testAuthorizeSuccessCheckExplictAction()
