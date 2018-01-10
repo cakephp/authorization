@@ -31,14 +31,14 @@ class OrmResolver implements ResolverInterface
      *
      * @var string
      */
-    protected $appNamespace;
+    protected $appNamespace = 'App';
 
     /**
      * Plugin name overrides.
      *
      * @var array<string, string>
      */
-    protected $overrides;
+    protected $overrides = [];
 
     /**
      * Constructor
