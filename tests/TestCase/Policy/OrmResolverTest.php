@@ -19,8 +19,8 @@ use Authorization\Policy\OrmResolver;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use OverridePlugin\Policy\TagPolicy as OverrideTagPolicy;
 use TestApp\Model\Entity\Article;
-use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\ArticlesTablePolicy;
 use TestApp\Policy\TestPlugin\BookmarkPolicy;
@@ -65,6 +65,19 @@ class OrmResolverTest extends TestCase
         $policy = $resolver->getPolicy($bookmark);
         $this->assertInstanceOf(BookmarkPolicy::class, $policy);
         $this->assertContains('TestApp\Policy\TestPlugin', BookmarkPolicy::class, 'class has moved');
+    }
+
+    public function testGetPolicyDefinedPluginEntityPluginOveride()
+    {
+        $bookmark = new Tag();
+        $resolver = new OrmResolver('TestApp', [
+            'TestPlugin' => 'OverridePlugin'
+        ]);
+        $policy = $resolver->getPolicy($bookmark);
+        $this->assertInstanceOf(OverrideTagPolicy::class, $policy);
+        $this->assertContains('OverridePlugin\Policy', OverrideTagPolicy::class, 'class has moved');
+        $this->assertNotContains('TestApp', OverrideTagPolicy::class, 'class has moved');
+        $this->assertNotContains('TestPlugin', OverrideTagPolicy::class, 'class has moved');
     }
 
     public function testGetPolicyDefinedPluginEntity()

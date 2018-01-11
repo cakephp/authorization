@@ -19,11 +19,10 @@ use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\RepositoryInterface;
-use InvalidArgumentException;
 
 /**
  * Policy resolver that applies conventions based policy classes
- * for CakePHP ORM Tables and Entities.
+ * for CakePHP ORM Tables, Entities and Queries.
  */
 class OrmResolver implements ResolverInterface
 {
@@ -32,22 +31,31 @@ class OrmResolver implements ResolverInterface
      *
      * @var string
      */
-    protected $appNamespace;
+    protected $appNamespace = 'App';
+
+    /**
+     * Plugin name overrides.
+     *
+     * @var array<string, string>
+     */
+    protected $overrides = [];
 
     /**
      * Constructor
      *
      * @param string $appNamespace The application namespace
+     * @param array<string, string> $overrides A list of plugin name overrides.
      */
-    public function __construct($appNamespace = 'App')
+    public function __construct($appNamespace = 'App', array $overrides = [])
     {
         $this->appNamespace = $appNamespace;
+        $this->overrides = $overrides;
     }
 
     /**
-     * Get a policy for an ORM Table or Entity.
+     * Get a policy for an ORM Table, Entity or Query.
      *
-     * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\EntityInterface $resource The resource.
+     * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\EntityInterface|\Cake\Datasource\QueryInterface $resource The resource.
      * @return object
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined or cannot be resolved.
@@ -111,6 +119,7 @@ class OrmResolver implements ResolverInterface
      */
     protected function findPolicy($class, $name, $namespace)
     {
+        $namespace = $this->getNamespace($namespace);
         $policyClass = false;
 
         // plugin entities can have application overides defined.
@@ -128,5 +137,20 @@ class OrmResolver implements ResolverInterface
         }
 
         return new $policyClass();
+    }
+
+    /**
+     * Returns plugin namespace override if exists.
+     *
+     * @param string $namespace The namespace to find the policy in.
+     * @return string
+     */
+    protected function getNamespace($namespace)
+    {
+        if (isset($this->overrides[$namespace])) {
+            return $this->overrides[$namespace];
+        }
+
+        return $namespace;
     }
 }
