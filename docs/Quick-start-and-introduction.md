@@ -16,4 +16,4 @@ Plugin::load('Authorization');
 
 With the plugin installed, you can:
 
-* [Create a Policy](docs/Policies.md)
+* [Create a Policy](/docs/Policies.md)
