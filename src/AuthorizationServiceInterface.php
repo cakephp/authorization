@@ -46,4 +46,12 @@ interface AuthorizationServiceInterface
      * @return mixed The modified resource.
      */
     public function applyScope(IdentityInterface $user, $action, $resource);
+
+    /**
+     * Return a boolean based on whether or not this object
+     * has had an authorization operation performed.
+     *
+     * @return bool
+     */
+    public function authorizationChecked();
 }
