@@ -15,6 +15,7 @@
 namespace Authorization\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
+use Authorization\Exception\AuthorizationRequiredException;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Cake\Core\HttpApplicationInterface;
@@ -36,13 +37,21 @@ class AuthorizationMiddleware
     /**
      * Default config.
      *
-     * - `identityDecorator`: Identity decorator class name or a callable.
+     * - `identityDecorator` Identity decorator class name or a callable.
+     *   Defaults to IdentityDecorator
+     * - `identityAttribute` Attribute name the identity is stored under.
+     *   Defaults to 'identity'
+     * - `requireAuthorizationCheck` When true the middleware will raise an exception
+     *   if no authorization checks were done. This aids in ensuring that all actions
+     *   check authorization. It is intended as a development aid and not to be relied upon
+     *   in production. Defaults to `true`.
      *
      * @var array
      */
     protected $_defaultConfig = [
         'identityDecorator' => IdentityDecorator::class,
-        'identityAttribute' => 'identity'
+        'identityAttribute' => 'identity',
+        'requireAuthorizationCheck' => true
     ];
 
     /**
@@ -101,8 +110,12 @@ class AuthorizationMiddleware
         }
 
         $request = $request->withAttribute($attribute, $identity);
+        $response = $next($request, $response);
+        if ($this->getConfig('requireAuthorizationCheck') && !$service->authorizationChecked()) {
+            throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
+        }
 
-        return $next($request, $response);
+        return $response;
     }
 
     /**

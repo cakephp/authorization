@@ -42,6 +42,39 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function testAuthorizationCheckedWithCan()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class
+        ]);
+        $service = new AuthorizationService($resolver);
+        $this->assertFalse($service->authorizationChecked());
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin'
+        ]);
+
+        $service->can($user, 'add', new Article);
+        $this->assertTrue($service->authorizationChecked());
+    }
+
+    public function testAuthorizationCheckedWithApplyScope()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class
+        ]);
+        $service = new AuthorizationService($resolver);
+        $this->assertFalse($service->authorizationChecked());
+
+        $user = new IdentityDecorator($service, [
+            'id' => 9,
+            'role' => 'admin'
+        ]);
+
+        $service->applyScope($user, 'index', new Article);
+        $this->assertTrue($service->authorizationChecked());
+    }
+
     public function testApplyScope()
     {
         $resolver = new MapResolver([

@@ -15,6 +15,7 @@
 namespace Authorization\Test\TestCase\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
+use Authorization\Exception\AuthorizationRequiredException;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
@@ -40,13 +41,36 @@ class AuthorizationMiddlewareTest extends TestCase
             return $request;
         };
 
-        $middleware = new AuthorizationMiddleware($service);
+        $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => false]);
 
         $result = $middleware($request, $response, $next);
 
         $this->assertInstanceOf(RequestInterface::class, $result);
         $this->assertSame($service, $result->getAttribute('authorization'));
         $this->assertNull($result->getAttribute('identity'));
+    }
+
+    public function testInvokeAuthorizationRequiredError()
+    {
+        $this->expectException(AuthorizationRequiredException::class);
+
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $service->expects($this->once())
+            ->method('authorizationChecked')
+            ->will($this->returnValue(false));
+
+        $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
+        $response = new Response();
+        $next = function ($request) {
+            // Don't call any auth methods.
+            return $request;
+        };
+
+        $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => true]);
+        $result = $middleware($request, $response, $next);
+
+        $this->assertInstanceOf(RequestInterface::class, $result);
+        $this->assertSame($service, $result->getAttribute('authorization'));
     }
 
     public function testInvokeApp()
@@ -71,7 +95,7 @@ class AuthorizationMiddlewareTest extends TestCase
             return $request;
         };
 
-        $middleware = new AuthorizationMiddleware($application);
+        $middleware = new AuthorizationMiddleware($application, ['requireAuthorizationCheck' => false]);
 
         $result = $middleware($request, $response, $next);
 
@@ -94,7 +118,7 @@ class AuthorizationMiddlewareTest extends TestCase
             return $request;
         };
 
-        $middleware = new AuthorizationMiddleware($application);
+        $middleware = new AuthorizationMiddleware($application, ['requireAuthorizationCheck' => false]);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Method `authorization` has not been defined in your `Application` class.');
@@ -126,7 +150,7 @@ class AuthorizationMiddlewareTest extends TestCase
             return $request;
         };
 
-        $middleware = new AuthorizationMiddleware($application);
+        $middleware = new AuthorizationMiddleware($application, ['requireAuthorizationCheck' => false]);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
@@ -169,7 +193,7 @@ class AuthorizationMiddlewareTest extends TestCase
             return $request;
         };
 
-        $middleware = new AuthorizationMiddleware($service);
+        $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => false]);
 
         $result = $middleware($request, $response, $next);
 
@@ -192,7 +216,7 @@ class AuthorizationMiddlewareTest extends TestCase
             return $request;
         };
 
-        $middleware = new AuthorizationMiddleware($service);
+        $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => false]);
 
         $result = $middleware($request, $response, $next);
 
@@ -219,7 +243,8 @@ class AuthorizationMiddlewareTest extends TestCase
             'identityDecorator' => function ($service, $identity) {
                 return new IdentityDecorator($service, $identity);
             },
-            'identityAttribute' => 'user'
+            'identityAttribute' => 'user',
+            'requireAuthorizationCheck' => false,
         ]);
 
         $result = $middleware($request, $response, $next);
@@ -244,7 +269,8 @@ class AuthorizationMiddlewareTest extends TestCase
         };
 
         $middleware = new AuthorizationMiddleware($service, [
-            'identityDecorator' => 'stdClass'
+            'identityDecorator' => stdClass::class,
+            'requireAuthorizationCheck' => false,
         ]);
 
         $this->expectException(RuntimeException::class);

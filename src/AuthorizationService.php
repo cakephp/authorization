@@ -29,6 +29,13 @@ class AuthorizationService implements AuthorizationServiceInterface
     protected $resolver;
 
     /**
+     * Track whether or not authorization was checked.
+     *
+     * @var bool
+     */
+    protected $authorizationChecked = false;
+
+    /**
      *
      * @param \Authorization\Policy\ResolverInterface $resolver Authorization policy resolver.
      */
@@ -42,6 +49,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      */
     public function can(IdentityInterface $user, $action, $resource)
     {
+        $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
 
         if ($policy instanceof BeforePolicyInterface) {
@@ -66,6 +74,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      */
     public function applyScope(IdentityInterface $user, $action, $resource)
     {
+        $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
         $handler = $this->getScopeHandler($policy, $action);
 
@@ -108,5 +117,13 @@ class AuthorizationService implements AuthorizationServiceInterface
         }
 
         return [$policy, $method];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function authorizationChecked()
+    {
+        return $this->authorizationChecked;
     }
 }
