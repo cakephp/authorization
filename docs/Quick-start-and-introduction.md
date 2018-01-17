@@ -20,5 +20,5 @@ Plugin::load('Authorization');
 With the plugin installed, you can:
 
 * [Create a Policy](/docs/Policies.md)
-* [Apply the Middleware](/docs/Middleware-and-Component.md)
+* [Use the Middleware & Component](/docs/Middleware-and-Component.md)
 * [Check authorization](/docs/Checking-Authorization.md)

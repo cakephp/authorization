@@ -1,4 +1,4 @@
-# Middleware & Component
+# Authorization Middleware
 
 Authorization is applied to your application as a middleware. The
 `AuthorizationMiddleware` handles the following responsibilities:
@@ -14,8 +14,8 @@ the following:
 // Import the class.
 use Authorization\Middleware\AuthorizationMiddleware;
 
-// inside your middleware hook.
-$middleware->add(new AuthorizationMiddleware($this));
+// inside your application's middleware hook.
+$middlewareStack->add(new AuthorizationMiddleware($this));
 ```
 
 By passing your application instance into the middlware, it can invoke the
@@ -44,7 +44,23 @@ The authorization service requires a policy resolver. See the
 [Policies](./Policies.md) documentation on what resolvers are available and how
 to use them.
 
-## AuthorizationComponent
+### Ensuring Authorization is Applied
+
+By default the `AuthorizationMiddleware` will ensure that each request
+containing an `identity` also has authorization checked/bypassed. If
+authorization is not checked an `AuthorizationRequiredException` will be raised.
+This exception is raised *after* your other middleware/controller actions are
+complete, so you cannot rely on it to prevent unauthorized access, however it is
+a helpful aid during development/testing. You can disable this behavior via an
+option:
+
+```php
+$middlewareStack->add(new AuthorizationMiddleware($this, [
+    'requireAuthorizationCheck' => false
+]));
+```
+
+# AuthorizationComponent
 
 The `AuthorizationComponent` exposes a few conventions based helper methods for
 checking permissions from your controllers. It abstracts getting the user and
@@ -61,7 +77,37 @@ public function initialize()
 }
 ```
 
-Then in your controller actions or callback methods you can check authorization:
+### Automatic authorization checks
+
+By default `AuthorizationComponent` will attempt to automatically apply
+authorization based on the controller's default table class and current action
+name. You can disable this behavior entirely using the `authorizeModel` option:
+
+```php
+$this->loadComponent('Authorization.Authorization', [
+    'authorizeModel' => false
+];
+```
+
+If you want to apply automatic authorization to all but a subset of actions
+use the `actionMap` option:
+
+```php
+$this->loadComponent('Authorization.Authorization', [
+    'actionMap' => [
+        'update' => false,
+        'delete' => false,
+    ]
+];
+```
+
+Any action not set to `false` in the `actionMap` will have authorization checked
+automatically.
+
+### Component Usage
+
+In your controller actions or callback methods you can check authorization using
+the component:
 
 ```php
 // In the Articles Controller.
@@ -85,5 +131,5 @@ $this->Authorization->authorize($article, 'update');
 You can also apply policy scopes using the component:
 
 ```php
-$query = $this->Authorization->authorizeScope($this->Articles->find());
+$query = $this->Authorization->applyScope($this->Articles->find());
 ```

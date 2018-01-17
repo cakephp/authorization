@@ -39,3 +39,4 @@ Plugin::load('Authorization');
  * [Quick Start and Introduction to the basics](docs/Quick-start-and-introduction.md)
  * [Policies](docs/Policies.md)
  * [Middleware and Component](docs/Middleware-and-Component.md)
+ * [Checking Authorization](docs/Checking-Authorization.md)
