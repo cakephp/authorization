@@ -104,18 +104,3 @@ Before hooks are expected to one of 3 return values:
 - `false` The user is not allowed to proceed with the action.
 - `null` The before hook did not make a decision, and the authorization method
   will be invoked.
-
-
-# Policy Resolvers
-
-Mapping resource objects to their respective policy classes is a behavior
-handled by a policy resolver. We provide a few resolvers to get you started, but
-you can create your own resolver by implementing the
-`Authorization\Policy\ResolverInterface`. The built-in resolvers are:
-
-* `MapResolver` allows you to map resource names to their policy class names, or
-  to objects and callables.
-* `OrmResolver` applies conventions based policy resolution for common ORM
-  objects.
-* `ResolverCollection` allows you to aggregate multiple resolvers together,
-  searching them sequentially.
