@@ -80,7 +80,7 @@ public function initialize()
 ### Automatic authorization checks
 
 By default `AuthorizationComponent` will attempt to automatically apply
-authorization based on the controller's default table class and current action
+authorization based on the controller's default model class and current action
 name. You can disable this behavior entirely using the `authorizeModel` option:
 
 ```php
@@ -89,13 +89,13 @@ $this->loadComponent('Authorization.Authorization', [
 ];
 ```
 
-If you want to apply automatic authorization to all but a subset of actions
-use the `actionMap` option:
+If you want to exclude some actions from automatic authorization, or map actions to
+different authorization methods use the `actionMap` option:
 
 ```php
 $this->loadComponent('Authorization.Authorization', [
     'actionMap' => [
-        'update' => false,
+        'update' => 'modify',
         'delete' => false,
     ]
 ];

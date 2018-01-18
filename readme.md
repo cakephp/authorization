@@ -13,7 +13,7 @@ This plugin is for CakePHP 3.5+.
 
 ## Authorization not Authentication
 
-This plugin is intends to provide a framework around authorization and access
+This plugin intends to provide a framework around authorization and access
 control. Authentication is a [separate 
 concern](https://en.wikipedia.org/wiki/Separation_of_concerns) that has been
 packaged into a separate [authentication plugin](https://github.com/cakephp/authentication).

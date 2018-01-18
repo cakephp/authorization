@@ -10,7 +10,7 @@ authorization. The middleware will wrap your request `identity` with an
 $user = $this->request->getAttribute('identity');
 
 // Check authorization on $article
-if ($user->can($article, 'delete')) {
+if ($user->can('delete', $article)) {
     // Do delete operation
 }
 ```
@@ -22,7 +22,7 @@ You can also use the `identity` to apply scopes:
 $user = $this->request->getAttribute('identity');
 
 // Apply permission conditions to a query
-$query = $user->applyScope($query, 'index');
+$query = $user->applyScope('index', $query);
 ```
 
 The `IdentityDecorator` will forward all method calls, array access, and
