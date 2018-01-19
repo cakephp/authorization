@@ -17,7 +17,7 @@ you can create your own resolver by implementing the
 `MapResolver` lets you map resource class names to policy classnames, policy
 objects, or factory callables:
 
-``php
+```php
 use Authorization\Policy\MapResolver;
 
 $map = new MapResolver();
