@@ -6,14 +6,38 @@
 
 Authorization stack for the CakePHP framework.
 
-This plugin is for CakePHP 3.6+.
+This plugin is for CakePHP 3.5+.
 
-**This is work in progress! Don't use it in a live app!**
+**:warning: This is still under active development and APIs may change 
+  without notice :warning:**
 
-## Authorization is not Authentication
+## Authorization not Authentication
 
-This plugin intentionally **does not** handle authentication. It was [decoupled](https://en.wikipedia.org/wiki/Coupling_(computer_programming)) from authentication on purpose for a clear [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns). See also [Computer access control](https://en.wikipedia.org/wiki/Computer_access_control). This plugin handles only *authorization*. For *authentication* use the [CakePHP Authentication plugin](https://github.com/cakephp/authentication).
+This plugin intends to provide a framework around authorization and access
+control. Authentication is a [separate 
+concern](https://en.wikipedia.org/wiki/Separation_of_concerns) that has been
+packaged into a separate [authentication plugin](https://github.com/cakephp/authentication).
+
+## Installation
+
+You can install this plugin into your CakePHP application using 
+[composer](http://getcomposer.org):
+
+```
+php composer.phar require cakephp/authorization
+```
+
+Load the plugin by adding the following statement in your project's
+`config/bootstrap.php`:
+
+```php
+Plugin::load('Authorization');
+```
 
 ## Documentation
 
  * [Quick Start and Introduction to the basics](docs/Quick-start-and-introduction.md)
+ * [Policies](docs/Policies.md)
+ * [Policy Resolver](docs/Policy-Resolvers.md)
+ * [Middleware and Component](docs/Middleware-and-Component.md)
+ * [Checking Authorization](docs/Checking-Authorization.md)

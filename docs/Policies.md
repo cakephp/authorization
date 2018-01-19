@@ -54,22 +54,53 @@ public function canUpdate(IdentityInterface $user, Article $article)
 Policy methods must return `true` to indicate success. All other values will be
 interpreted as failure.
 
+### Policy Scopes
+
+In addition to policies being able to define pass/fail authorization checks,
+they can also define 'scopes'. Scope methods allow you to modify another object
+applying authorization conditions. A perfect use case for this is restricting
+a list view to the current user:
+
+```php
+namespace App\Policy;
+
+class ArticlesPolicy
+{
+    public function scopeIndex($user, $query)
+    {
+        return $query->where(['Articles.user_id' => $user->getIdentifier()]);
+    }
+}
+```
+
+
 ### Policy Preconditions
 
 In some policies you may wish to apply common checks across all operations in
 a policy. This is useful when you need to deny all actions to the provided
-resource.
+resource. To use preconditions you need to implement the `BeforePolicyInterface`
+in your policy:
 
+```php
+namespace App\Policy;
 
-# Policy Resolvers
+use Authorization\Policy\BeforePolicyInterface;
 
-Mapping resource objects to their respective policy classes is a behavior
-handled by a policy resolver. We provide a few resolvers to get you started, but
-you can create your own resolver by implementing the
-`Authorization\Policy\ResolverInterface`. The built-in resolvers are:
+class ArticlesPolicy implements BeforePolicyInterface
+{
+    public function before($user, $resource, $action)
+    {
+        if ($user->getOriginalData()->is_admin) {
+            return true;
+        }
+        // fall through
+    }
+}
+```
 
-* `MapResolver` allows you to map resource names to their policy class names.
-* `OrmResolver` applies conventions based policy resolution for common ORM
-  objects.
-* `ResolverCollection` allows you to aggregate multiple resolvers together,
-  searching them sequentially.
+Before hooks are expected to one of 3 return values:
+
+- `true` The user is allowed to proceed with the action.
+- `false` The user is not allowed to proceed with the action.
+- `null` The before hook did not make a decision, and the authorization method
+  will be invoked.
