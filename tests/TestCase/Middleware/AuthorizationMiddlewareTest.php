@@ -29,6 +29,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use stdClass;
+use TestApp\Identity;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
@@ -253,6 +254,38 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->assertSame($service, $result->getAttribute('authorization'));
         $this->assertInstanceOf(IdentityInterface::class, $result->getAttribute('user'));
         $this->assertEquals(1, $result->getAttribute('user')['id']);
+    }
+
+    public function testCustomIdentityDecorator()
+    {
+        $identity = $this->createMock(Identity::class);
+
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $request = (new ServerRequest)->withAttribute('identity', $identity);
+        $response = new Response();
+        $next = function ($request) {
+            return $request;
+        };
+
+        $middleware = new AuthorizationMiddleware($service, [
+            'identityDecorator' => function ($service, $identity) {
+                $identity->setService($service);
+
+                return $identity;
+            },
+            'requireAuthorizationCheck' => false,
+        ]);
+
+        $identity->expects($this->once())
+            ->method('setService')
+            ->with($service);
+
+        $result = $middleware($request, $response, $next);
+
+        $this->assertInstanceOf(RequestInterface::class, $result);
+        $this->assertSame($service, $result->getAttribute('authorization'));
+        $this->assertInstanceOf(IdentityInterface::class, $result->getAttribute('identity'));
+        $this->assertSame($identity, $result->getAttribute('identity'));
     }
 
     public function testInvalidIdentity()
