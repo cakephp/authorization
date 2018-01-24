@@ -258,7 +258,9 @@ class AuthorizationMiddlewareTest extends TestCase
 
     public function testCustomIdentityDecorator()
     {
-        $identity = $this->createMock(Identity::class);
+        $identity = new Identity([
+            'id' => 1
+        ]);
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
         $request = (new ServerRequest)->withAttribute('identity', $identity);
@@ -275,17 +277,13 @@ class AuthorizationMiddlewareTest extends TestCase
             },
             'requireAuthorizationCheck' => false,
         ]);
-
-        $identity->expects($this->once())
-            ->method('setService')
-            ->with($service);
-
         $result = $middleware($request, $response, $next);
 
         $this->assertInstanceOf(RequestInterface::class, $result);
         $this->assertSame($service, $result->getAttribute('authorization'));
         $this->assertInstanceOf(IdentityInterface::class, $result->getAttribute('identity'));
         $this->assertSame($identity, $result->getAttribute('identity'));
+        $this->assertSame($service, $result->getAttribute('identity')->getService());
     }
 
     public function testInvalidIdentity()
