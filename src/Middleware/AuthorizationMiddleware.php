@@ -105,9 +105,7 @@ class AuthorizationMiddleware
             return $next($request, $response);
         }
 
-        if (!$identity instanceof IdentityInterface) {
-            $identity = $this->buildIdentity($service, $identity);
-        }
+        $identity = $this->buildIdentity($service, $identity);
 
         $request = $request->withAttribute($attribute, $identity);
         $response = $next($request, $response);
@@ -166,7 +164,9 @@ class AuthorizationMiddleware
         if (is_callable($class)) {
             $identity = $class($service, $identity);
         } else {
-            $identity = new $class($service, $identity);
+            if (!$identity instanceof IdentityInterface) {
+                $identity = new $class($service, $identity);
+            }
         }
 
         if (!$identity instanceof IdentityInterface) {
