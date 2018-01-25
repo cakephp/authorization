@@ -14,9 +14,9 @@
  */
 namespace Authorization\Controller\Component;
 
+use Authorization\Exception\ForbiddenException;
 use Authorization\IdentityInterface;
 use Cake\Controller\Component;
-use Cake\Network\Exception\ForbiddenException;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use UnexpectedValueException;
@@ -38,7 +38,6 @@ class AuthorizationComponent extends Component
      */
     protected $_defaultConfig = [
         'identityAttribute' => 'identity',
-        'forbiddenException' => ForbiddenException::class,
         'authorizationEvent' => 'Controller.initialize',
         'authorizeModel' => true,
         'actionMap' => []
@@ -63,8 +62,7 @@ class AuthorizationComponent extends Component
         }
         $identity = $this->getIdentity($request);
         if (!$identity->can($action, $resource)) {
-            $class = $this->getConfig('forbiddenException');
-            throw new $class();
+            throw new ForbiddenException([$action, get_class($resource)]);
         }
     }
 

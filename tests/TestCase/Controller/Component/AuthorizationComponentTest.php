@@ -16,16 +16,15 @@ namespace Authorization\Test\TestCase\Controller\Component;
 
 use Authorization\AuthorizationService;
 use Authorization\Controller\Component\AuthorizationComponent;
+use Authorization\Exception\ForbiddenException;
 use Authorization\IdentityDecorator;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
-use BadMethodCallException;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Datasource\QueryInterface;
 use Cake\Http\ServerRequest;
-use Cake\Network\Exception\ForbiddenException;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use stdClass;
@@ -141,15 +140,6 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->authorize($article);
     }
 
-    public function testAuthorizeCustomException()
-    {
-        $this->expectException(BadMethodCallException::class);
-        $this->Auth->config('forbiddenException', BadMethodCallException::class);
-
-        $article = new Article(['user_id' => 99]);
-        $this->Auth->authorize($article);
-    }
-
     public function testAuthorizeModelSuccess()
     {
         $service = new AuthorizationService(new OrmResolver());
@@ -169,6 +159,8 @@ class AuthorizationComponentTest extends TestCase
             ->withAttribute('identity', $identity);
 
         $this->expectException(ForbiddenException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage('Identity is not authorized to perform `edit` on `TestApp\Model\Table\ArticlesTable`.');
         $this->Auth->authorizeModel();
     }
 
