@@ -17,6 +17,7 @@ namespace Authorization\Controller\Component;
 use Authorization\Exception\ForbiddenException;
 use Authorization\IdentityInterface;
 use Cake\Controller\Component;
+use Cake\Http\ServerRequest;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use UnexpectedValueException;
@@ -32,6 +33,11 @@ class AuthorizationComponent extends Component
 {
 
     /**
+     * Constant for all actions config key.
+     */
+    const ALL = '*';
+
+    /**
      * Default config
      *
      * @var array
@@ -39,7 +45,9 @@ class AuthorizationComponent extends Component
     protected $_defaultConfig = [
         'identityAttribute' => 'identity',
         'authorizationEvent' => 'Controller.initialize',
-        'authorizeModel' => true,
+        'authorizeModel' => [
+            self::ALL => true,
+        ],
         'actionMap' => []
     ];
 
@@ -58,7 +66,7 @@ class AuthorizationComponent extends Component
     {
         $request = $this->getController()->request;
         if ($action === null) {
-            $action = $request->getParam('action');
+            $action = $this->getDefaultAction($request);
         }
         $identity = $this->getIdentity($request);
         if (!$identity->can($action, $resource)) {
@@ -80,7 +88,7 @@ class AuthorizationComponent extends Component
     {
         $request = $this->getController()->request;
         if ($action === null) {
-            $action = $request->getParam('action');
+            $action = $this->getDefaultAction($request);
         }
         $identity = $this->getIdentity($request);
 
@@ -118,34 +126,47 @@ class AuthorizationComponent extends Component
     public function authorizeModel()
     {
         $action = $this->getController()->request->getParam('action');
-        $name = $this->getActionName($action);
 
-        if ($name !== null) {
-            $this->authorize($this->getController()->loadModel(), $name);
+        if ($this->shouldAuthorizeAction($action, 'authorizeModel')) {
+            $this->authorize($this->getController()->loadModel());
         }
     }
 
     /**
-     * Returns mapped action name.
-     * If mapped action name is `false`, null is returned.
+     * Checks whether an action should be authorized according to the config key provided.
      *
-     * @param string $action The action to check authorization for.
-     * @return string|null
+     * @param string $action Action name.
+     * @param string $configKey Configuration key with actions.
+     * @return bool
+     */
+    protected function shouldAuthorizeAction($action, $configKey)
+    {
+        $value = $this->getConfig($configKey . '.' . $action);
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        return (bool)$this->getConfig($configKey . '.' . static::ALL);
+    }
+
+    /**
+     * Returns authorization action name for a controller action resolved from the request.
+     *
+     * @param \Cake\Http\ServerRequest $request Server request.
+     * @return string
      * @throws UnexpectedValueException When invalid action type encountered.
      */
-    protected function getActionName($action)
+    protected function getDefaultAction(ServerRequest $request)
     {
+        $action = $request->getParam('action');
         $name = $this->getConfig('actionMap.' . $action);
 
         if ($name === null) {
             return $action;
         }
-        if (is_bool($name)) {
-            return $name ? $action : null;
-        }
         if (!is_string($name)) {
             $type = is_object($name) ? get_class($name) : gettype($name);
-            $message = sprintf('Invalid action type for `%s`. Expected `string`, `null` or `bool`, got `%s`.', $action, $type);
+            $message = sprintf('Invalid action type for `%s`. Expected `string` or `null`, got `%s`.', $action, $type);
             throw new UnexpectedValueException($message);
         }
 
@@ -159,10 +180,6 @@ class AuthorizationComponent extends Component
      */
     public function implementedEvents()
     {
-        if (!$this->getConfig('authorizeModel')) {
-            return [];
-        }
-
         return [
             $this->getConfig('authorizationEvent') => 'authorizeModel'
         ];

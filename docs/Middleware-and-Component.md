@@ -88,22 +88,28 @@ public function initialize()
 
 By default `AuthorizationComponent` will attempt to automatically apply
 authorization based on the controller's default model class and current action
-name. You can disable this behavior entirely using the `authorizeModel` option:
+name. You can disable this behavior entirely or configure it for individual actions 
+using the `authorizeModel` option.
+
+
+In the following example all actions will be authorized except the `index` action:
 
 ```php
 $this->loadComponent('Authorization.Authorization', [
-    'authorizeModel' => false
+    'authorizeModel' => [
+        'index' => false,
+    ]
 ];
 ```
 
-If you want to exclude some actions from automatic authorization, or map actions to
-different authorization methods use the `actionMap` option:
+You can control default check for all actions using a *wildcard character* `*`.
+In the following example only `add` action would be authorized automatically:
 
 ```php
 $this->loadComponent('Authorization.Authorization', [
-    'actionMap' => [
-        'update' => 'modify',
-        'delete' => false,
+    'authorizeModel' => [
+        '*' => false,
+        'add' => true,
     ]
 ];
 ```
@@ -139,4 +145,15 @@ You can also apply policy scopes using the component:
 
 ```php
 $query = $this->Authorization->applyScope($this->Articles->find());
+```
+
+If you want to map actions to different authorization methods use the `actionMap` option:
+
+```php
+$this->loadComponent('Authorization.Authorization', [
+    'actionMap' => [
+        'update' => 'modify',
+        'delete' => 'remove',
+    ]
+];
 ```

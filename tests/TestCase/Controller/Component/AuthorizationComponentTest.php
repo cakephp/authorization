@@ -164,19 +164,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->authorizeModel();
     }
 
-    public function testAuthorizeModelEnabled()
-    {
-        $service = new AuthorizationService(new OrmResolver());
-        $identity = new IdentityDecorator($service, ['can_edit' => true]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
-
-        $this->Auth->setConfig('actionMap', ['edit' => true]);
-        $result = $this->Auth->authorizeModel();
-        $this->assertNull($result);
-    }
-
-    public function testAuthorizeModelDisabled()
+    public function testAuthorizeModelAllDisabled()
     {
         $policy = $this->createMock(ArticlesTablePolicy::class);
         $service = new AuthorizationService(new MapResolver([
@@ -190,7 +178,38 @@ class AuthorizationComponentTest extends TestCase
         $policy->expects($this->never())
             ->method('canEdit');
 
-        $this->Auth->setConfig('actionMap', ['edit' => false]);
+        $this->Auth->setConfig('authorizeModel', ['*' => false]);
+        $result = $this->Auth->authorizeModel();
+        $this->assertNull($result);
+    }
+
+    public function testAuthorizeModelActionEnabled()
+    {
+        $service = new AuthorizationService(new OrmResolver());
+        $identity = new IdentityDecorator($service, ['can_edit' => true]);
+        $this->Controller->request = $this->Controller->request
+            ->withAttribute('identity', $identity);
+
+        $this->Auth->setConfig('authorizeModel', ['edit' => true]);
+        $result = $this->Auth->authorizeModel();
+        $this->assertNull($result);
+    }
+
+    public function testAuthorizeModelActionDisabled()
+    {
+        $policy = $this->createMock(ArticlesTablePolicy::class);
+        $service = new AuthorizationService(new MapResolver([
+            ArticlesTable::class => $policy
+        ]));
+
+        $identity = new IdentityDecorator($service, ['can_edit' => true]);
+        $this->Controller->request = $this->Controller->request
+            ->withAttribute('identity', $identity);
+
+        $policy->expects($this->never())
+            ->method('canEdit');
+
+        $this->Auth->setConfig('authorizeModel', ['edit' => false]);
         $result = $this->Auth->authorizeModel();
         $this->assertNull($result);
     }
@@ -228,7 +247,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->setConfig('actionMap', ['edit' => new stdClass]);
 
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Invalid action type for `edit`. Expected `string`, `null` or `bool`, got `stdClass`.');
+        $this->expectExceptionMessage('Invalid action type for `edit`. Expected `string` or `null`, got `stdClass`.');
         $this->Auth->authorizeModel();
     }
 
@@ -247,12 +266,5 @@ class AuthorizationComponentTest extends TestCase
         $this->assertEquals([
             'Controller.startup' => 'authorizeModel'
         ], $events);
-    }
-
-    public function testImplementedDisabled()
-    {
-        $this->Auth->setConfig('authorizeModel', false);
-        $events = $this->Auth->implementedEvents();
-        $this->assertEquals([], $events);
     }
 }
