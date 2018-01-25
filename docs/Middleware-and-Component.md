@@ -60,6 +60,35 @@ $middlewareStack->add(new AuthorizationMiddleware($this, [
 ]));
 ```
 
+### Handling unathorized requests
+
+By default authorization exceptions thrown by the application are rethrown by the middleware.
+You can configure handlers for unauthorized requests and perform custom action, e.g.
+redirect the user to the login page.
+
+Handlers should implement `Authorization\Middleware\Handler\HandlerInterface`,
+be suffixed with `Handler` suffix and reside under your app's or plugin's 
+`Middleware\Handler` namespace.
+
+For example `App\Middleware\Handler\CustomHandler` can be configured this way:
+
+```php
+$middlewareStack->add(new AuthorizationMiddleware($this, [
+    'unauthorizedHandler' => 'Custom'
+]));
+```
+
+You can pass the additional options to your handler's `$options` argument:
+
+```php
+$middlewareStack->add(new AuthorizationMiddleware($this, [
+    'unauthorizedHandler' => [
+        'className' => 'Custom',
+        'redirect' => true,
+    ]
+]));
+```
+
 # AuthorizationComponent
 
 The `AuthorizationComponent` exposes a few conventions based helper methods for
