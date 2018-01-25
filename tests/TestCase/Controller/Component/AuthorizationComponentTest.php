@@ -17,6 +17,7 @@ namespace Authorization\Test\TestCase\Controller\Component;
 use Authorization\AuthorizationService;
 use Authorization\Controller\Component\AuthorizationComponent;
 use Authorization\Exception\ForbiddenException;
+use Authorization\Exception\MissingIdentityException;
 use Authorization\IdentityDecorator;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\MapResolver;
@@ -54,7 +55,9 @@ class AuthorizationComponentTest extends TestCase
         $request = new ServerRequest([
             'params' => ['controller' => 'Articles', 'action' => 'edit'],
         ]);
-        $request = $request->withAttribute('identity', $identity);
+        $request = $request
+            ->withAttribute('authorization', $service)
+            ->withAttribute('identity', $identity);
 
         $this->Controller = new Controller($request);
         $this->ComponentRegistry = new ComponentRegistry($this->Controller);
@@ -140,6 +143,19 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->authorize($article);
     }
 
+    public function testAuthorizeMissingIdentity()
+    {
+        $this->expectException(MissingIdentityException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage('Identity is not present in `identity` request attribute.');
+
+        $this->Controller->request = $this->Controller->request
+            ->withoutAttribute('identity');
+
+        $article = new Article(['user_id' => 1]);
+        $this->Auth->authorize($article);
+    }
+
     public function testAuthorizeModelSuccess()
     {
         $service = new AuthorizationService(new OrmResolver());
@@ -147,7 +163,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Controller->request = $this->Controller->request
             ->withAttribute('identity', $identity);
 
-        $result = $this->Auth->authorizeModel();
+        $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
     }
 
@@ -161,7 +177,7 @@ class AuthorizationComponentTest extends TestCase
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionCode(403);
         $this->expectExceptionMessage('Identity is not authorized to perform `edit` on `TestApp\Model\Table\ArticlesTable`.');
-        $this->Auth->authorizeModel();
+        $this->Auth->authorizeAction();
     }
 
     public function testAuthorizeModelAllDisabled()
@@ -179,7 +195,7 @@ class AuthorizationComponentTest extends TestCase
             ->method('canEdit');
 
         $this->Auth->setConfig('authorizeModel', ['*' => false]);
-        $result = $this->Auth->authorizeModel();
+        $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
     }
 
@@ -191,7 +207,7 @@ class AuthorizationComponentTest extends TestCase
             ->withAttribute('identity', $identity);
 
         $this->Auth->setConfig('authorizeModel', ['edit' => true]);
-        $result = $this->Auth->authorizeModel();
+        $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
     }
 
@@ -210,7 +226,7 @@ class AuthorizationComponentTest extends TestCase
             ->method('canEdit');
 
         $this->Auth->setConfig('authorizeModel', ['edit' => false]);
-        $result = $this->Auth->authorizeModel();
+        $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
     }
 
@@ -233,7 +249,7 @@ class AuthorizationComponentTest extends TestCase
             ->willReturn(true);
 
         $this->Auth->setConfig('actionMap', ['edit' => 'modify']);
-        $result = $this->Auth->authorizeModel();
+        $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
     }
 
@@ -248,14 +264,14 @@ class AuthorizationComponentTest extends TestCase
 
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Invalid action type for `edit`. Expected `string` or `null`, got `stdClass`.');
-        $this->Auth->authorizeModel();
+        $this->Auth->authorizeAction();
     }
 
     public function testImplementedEvents()
     {
         $events = $this->Auth->implementedEvents();
         $this->assertEquals([
-            'Controller.initialize' => 'authorizeModel'
+            'Controller.initialize' => 'authorizeAction'
         ], $events);
     }
 
@@ -264,7 +280,71 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->setConfig('authorizationEvent', 'Controller.startup');
         $events = $this->Auth->implementedEvents();
         $this->assertEquals([
-            'Controller.startup' => 'authorizeModel'
+            'Controller.startup' => 'authorizeAction'
         ], $events);
+    }
+
+    public function testSkipAuthorization()
+    {
+        $service = $this->Controller->request->getAttribute('authorization');
+        $this->assertFalse($service->authorizationChecked());
+
+        $this->Auth->skipAuthorization();
+        $this->assertTrue($service->authorizationChecked());
+    }
+
+    public function testSkipAuthorizationBadService()
+    {
+        $this->Controller->request = $this->Controller->request
+            ->withAttribute('authorization', 'derp');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageRegexp('/Expected that `authorization` would be/');
+        $this->Auth->skipAuthorization();
+    }
+
+    public function testAuthorizeNotSkipped()
+    {
+        $service = $this->Controller->request->getAttribute('authorization');
+
+        $this->Auth->setConfig('authorizeModel', ['*' => false]);
+        $this->Auth->authorizeAction();
+        $this->assertFalse($service->authorizationChecked());
+    }
+
+    public function testAuthorizeAllSkipped()
+    {
+        $service = $this->Controller->request->getAttribute('authorization');
+
+        $this->Auth->setConfig('skipAuthorization', ['*' => true]);
+        $this->Auth->setConfig('authorizeModel', ['*' => false]);
+        $this->Auth->authorizeAction();
+        $this->assertTrue($service->authorizationChecked());
+    }
+
+    public function testAuthorizeActionSkipped()
+    {
+        $service = $this->Controller->request->getAttribute('authorization');
+
+        $this->Auth->setConfig('skipAuthorization', [
+            '*' => false,
+            'edit' => true,
+        ]);
+        $this->Auth->setConfig('authorizeModel', ['*' => false]);
+        $this->Auth->authorizeAction();
+        $this->assertTrue($service->authorizationChecked());
+    }
+
+    public function testAuthorizeActionNotSkipped()
+    {
+        $service = $this->Controller->request->getAttribute('authorization');
+
+        $this->Auth->setConfig('skipAuthorization', [
+            '*' => true,
+            'edit' => false,
+        ]);
+        $this->Auth->setConfig('authorizeModel', ['*' => false]);
+        $this->Auth->authorizeAction();
+        $this->assertFalse($service->authorizationChecked());
     }
 }

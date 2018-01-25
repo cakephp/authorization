@@ -114,8 +114,29 @@ $this->loadComponent('Authorization.Authorization', [
 ];
 ```
 
-Any action not set to `false` in the `actionMap` will have authorization checked
-automatically.
+You can also configure actions to skip authorization. This will make actions *public*,
+accessible to all users. By default all actions require authorization and
+`AuthorizationRequiredException` will be thrown if authorization checking is enabled.
+
+Authorization can be skipped for individual actions:
+
+```php
+$this->loadComponent('Authorization.Authorization', [
+    'skipAuthorization' => [
+        'login' => true,
+    ]
+];
+```
+
+Authorization bypass can be configured for all actions as well:
+
+```php
+$this->loadComponent('Authorization.Authorization', [
+    'skipAuthorization' => [
+        '*' => true,
+    ]
+];
+```
 
 ### Component Usage
 
@@ -132,7 +153,7 @@ public function edit($id)
 }
 ```
 
-Above we see an article being authorized for the current user. By the current
+Above we see an article being authorized for the current user. By default the current
 request's `action` is used for the policy method. You can choose
 a policy method to use if necessary:
 
@@ -156,4 +177,10 @@ $this->loadComponent('Authorization.Authorization', [
         'delete' => 'remove',
     ]
 ];
+```
+
+Authorization can also be skipped manually, e.g. from action body:
+
+```php
+$this->Authorization->skipAuthorization();
 ```
