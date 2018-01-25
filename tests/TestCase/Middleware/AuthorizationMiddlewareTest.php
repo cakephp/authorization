@@ -16,6 +16,7 @@ namespace Authorization\Test\TestCase\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\AuthorizationRequiredException;
+use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
@@ -308,5 +309,38 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->expectExceptionMessage('Invalid identity returned by decorator. `stdClass` does not implement `Authorization\IdentityInterface`.');
 
         $result = $middleware($request, $response, $next);
+    }
+
+    public function testUnauthorizedHandler()
+    {
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $request = new ServerRequest();
+        $response = new Response();
+        $next = function () {
+            throw new Exception();
+        };
+
+        $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => false]);
+
+        $this->expectException(Exception::class);
+        $middleware($request, $response, $next);
+    }
+
+    public function testUnauthorizedHandlerSuppress()
+    {
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $request = new ServerRequest();
+        $response = new Response();
+        $next = function () {
+            throw new Exception();
+        };
+
+        $middleware = new AuthorizationMiddleware($service, [
+            'requireAuthorizationCheck' => false,
+            'unauthorizedHandler' => 'Suppress',
+        ]);
+
+        $result = $middleware($request, $response, $next);
+        $this->assertSame($response, $result);
     }
 }
