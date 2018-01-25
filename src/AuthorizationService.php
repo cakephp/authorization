@@ -126,4 +126,14 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         return $this->authorizationChecked;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function skipAuthorization()
+    {
+        $this->authorizationChecked = true;
+
+        return $this;
+    }
 }

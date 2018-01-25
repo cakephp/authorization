@@ -60,6 +60,13 @@ $middlewareStack->add(new AuthorizationMiddleware($this, [
 ]));
 ```
 
+You can bypass the authorization check for individual requests by calling method
+`skipAuthorization()` on `AuthorizationService` instance:
+
+```php
+$request->getAttribute('authorization')->skipAuthorization();
+```
+
 # AuthorizationComponent
 
 The `AuthorizationComponent` exposes a few conventions based helper methods for

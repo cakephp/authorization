@@ -75,6 +75,16 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($service->authorizationChecked());
     }
 
+    public function testSkipAuthorization()
+    {
+        $resolver = new MapResolver([]);
+        $service = new AuthorizationService($resolver);
+        $this->assertFalse($service->authorizationChecked());
+
+        $service->skipAuthorization();
+        $this->assertTrue($service->authorizationChecked());
+    }
+
     public function testApplyScope()
     {
         $resolver = new MapResolver([
