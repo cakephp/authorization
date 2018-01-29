@@ -14,9 +14,12 @@
  */
 namespace Authorization\Controller\Component;
 
+use Authorization\AuthorizationServiceInterface;
+use Authorization\Exception\ForbiddenException;
+use Authorization\Exception\MissingIdentityException;
 use Authorization\IdentityInterface;
 use Cake\Controller\Component;
-use Cake\Network\Exception\ForbiddenException;
+use Cake\Http\ServerRequest;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use UnexpectedValueException;
@@ -38,9 +41,10 @@ class AuthorizationComponent extends Component
      */
     protected $_defaultConfig = [
         'identityAttribute' => 'identity',
-        'forbiddenException' => ForbiddenException::class,
+        'serviceAttribute' => 'authorization',
         'authorizationEvent' => 'Controller.initialize',
-        'authorizeModel' => true,
+        'skipAuthorization' => [],
+        'authorizeModel' => [],
         'actionMap' => []
     ];
 
@@ -59,12 +63,11 @@ class AuthorizationComponent extends Component
     {
         $request = $this->getController()->request;
         if ($action === null) {
-            $action = $request->getParam('action');
+            $action = $this->getDefaultAction($request);
         }
         $identity = $this->getIdentity($request);
         if (!$identity->can($action, $resource)) {
-            $class = $this->getConfig('forbiddenException');
-            throw new $class();
+            throw new ForbiddenException([$action, get_class($resource)]);
         }
     }
 
@@ -82,7 +85,7 @@ class AuthorizationComponent extends Component
     {
         $request = $this->getController()->request;
         if ($action === null) {
-            $action = $request->getParam('action');
+            $action = $this->getDefaultAction($request);
         }
         $identity = $this->getIdentity($request);
 
@@ -90,15 +93,59 @@ class AuthorizationComponent extends Component
     }
 
     /**
+     * Skips the authorization check.
+     *
+     * @return $this
+     */
+    public function skipAuthorization()
+    {
+        $request = $this->getController()->request;
+        $service = $this->getService($request);
+
+        $service->skipAuthorization();
+
+        return $this;
+    }
+
+    /**
+     * Get the authorization service from a request.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request
+     * @return \Authorization\AuthorizationServiceInterface
+     * @throws InvalidArgumentException When invalid authorization service encountered.
+     */
+    protected function getService(ServerRequestInterface $request)
+    {
+        $serviceAttribute = $this->getConfig('serviceAttribute');
+        $service = $request->getAttribute($serviceAttribute);
+        if (!$service instanceof AuthorizationServiceInterface) {
+            $type = is_object($service) ? get_class($service) : gettype($service);
+            throw new InvalidArgumentException(sprintf(
+                'Expected that `%s` would be an instance of %s, but got %s',
+                $serviceAttribute,
+                AuthorizationServiceInterface::class,
+                $type
+            ));
+        }
+
+        return $service;
+    }
+
+    /**
      * Get the identity from a request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request
      * @return \Authorization\IdentityInterface
+     * @throws MissingIdentityException When identity is not present in a request.
+     * @throws InvalidArgumentException When invalid identity encountered.
      */
     protected function getIdentity(ServerRequestInterface $request)
     {
         $identityAttribute = $this->getConfig('identityAttribute');
         $identity = $request->getAttribute($identityAttribute);
+        if ($identity === null) {
+            throw new MissingIdentityException([$identityAttribute]);
+        }
         if (!$identity instanceof IdentityInterface) {
             $type = is_object($identity) ? get_class($identity) : gettype($identity);
             throw new InvalidArgumentException(sprintf(
@@ -113,41 +160,62 @@ class AuthorizationComponent extends Component
     }
 
     /**
-     * Model authorization handler.
+     * Action authorization handler.
+     *
+     * Checks identity and model authorization.
      *
      * @return void
      */
-    public function authorizeModel()
+    public function authorizeAction()
     {
-        $action = $this->getController()->request->getParam('action');
-        $name = $this->getActionName($action);
+        $request = $this->getController()->request;
+        $action = $request->getParam('action');
 
-        if ($name !== null) {
-            $this->authorize($this->getController()->loadModel(), $name);
+        $skipAuthorization = $this->checkAction($action, 'skipAuthorization');
+        if ($skipAuthorization) {
+            $this->skipAuthorization();
+
+            return;
+        }
+
+        $authorizeModel = $this->checkAction($action, 'authorizeModel');
+        if ($authorizeModel) {
+            $this->authorize($this->getController()->loadModel());
         }
     }
 
     /**
-     * Returns mapped action name.
-     * If mapped action name is `false`, null is returned.
+     * Checks whether an action should be authorized according to the config key provided.
      *
-     * @param string $action The action to check authorization for.
-     * @return string|null
+     * @param string $action Action name.
+     * @param string $configKey Configuration key with actions.
+     * @return bool
+     */
+    protected function checkAction($action, $configKey)
+    {
+        $actions = (array)$this->getConfig($configKey);
+
+        return in_array($action, $actions, true);
+    }
+
+    /**
+     * Returns authorization action name for a controller action resolved from the request.
+     *
+     * @param \Cake\Http\ServerRequest $request Server request.
+     * @return string
      * @throws UnexpectedValueException When invalid action type encountered.
      */
-    protected function getActionName($action)
+    protected function getDefaultAction(ServerRequest $request)
     {
+        $action = $request->getParam('action');
         $name = $this->getConfig('actionMap.' . $action);
 
         if ($name === null) {
             return $action;
         }
-        if (is_bool($name)) {
-            return $name ? $action : null;
-        }
         if (!is_string($name)) {
             $type = is_object($name) ? get_class($name) : gettype($name);
-            $message = sprintf('Invalid action type for `%s`. Expected `string`, `null` or `bool`, got `%s`.', $action, $type);
+            $message = sprintf('Invalid action type for `%s`. Expected `string` or `null`, got `%s`.', $action, $type);
             throw new UnexpectedValueException($message);
         }
 
@@ -161,12 +229,8 @@ class AuthorizationComponent extends Component
      */
     public function implementedEvents()
     {
-        if (!$this->getConfig('authorizeModel')) {
-            return [];
-        }
-
         return [
-            $this->getConfig('authorizationEvent') => 'authorizeModel'
+            $this->getConfig('authorizationEvent') => 'authorizeAction'
         ];
     }
 }
