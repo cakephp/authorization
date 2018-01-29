@@ -150,14 +150,52 @@ If you want to map actions to different authorization methods use the `actionMap
 ```php
 $this->loadComponent('Authorization.Authorization', [
     'actionMap' => [
-        'update' => 'modify',
+        'index' => 'list',
         'delete' => 'remove',
+        'add' => 'insert',
     ]
 ];
 ```
 
-Authorization can also be skipped manually, e.g. from action body:
+Example:
 
 ```php
-$this->Authorization->skipAuthorization();
+//ArticlesController.php
+
+public function index()
+{
+    $query = $this->Articles->find();
+
+    //this will apply `list` scope while being called in `index` controller action.
+    $this->Authorizaton->applyScope($query); 
+    ...
+}
+
+public function delete($id)
+{
+    $article = $this->Articles->get($id);
+
+    //this will authorize against `remove` entity action while being called in `delete` controller action.
+    $this->Authorizaton->authorize($article); 
+    ...
+}
+
+public function add()
+{
+    //this will authorize against `insert` model action while being called in `add` controller action.
+    $this->Authorizaton->authorizeModel(); 
+    ...
+}
+```
+
+Authorization can also be skipped manually:
+
+```php
+//ArticlesController.php
+
+public function view($id)
+{
+    $this->Authorization->skipAuthorization();
+    ...
+}
 ```
