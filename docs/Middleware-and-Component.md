@@ -60,34 +60,48 @@ $middlewareStack->add(new AuthorizationMiddleware($this, [
 ]));
 ```
 
-### Handling unathorized requests
+### Handling unauthorized requests
 
 By default authorization exceptions thrown by the application are rethrown by the middleware.
 You can configure handlers for unauthorized requests and perform custom action, e.g.
 redirect the user to the login page.
 
-Handlers should implement `Authorization\Middleware\Handler\HandlerInterface`,
-be suffixed with `Handler` suffix and reside under your app's or plugin's 
-`Middleware\Handler` namespace.
+The built-in handlers are:
 
-For example `App\Middleware\Handler\CustomHandler` can be configured this way:
+* `Exception` - this handler will rethrow the exception, this is a default behavior of the middleware.
+* `Redirect` - this handler will redirect the request to the provided URL.
+* `CakeRedirect` - redirect handler with support for CakePHP Router.
 
-```php
-$middlewareStack->add(new AuthorizationMiddleware($this, [
-    'unauthorizedHandler' => 'Custom'
-]));
-```
+Both redirect handlers share the same configuration options:
 
-You can pass the additional options to your handler's `$options` argument:
+* `url` - URL to redirect to (`CakeRedirect` supports array syntax).
+* `exceptions` - a list of exception classes that should be redirected. By default only `MissingIdentityException` is redirected.
+* `queryParam` - the accessed request URL will be attached to the redirect URL query parameter (`url` by default).
+* `statusCode` - HTTP status code of a redirect, `302` by default.
+
+For example:
 
 ```php
 $middlewareStack->add(new AuthorizationMiddleware($this, [
     'unauthorizedHandler' => [
-        'className' => 'Custom',
-        'redirect' => true,
-    ]
+        'className' => 'Authorization.Redirect',
+        'url' => '/users/login',
+        'queryParam' => 'redirectUrl',
+        'exceptions' => [
+            MissingIdentityException::class,
+            OtherException::class,
+        ],
+    ],
 ]));
 ```
+
+You can also add your own handler. Handlers should implement `Authorization\Middleware\Handler\HandlerInterface`,
+be suffixed with `Handler` suffix and reside under your app's or plugin's 
+`Middleware\Handler` namespace.
+
+Configuration options are passed to the handler's `handle()` method as the last parameter.
+
+Handlers catch only those exceptions which extend `Authorization\Exception\Exception` class.
 
 # AuthorizationComponent
 

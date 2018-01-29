@@ -83,7 +83,7 @@ class RedirectHandler implements HandlerInterface
     }
 
     /**
-     * Returns the modified for the Location header.
+     * Returns the url for the Location header.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
      * @param array $options Options.

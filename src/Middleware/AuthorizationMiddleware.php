@@ -136,7 +136,7 @@ class AuthorizationMiddleware
             ];
         }
         if (!isset($handler['className'])) {
-            throw new RuntimeException('Missing `className` key from hadler config.');
+            throw new RuntimeException('Missing `className` key from handler config.');
         }
 
         return HandlerFactory::create($handler['className']);
