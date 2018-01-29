@@ -174,6 +174,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Controller->request = $this->Controller->request
             ->withAttribute('identity', $identity);
 
+        $this->Auth->setConfig('authorizeModel', ['edit']);
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionCode(403);
         $this->expectExceptionMessage('Identity is not authorized to perform `edit` on `TestApp\Model\Table\ArticlesTable`.');
@@ -194,7 +195,6 @@ class AuthorizationComponentTest extends TestCase
         $policy->expects($this->never())
             ->method('canEdit');
 
-        $this->Auth->setConfig('authorizeModel', ['*' => false]);
         $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
     }
@@ -206,26 +206,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Controller->request = $this->Controller->request
             ->withAttribute('identity', $identity);
 
-        $this->Auth->setConfig('authorizeModel', ['edit' => true]);
-        $result = $this->Auth->authorizeAction();
-        $this->assertNull($result);
-    }
-
-    public function testAuthorizeModelActionDisabled()
-    {
-        $policy = $this->createMock(ArticlesTablePolicy::class);
-        $service = new AuthorizationService(new MapResolver([
-            ArticlesTable::class => $policy
-        ]));
-
-        $identity = new IdentityDecorator($service, ['can_edit' => true]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
-
-        $policy->expects($this->never())
-            ->method('canEdit');
-
-        $this->Auth->setConfig('authorizeModel', ['edit' => false]);
+        $this->Auth->setConfig('authorizeModel', ['edit']);
         $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
     }
@@ -248,6 +229,7 @@ class AuthorizationComponentTest extends TestCase
             ->method('canModify')
             ->willReturn(true);
 
+        $this->Auth->setConfig('authorizeModel', ['edit']);
         $this->Auth->setConfig('actionMap', ['edit' => 'modify']);
         $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
@@ -260,6 +242,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Controller->request = $this->Controller->request
             ->withAttribute('identity', $identity);
 
+        $this->Auth->setConfig('authorizeModel', ['edit']);
         $this->Auth->setConfig('actionMap', ['edit' => new stdClass]);
 
         $this->expectException(UnexpectedValueException::class);
@@ -307,44 +290,16 @@ class AuthorizationComponentTest extends TestCase
     {
         $service = $this->Controller->request->getAttribute('authorization');
 
-        $this->Auth->setConfig('authorizeModel', ['*' => false]);
         $this->Auth->authorizeAction();
         $this->assertFalse($service->authorizationChecked());
-    }
-
-    public function testAuthorizeAllSkipped()
-    {
-        $service = $this->Controller->request->getAttribute('authorization');
-
-        $this->Auth->setConfig('skipAuthorization', ['*' => true]);
-        $this->Auth->setConfig('authorizeModel', ['*' => false]);
-        $this->Auth->authorizeAction();
-        $this->assertTrue($service->authorizationChecked());
     }
 
     public function testAuthorizeActionSkipped()
     {
         $service = $this->Controller->request->getAttribute('authorization');
 
-        $this->Auth->setConfig('skipAuthorization', [
-            '*' => false,
-            'edit' => true,
-        ]);
-        $this->Auth->setConfig('authorizeModel', ['*' => false]);
+        $this->Auth->setConfig('skipAuthorization', ['edit']);
         $this->Auth->authorizeAction();
         $this->assertTrue($service->authorizationChecked());
-    }
-
-    public function testAuthorizeActionNotSkipped()
-    {
-        $service = $this->Controller->request->getAttribute('authorization');
-
-        $this->Auth->setConfig('skipAuthorization', [
-            '*' => true,
-            'edit' => false,
-        ]);
-        $this->Auth->setConfig('authorizeModel', ['*' => false]);
-        $this->Auth->authorizeAction();
-        $this->assertFalse($service->authorizationChecked());
     }
 }

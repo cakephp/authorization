@@ -35,11 +35,6 @@ class AuthorizationComponent extends Component
 {
 
     /**
-     * Constant for all actions config key.
-     */
-    const ALL = '*';
-
-    /**
      * Default config
      *
      * @var array
@@ -48,12 +43,8 @@ class AuthorizationComponent extends Component
         'identityAttribute' => 'identity',
         'serviceAttribute' => 'authorization',
         'authorizationEvent' => 'Controller.initialize',
-        'skipAuthorization' => [
-            self::ALL => false,
-        ],
-        'authorizeModel' => [
-            self::ALL => true,
-        ],
+        'skipAuthorization' => [],
+        'authorizeModel' => [],
         'actionMap' => []
     ];
 
@@ -202,12 +193,9 @@ class AuthorizationComponent extends Component
      */
     protected function checkAction($action, $configKey)
     {
-        $value = $this->getConfig($configKey . '.' . $action);
-        if (is_bool($value)) {
-            return $value;
-        }
+        $actions = (array)$this->getConfig($configKey);
 
-        return (bool)$this->getConfig($configKey . '.' . static::ALL);
+        return in_array($action, $actions, true);
     }
 
     /**

@@ -86,30 +86,17 @@ public function initialize()
 
 ### Automatic authorization checks
 
-By default `AuthorizationComponent` will attempt to automatically apply
+`AuthorizationComponent` can be configured to automatically apply
 authorization based on the controller's default model class and current action
-name. You can disable this behavior entirely or configure it for individual actions 
-using the `authorizeModel` option.
+name. You can configure this for individual actions using the `authorizeModel` option.
 
-
-In the following example all actions will be authorized except the `index` action:
+In the following example `index` and `add` actions will be authorized:
 
 ```php
 $this->loadComponent('Authorization.Authorization', [
     'authorizeModel' => [
-        'index' => false,
-    ]
-];
-```
-
-You can control default check for all actions using a *wildcard character* `*`.
-In the following example only `add` action would be authorized automatically:
-
-```php
-$this->loadComponent('Authorization.Authorization', [
-    'authorizeModel' => [
-        '*' => false,
-        'add' => true,
+        'index',
+        'add',
     ]
 ];
 ```
@@ -123,17 +110,7 @@ Authorization can be skipped for individual actions:
 ```php
 $this->loadComponent('Authorization.Authorization', [
     'skipAuthorization' => [
-        'login' => true,
-    ]
-];
-```
-
-Authorization bypass can be configured for all actions as well:
-
-```php
-$this->loadComponent('Authorization.Authorization', [
-    'skipAuthorization' => [
-        '*' => true,
+        'login',
     ]
 ];
 ```
