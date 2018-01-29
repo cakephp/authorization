@@ -31,6 +31,7 @@ use InvalidArgumentException;
 use stdClass;
 use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
+use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\ArticlesTablePolicy;
 use UnexpectedValueException;
 
@@ -85,6 +86,30 @@ class AuthorizationComponentTest extends TestCase
         $this->assertNull($this->Auth->authorize($article));
     }
 
+    public function testAuthorizeSuccessCheckMappedAction()
+    {
+        $policy = $this->createMock(ArticlePolicy::class);
+        $service = new AuthorizationService(new MapResolver([
+            Article::class => $policy
+        ]));
+
+        $identity = new IdentityDecorator($service, ['can_edit' => true]);
+        $this->Controller->request = $this->Controller->request
+            ->withAttribute('identity', $identity);
+
+        $policy->expects($this->never())
+            ->method('canEdit');
+
+        $policy->expects($this->once())
+            ->method('canModify')
+            ->willReturn(true);
+
+        $article = new Article(['user_id' => 1]);
+
+        $this->Auth->setConfig('actionMap', ['edit' => 'modify']);
+        $this->assertNull($this->Auth->authorize($article));
+    }
+
     public function testApplyScopeImplictAction()
     {
         $articles = new ArticlesTable();
@@ -99,6 +124,27 @@ class AuthorizationComponentTest extends TestCase
             ])
             ->willReturn($query);
 
+        $result = $this->Auth->applyScope($query);
+
+        $this->assertInstanceOf(QueryInterface::class, $result);
+        $this->assertSame($query, $result);
+    }
+
+    public function testApplyScopeMappedAction()
+    {
+        $articles = new ArticlesTable();
+        $query = $this->createMock(QueryInterface::class);
+        $query->method('repository')
+            ->willReturn($articles);
+
+        $query->expects($this->once())
+            ->method('where')
+            ->with([
+                'identity_id' => 1
+            ])
+            ->willReturn($query);
+
+        $this->Auth->setConfig('actionMap', ['edit' => 'modify']);
         $result = $this->Auth->applyScope($query);
 
         $this->assertInstanceOf(QueryInterface::class, $result);
