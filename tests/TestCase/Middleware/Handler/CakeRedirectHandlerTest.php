@@ -45,11 +45,11 @@ class CakeRedirectHandlerTest extends TestCase
 
     public function testHandleRedirectionDefault()
     {
-        $handler = new CakeRedirectHandler;
+        $handler = new CakeRedirectHandler();
 
-        $exception = new Exception;
-        $request = new ServerRequest;
-        $response = new Response;
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
             'exceptions' => [
@@ -63,11 +63,11 @@ class CakeRedirectHandlerTest extends TestCase
 
     public function testHandleRedirectionNamed()
     {
-        $handler = new CakeRedirectHandler;
+        $handler = new CakeRedirectHandler();
 
-        $exception = new Exception;
-        $request = new ServerRequest;
-        $response = new Response;
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
             'exceptions' => [
@@ -84,11 +84,11 @@ class CakeRedirectHandlerTest extends TestCase
 
     public function testHandleRedirectionWithQuery()
     {
-        $handler = new CakeRedirectHandler;
+        $handler = new CakeRedirectHandler();
 
-        $exception = new Exception;
-        $request = new ServerRequest;
-        $response = new Response;
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
             'exceptions' => [
@@ -108,11 +108,11 @@ class CakeRedirectHandlerTest extends TestCase
 
     public function testHandleRedirectionNoQuery()
     {
-        $handler = new CakeRedirectHandler;
+        $handler = new CakeRedirectHandler();
 
-        $exception = new Exception;
-        $request = new ServerRequest;
-        $response = new Response;
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
             'exceptions' => [

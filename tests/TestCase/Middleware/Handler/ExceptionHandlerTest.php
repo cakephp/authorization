@@ -24,9 +24,9 @@ class ExceptionHandlerTest extends TestCase
 {
     public function testHandle()
     {
-        $handler = new ExceptionHandler;
+        $handler = new ExceptionHandler();
 
-        $exception = new Exception;
+        $exception = new Exception();
         $request = new ServerRequest();
         $response = new Response();
 

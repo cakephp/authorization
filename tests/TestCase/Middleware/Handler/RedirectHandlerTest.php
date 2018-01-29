@@ -25,11 +25,11 @@ class RedirectHandlerTest extends TestCase
 {
     public function testHandleRedirection()
     {
-        $handler = new RedirectHandler;
+        $handler = new RedirectHandler();
 
-        $exception = new Exception;
-        $request = new ServerRequest;
-        $response = new Response;
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
             'exceptions' => [
@@ -42,11 +42,11 @@ class RedirectHandlerTest extends TestCase
     }
     public function testHandleRedirectionWithQuery()
     {
-        $handler = new RedirectHandler;
+        $handler = new RedirectHandler();
 
-        $exception = new Exception;
-        $request = new ServerRequest;
-        $response = new Response;
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
             'exceptions' => [
@@ -61,11 +61,11 @@ class RedirectHandlerTest extends TestCase
 
     public function testHandleRedirectionNoQuery()
     {
-        $handler = new RedirectHandler;
+        $handler = new RedirectHandler();
 
-        $exception = new Exception;
-        $request = new ServerRequest;
-        $response = new Response;
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
             'exceptions' => [
@@ -81,11 +81,11 @@ class RedirectHandlerTest extends TestCase
 
     public function testHandleException()
     {
-        $handler = new RedirectHandler;
+        $handler = new RedirectHandler();
 
-        $exception = new Exception;
-        $request = new ServerRequest;
-        $response = new Response;
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
 
         $this->expectException(Exception::class);
         $handler->handle($exception, $request, $response);
