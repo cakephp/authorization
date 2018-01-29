@@ -54,4 +54,14 @@ interface AuthorizationServiceInterface
      * @return bool
      */
     public function authorizationChecked();
+
+    /**
+     * Allow for authorization to be skipped for this object.
+     *
+     * After calling this method the value of `authorizationChecked()` should
+     * return `true` regardless of whether authorization has been performed or not.
+     *
+     * @return $this
+     */
+    public function skipAuthorization();
 }

@@ -26,6 +26,15 @@ class ArticlePolicy
         return $article->get('user_id') === $user['id'];
     }
 
+    public function canModify($user, Article $article)
+    {
+        if (in_array($user['role'], ['admin', 'author'])) {
+            return true;
+        }
+
+        return $article->get('user_id') === $user['id'];
+    }
+
     /**
      * Delete only own articles or any if you're an admin
      *

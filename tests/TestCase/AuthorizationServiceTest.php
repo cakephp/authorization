@@ -75,6 +75,16 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($service->authorizationChecked());
     }
 
+    public function testSkipAuthorization()
+    {
+        $resolver = new MapResolver([]);
+        $service = new AuthorizationService($resolver);
+        $this->assertFalse($service->authorizationChecked());
+
+        $service->skipAuthorization();
+        $this->assertTrue($service->authorizationChecked());
+    }
+
     public function testApplyScope()
     {
         $resolver = new MapResolver([
@@ -248,8 +258,8 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $this->expectException(MissingMethodException::class);
-        $this->expectExceptionMessage('Method `canModify` for invoking action `modify` has not been defined in `TestApp\Policy\ArticlePolicy`.');
+        $this->expectExceptionMessage('Method `canDisable` for invoking action `disable` has not been defined in `TestApp\Policy\ArticlePolicy`.');
 
-        $service->can($user, 'modify', $entity);
+        $service->can($user, 'disable', $entity);
     }
 }
