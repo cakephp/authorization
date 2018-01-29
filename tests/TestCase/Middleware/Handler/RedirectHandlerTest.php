@@ -87,7 +87,7 @@ class RedirectHandlerTest extends TestCase
         $request = new ServerRequest;
         $response = new Response;
 
-        $this->expectExceptionObject($exception);
+        $this->expectException(Exception::class);
         $handler->handle($exception, $request, $response);
     }
 }
