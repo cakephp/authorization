@@ -74,7 +74,7 @@ The built-in handlers are:
 
 Both redirect handlers share the same configuration options:
 
-* `url` - URL to redirect to (`CakeRedirect` supports array syntax).
+* `url` - URL to redirect to (`CakeRedirect` supports CakePHP Router syntax).
 * `exceptions` - a list of exception classes that should be redirected. By default only `MissingIdentityException` is redirected.
 * `queryParam` - the accessed request URL will be attached to the redirect URL query parameter (`url` by default).
 * `statusCode` - HTTP status code of a redirect, `302` by default.
