@@ -12,25 +12,24 @@
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Authorization\Test\TestCase\Middleware\Handler;
+
+namespace Authorization\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
-use Authorization\Middleware\Handler\ExceptionHandler;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
-use Cake\TestSuite\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-class ExceptionHandlerTest extends TestCase
+/**
+ * This handler rethrows an exception caught by the middleware.
+ */
+class ExceptionHandler implements HandlerInterface
 {
-    public function testHandle()
+
+    /**
+     * {@inheritDoc}
+     */
+    public function handle(Exception $exception, ServerRequestInterface $request, ResponseInterface $response, array $options = [])
     {
-        $handler = new ExceptionHandler();
-
-        $exception = new Exception();
-        $request = new ServerRequest();
-        $response = new Response();
-
-        $this->expectException(Exception::class);
-        $handler->handle($exception, $request, $response);
+        throw $exception;
     }
 }

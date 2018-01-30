@@ -19,7 +19,7 @@ use Authorization\Exception\AuthorizationRequiredException;
 use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
-use Authorization\Middleware\Handler\HandlerFactory;
+use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
 use Cake\Core\HttpApplicationInterface;
 use Cake\Core\InstanceConfigTrait;
 use InvalidArgumentException;
@@ -125,7 +125,7 @@ class AuthorizationMiddleware
     /**
      * Returns unauthorized handler.
      *
-     * @return \Authorization\Middleware\Handler\HandlerInterface
+     * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
      */
     protected function getHandler()
     {

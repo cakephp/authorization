@@ -13,12 +13,12 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Authorization\Test\TestCase\Middleware\Handler;
+namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
-use Authorization\Middleware\Handler\HandlerFactory;
+use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
 use Cake\TestSuite\TestCase;
 use RuntimeException;
-use TestApp\Middleware\Handler\SuppressHandler;
+use TestApp\Middleware\UnauthorizedHandler\SuppressHandler;
 
 class HandlerFactoryTest extends TestCase
 {
@@ -39,7 +39,7 @@ class HandlerFactoryTest extends TestCase
     public function testCreateInvalid()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Handler should implement `Authorization\Middleware\Handler\HandlerInterface`, got `stdClass`.');
+        $this->expectExceptionMessage('Handler should implement `Authorization\Middleware\UnauthorizedHandler\HandlerInterface`, got `stdClass`.');
         HandlerFactory::create('\stdClass');
     }
 }

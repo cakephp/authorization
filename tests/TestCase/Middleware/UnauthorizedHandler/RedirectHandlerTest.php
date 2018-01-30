@@ -13,39 +13,19 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Authorization\Test\TestCase\Middleware\Handler;
+namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
-use Authorization\Middleware\Handler\CakeRedirectHandler;
+use Authorization\Middleware\UnauthorizedHandler\RedirectHandler;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
-use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 
-/**
- * Description of CakeRedirectHandlerTest
- *
- * @author Robert Pustułka <robert.pustulka@gmail.com>
- */
-class CakeRedirectHandlerTest extends TestCase
+class RedirectHandlerTest extends TestCase
 {
-    public function setUp()
+    public function testHandleRedirection()
     {
-        parent::setUp();
-
-        Router::reload();
-        Router::fullBaseUrl('http://localhost');
-        Router::connect(
-            '/login',
-            ['controller' => 'Users', 'action' => 'login'],
-            ['_name' => 'login']
-        );
-        Router::connect('/:controller/:action');
-    }
-
-    public function testHandleRedirectionDefault()
-    {
-        $handler = new CakeRedirectHandler();
+        $handler = new RedirectHandler();
 
         $exception = new Exception();
         $request = new ServerRequest();
@@ -60,31 +40,9 @@ class CakeRedirectHandlerTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('/login?redirect=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
     }
-
-    public function testHandleRedirectionNamed()
-    {
-        $handler = new CakeRedirectHandler();
-
-        $exception = new Exception();
-        $request = new ServerRequest();
-        $response = new Response();
-
-        $response = $handler->handle($exception, $request, $response, [
-            'exceptions' => [
-                Exception::class,
-            ],
-            'url' => [
-                '_name' => 'login'
-            ]
-        ]);
-
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?redirect=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
-    }
-
     public function testHandleRedirectionWithQuery()
     {
-        $handler = new CakeRedirectHandler();
+        $handler = new RedirectHandler();
 
         $exception = new Exception();
         $request = new ServerRequest();
@@ -94,12 +52,7 @@ class CakeRedirectHandlerTest extends TestCase
             'exceptions' => [
                 Exception::class,
             ],
-            'url' => [
-                '_name' => 'login',
-                '?' => [
-                    'foo' => 'bar'
-                ],
-            ]
+            'url' => '/login?foo=bar'
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
@@ -108,7 +61,7 @@ class CakeRedirectHandlerTest extends TestCase
 
     public function testHandleRedirectionNoQuery()
     {
-        $handler = new CakeRedirectHandler();
+        $handler = new RedirectHandler();
 
         $exception = new Exception();
         $request = new ServerRequest();
@@ -118,10 +71,23 @@ class CakeRedirectHandlerTest extends TestCase
             'exceptions' => [
                 Exception::class,
             ],
+            'url' => '/users/login',
             'queryParam' => null,
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+        $this->assertEquals('/users/login', $response->getHeaderLine('Location'));
+    }
+
+    public function testHandleException()
+    {
+        $handler = new RedirectHandler();
+
+        $exception = new Exception();
+        $request = new ServerRequest();
+        $response = new Response();
+
+        $this->expectException(Exception::class);
+        $handler->handle($exception, $request, $response);
     }
 }

@@ -95,9 +95,9 @@ $middlewareStack->add(new AuthorizationMiddleware($this, [
 ]));
 ```
 
-You can also add your own handler. Handlers should implement `Authorization\Middleware\Handler\HandlerInterface`,
+You can also add your own handler. Handlers should implement `Authorization\Middleware\UnauthorizedHandler\HandlerInterface`,
 be suffixed with `Handler` suffix and reside under your app's or plugin's 
-`Middleware\Handler` namespace.
+`Middleware\UnauthorizedHandler` namespace.
 
 Configuration options are passed to the handler's `handle()` method as the last parameter.
 

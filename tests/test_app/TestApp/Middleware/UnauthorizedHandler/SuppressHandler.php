@@ -12,10 +12,10 @@
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace TestApp\Middleware\Handler;
+namespace TestApp\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
-use Authorization\Middleware\Handler\HandlerInterface;
+use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

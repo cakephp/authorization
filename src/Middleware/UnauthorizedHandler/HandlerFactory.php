@@ -13,7 +13,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Authorization\Middleware\Handler;
+namespace Authorization\Middleware\UnauthorizedHandler;
 
 use Cake\Core\App;
 use RuntimeException;
@@ -23,13 +23,13 @@ class HandlerFactory
     /**
      * Creates unauthorized request handler.
      *
-     * @param string $name Handler name.
-     * @return \Authorization\Middleware\Handler\HandlerInterface
+     * @param string $name UnauthorizedHandler name.
+     * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
      * @throws RuntimeException When invalid handler encountered.
      */
     public static function create($name)
     {
-        $class = App::className($name, 'Middleware/Handler', 'Handler');
+        $class = App::className($name, 'Middleware/UnauthorizedHandler', 'Handler');
         if (!$class) {
             $message = sprintf('Handler `%s` does not exist.', $name);
             throw new RuntimeException($message);

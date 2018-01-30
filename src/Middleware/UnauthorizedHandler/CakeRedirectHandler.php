@@ -13,7 +13,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace Authorization\Middleware\Handler;
+namespace Authorization\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\MissingIdentityException;
 use Cake\Routing\Router;
