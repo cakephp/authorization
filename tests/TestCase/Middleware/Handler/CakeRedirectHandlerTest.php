@@ -58,7 +58,7 @@ class CakeRedirectHandlerTest extends TestCase
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?url=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
+        $this->assertEquals('/login?redirect=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionNamed()
@@ -79,7 +79,7 @@ class CakeRedirectHandlerTest extends TestCase
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?url=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
+        $this->assertEquals('/login?redirect=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionWithQuery()
@@ -103,7 +103,7 @@ class CakeRedirectHandlerTest extends TestCase
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?foo=bar&url=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
+        $this->assertEquals('/login?foo=bar&redirect=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionNoQuery()

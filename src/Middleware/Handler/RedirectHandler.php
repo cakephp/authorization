@@ -40,7 +40,7 @@ class RedirectHandler implements HandlerInterface
             MissingIdentityException::class,
         ],
         'url' => '/login',
-        'queryParam' => 'url',
+        'queryParam' => 'redirect',
         'statusCode' => 302,
     ];
 

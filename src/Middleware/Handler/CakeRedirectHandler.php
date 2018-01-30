@@ -39,7 +39,7 @@ class CakeRedirectHandler extends RedirectHandler
             'controller' => 'Users',
             'action' => 'login',
         ],
-        'queryParam' => 'url',
+        'queryParam' => 'redirect',
         'statusCode' => 302,
     ];
 
