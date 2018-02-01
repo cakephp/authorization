@@ -16,8 +16,10 @@ namespace Authorization\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\AuthorizationRequiredException;
+use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
+use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
 use Cake\Core\HttpApplicationInterface;
 use Cake\Core\InstanceConfigTrait;
 use InvalidArgumentException;
@@ -51,7 +53,8 @@ class AuthorizationMiddleware
     protected $_defaultConfig = [
         'identityDecorator' => IdentityDecorator::class,
         'identityAttribute' => 'identity',
-        'requireAuthorizationCheck' => true
+        'requireAuthorizationCheck' => true,
+        'unauthorizedHandler' => 'Authorization.Exception',
     ];
 
     /**
@@ -101,19 +104,42 @@ class AuthorizationMiddleware
         $attribute = $this->getConfig('identityAttribute');
         $identity = $request->getAttribute($attribute);
 
-        if ($identity === null) {
-            return $next($request, $response);
+        if ($identity !== null) {
+            $identity = $this->buildIdentity($service, $identity);
+            $request = $request->withAttribute($attribute, $identity);
         }
 
-        $identity = $this->buildIdentity($service, $identity);
-
-        $request = $request->withAttribute($attribute, $identity);
-        $response = $next($request, $response);
+        try {
+            $response = $next($request, $response);
+        } catch (Exception $exception) {
+            $handler = $this->getHandler();
+            $response = $handler->handle($exception, $request, $response, (array)$this->getConfig('unauthorizedHandler'));
+        }
         if ($this->getConfig('requireAuthorizationCheck') && !$service->authorizationChecked()) {
             throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
         }
 
         return $response;
+    }
+
+    /**
+     * Returns unauthorized handler.
+     *
+     * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
+     */
+    protected function getHandler()
+    {
+        $handler = $this->getConfig('unauthorizedHandler');
+        if (!is_array($handler)) {
+            $handler = [
+                'className' => $handler,
+            ];
+        }
+        if (!isset($handler['className'])) {
+            throw new RuntimeException('Missing `className` key from handler config.');
+        }
+
+        return HandlerFactory::create($handler['className']);
     }
 
     /**

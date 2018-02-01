@@ -26,7 +26,7 @@ class ResolverCollectionTest extends TestCase
 {
     public function testEmptyCollection()
     {
-        $collection = new ResolverCollection;
+        $collection = new ResolverCollection();
 
         $this->expectException(MissingPolicyException::class);
 
@@ -35,7 +35,7 @@ class ResolverCollectionTest extends TestCase
 
     public function testMissingPolicy()
     {
-        $resource = new Article;
+        $resource = new Article();
 
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver->expects($this->once())
@@ -54,8 +54,8 @@ class ResolverCollectionTest extends TestCase
 
     public function testGetPolicy()
     {
-        $resource = new Article;
-        $policy = new ArticlePolicy;
+        $resource = new Article();
+        $policy = new ArticlePolicy();
 
         $resolver1 = new MapResolver();
         $resolver2 = new MapResolver([Article::class => $policy]);
