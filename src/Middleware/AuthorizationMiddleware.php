@@ -111,12 +111,12 @@ class AuthorizationMiddleware
 
         try {
             $response = $next($request, $response);
+            if ($this->getConfig('requireAuthorizationCheck') && !$service->authorizationChecked()) {
+                throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
+            }
         } catch (Exception $exception) {
             $handler = $this->getHandler();
             $response = $handler->handle($exception, $request, $response, (array)$this->getConfig('unauthorizedHandler'));
-        }
-        if ($this->getConfig('requireAuthorizationCheck') && !$service->authorizationChecked()) {
-            throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
         }
 
         return $response;
