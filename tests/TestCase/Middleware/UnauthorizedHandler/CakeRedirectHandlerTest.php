@@ -12,7 +12,6 @@
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-
 namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
@@ -24,8 +23,6 @@ use Cake\TestSuite\TestCase;
 
 /**
  * Description of CakeRedirectHandlerTest
- *
- * @author Robert Pustułka <robert.pustulka@gmail.com>
  */
 class CakeRedirectHandlerTest extends TestCase
 {

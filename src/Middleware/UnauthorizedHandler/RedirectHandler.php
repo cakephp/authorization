@@ -12,7 +12,6 @@
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-
 namespace Authorization\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
@@ -28,6 +27,7 @@ class RedirectHandler implements HandlerInterface
 
     /**
      * Default config:
+     *
      *  - `exceptions` - A list of exception classes.
      *  - `url` - Url to redirect to.
      *  - `queryParam` - Query parameter name for the target url.
