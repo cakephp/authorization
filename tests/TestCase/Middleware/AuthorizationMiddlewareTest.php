@@ -63,16 +63,16 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
         $response = new Response();
-        $next = function ($request) {
+        $next = function ($request, $response) {
             // Don't call any auth methods.
-            return $request;
+            return $response;
         };
 
         $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => true]);
         $result = $middleware($request, $response, $next);
 
-        $this->assertInstanceOf(RequestInterface::class, $result);
-        $this->assertSame($service, $result->getAttribute('authorization'));
+        $this->assertInstanceOf(ResponseInterface::class, $result);
+        $this->assertSame($service, $request->getAttribute('authorization'));
     }
 
     public function testInvokeApp()
@@ -337,6 +337,24 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $middleware = new AuthorizationMiddleware($service, [
             'requireAuthorizationCheck' => false,
+            'unauthorizedHandler' => 'Suppress',
+        ]);
+
+        $result = $middleware($request, $response, $next);
+        $this->assertSame($response, $result);
+    }
+
+    public function testUnauthorizedHandlerRequireAuthz()
+    {
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $request = new ServerRequest();
+        $response = new Response();
+        $next = function () {
+            throw new Exception();
+        };
+
+        $middleware = new AuthorizationMiddleware($service, [
+            'requireAuthorizationCheck' => true,
             'unauthorizedHandler' => 'Suppress',
         ]);
 
