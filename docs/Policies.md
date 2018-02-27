@@ -6,26 +6,16 @@ checks to.
 
 ### Creating Policies
 
-You can create policies in your `src/Policy` directory. Policy classes for ORM
-objects follow the following conventions.
+You can create policies in your `src/Policy` directory. Policy classes don't
+have a common base class or interface they are expected to implement.
+Application classes are then 'resolved' to a matching policy class. See the
+[Policy Resolvers](../Policy-Resolvers.md) section for how policies can be
+resolved.
 
-### Policy conventions for ORM classes
-
-1. Policy classes use the `Policy` suffix.
-2. Policy classes live in the `App\Policy` namespace or `$plugin\Policy`.
-
-The default ORM resolver uses the following conventions for policy classes:
-
-1. The entity classname is used to generate the policy class name. e.g
-   `App\Model\Entity\Article` will map to `App\Policy\ArticlePolicy`.
-2. Plugin entities will first check for an application policy e.g
-   `App\Policy\Blog\ArticlePolicy` for `Blog\Model\Entity\Article`.
-3. If no application override policy can be found, a plugin policy will be
-   checked. e.g. `Blog\Policy\ArticlePolicy`.
-4. If no policy can be found an exception will be raised.
-
-For now we'll create a policy class for the `Article` entity in our application.
-In **src/Policy/ArticlePolicy.php** put the following content:
+Generally you'll want to put your policies in **src/Policy** and use the
+``Policy`` class suffix. For now we'll create a policy class for the `Article`
+entity in our application.  In **src/Policy/ArticlePolicy.php** put the
+following content:
 
 ```php
 <?php
@@ -38,6 +28,10 @@ class ArticlePolicy
 {
 }
 ```
+
+In addition to entities, table objects and queries can have policies resolved.
+These objects use the following conventions:
+
 
 ### Writing Policy Methods
 
