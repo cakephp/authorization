@@ -37,7 +37,7 @@ $middleware->add(new AuthorizationMiddleware($this));
 
 The `AuthorizationMiddleware` will call a hook method on your application when
 it starts handling the request. This hook method allows your application to
-define the `AuthorizationService` it wants to use. Add the following method yo
+define the `AuthorizationService` it wants to use. Add the following method your
 **src/Application.php**
 
 ```php
