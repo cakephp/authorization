@@ -44,8 +44,8 @@ OrmResolver applies the following conventions:
 
 The OrmResolver can resolve policies for the following object types:
 
-* Entities - Using the entity classname
-* Tables - Using the table classname
+* Entities - Using the entity classname.
+* Tables - Using the table classname.
 * Queries - Using the return of the query's `repository()` to get a classname.
 
 In all cases the following rules are applied:
@@ -56,6 +56,11 @@ In all cases the following rules are applied:
    `App\Policy\Bookmarks\BookmarkPolicy` for `Bookmarks\Model\Entity\Bookmark`.
 3. If no application override policy can be found, a plugin policy will be
    checked. e.g. `Bookmarks\Policy\BookmarkPolicy`
+
+For table objects the class name tranformation would result in
+`App\Model\Table\ArticlesTable` mapping to `App\Policy\ArticlesTablePolicy`.
+Query objects will have their `repository()` method called, and a policy will be
+generated based on the resulting table class.
 
 The OrmResolver supports customization through its constructor:
 
