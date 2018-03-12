@@ -23,7 +23,6 @@ apply the middleware. In **src/Application.php** add the following to the class
 imports:
 
 ```php
-use Authentication\Middleware\AuthenticationMiddleware;
 use Authorization\AuthorizationService;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
