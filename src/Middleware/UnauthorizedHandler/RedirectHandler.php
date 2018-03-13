@@ -93,7 +93,7 @@ class RedirectHandler implements HandlerInterface
     {
         $url = $options['url'];
         if ($options['queryParam'] !== null) {
-            $query = urlencode($options['queryParam']) . '=' . urlencode($request->getUri());
+            $query = urlencode($options['queryParam']) . '=' . urlencode($request->getRequestTarget());
             if (strpos($url, '?') !== false) {
                 $query = '&' . $query;
             } else {
