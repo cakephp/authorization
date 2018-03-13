@@ -27,7 +27,9 @@ class RedirectHandlerTest extends TestCase
         $handler = new RedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest();
+        $request = new ServerRequest([
+            'environment' => ['REQUEST_METHOD' => 'GET']
+        ]);
         $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
@@ -47,6 +49,7 @@ class RedirectHandlerTest extends TestCase
         $exception = new Exception();
         $request = new ServerRequest([
             'environment' => [
+                'REQUEST_METHOD' => 'GET',
                 'PATH_INFO' => '/path',
                 'QUERY_STRING' => 'key=value'
             ]
@@ -69,7 +72,9 @@ class RedirectHandlerTest extends TestCase
         $handler = new RedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest();
+        $request = new ServerRequest([
+            'environment' => ['REQUEST_METHOD' => 'GET']
+        ]);
         $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
@@ -82,6 +87,46 @@ class RedirectHandlerTest extends TestCase
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('/users/login', $response->getHeaderLine('Location'));
+    }
+
+    public function httpMethodProvider()
+    {
+        return [
+            ['POST'],
+            ['PUT'],
+            ['DELETE'],
+            ['PATCH'],
+            ['OPTIONS'],
+            ['HEAD'],
+        ];
+    }
+
+    /**
+     * @dataProvider httpMethodProvider
+     */
+    public function testHandleRedirectionIgnoreNonIdempotentMethods($method)
+    {
+        $handler = new RedirectHandler();
+
+        $exception = new Exception();
+        $request = new ServerRequest([
+            'environment' => [
+                'REQUEST_METHOD' => $method,
+                'PATH_INFO' => '/path',
+                'QUERY_STRING' => 'key=value'
+            ]
+        ]);
+        $response = new Response();
+
+        $response = $handler->handle($exception, $request, $response, [
+            'exceptions' => [
+                Exception::class,
+            ],
+            'url' => '/login?foo=bar'
+        ]);
+
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login?foo=bar', $response->getHeaderLine('Location'));
     }
 
     public function testHandleException()
