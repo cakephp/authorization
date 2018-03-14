@@ -92,8 +92,8 @@ class RedirectHandler implements HandlerInterface
     protected function getUrl(ServerRequestInterface $request, array $options)
     {
         $url = $options['url'];
-        if ($options['queryParam'] !== null) {
-            $query = urlencode($options['queryParam']) . '=' . urlencode($request->getUri());
+        if ($options['queryParam'] !== null && $request->getMethod() === 'GET') {
+            $query = urlencode($options['queryParam']) . '=' . urlencode($request->getRequestTarget());
             if (strpos($url, '?') !== false) {
                 $query = '&' . $query;
             } else {
