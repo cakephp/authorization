@@ -31,6 +31,7 @@ use Authorization\Policy\OrmResolver;
 Then add the following to your `middleware()` method:
 
 ```php
+// Add authorization (after authentication if you are using that plugin too).
 $middleware->add(new AuthorizationMiddleware($this));
 ```
 
@@ -60,10 +61,22 @@ $this->loadComponent('Authorization.Authorization');
 ```
 
 By loading the [authorization component](./Component.php) we'll be able to check
-authorization on a per action basic more easily.
+authorization on a per action basic more easily. For example, we can do:
 
-You are now ready to start [creating policies](./Policies.md) and enforcing your
-authorization rules.
+```php
+public function edit($id)
+{
+    $article = $this->Article->get($id);
+    $this->Authorization->authorize('update', $article);
+
+    // Rest of action
+}
+```
+
+By calling `authorize` we can use our [policies](./Policies.md) to enforce our
+application's access control rules. You can check permissions anywhere by using
+the [identity stored in the request](./Checking-Authorization.md).
+
 
 ## Further Reading
 

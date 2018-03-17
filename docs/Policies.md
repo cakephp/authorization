@@ -68,11 +68,11 @@ class ArticlesPolicy
 ```
 
 
-### Policy Preconditions
+### Policy Pre-conditions
 
 In some policies you may wish to apply common checks across all operations in
 a policy. This is useful when you need to deny all actions to the provided
-resource. To use preconditions you need to implement the `BeforePolicyInterface`
+resource. To use pre-conditions you need to implement the `BeforePolicyInterface`
 in your policy:
 
 ```php
