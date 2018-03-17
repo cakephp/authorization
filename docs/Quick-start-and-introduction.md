@@ -64,7 +64,7 @@ By loading the [authorization component](./Component.php) we'll be able to check
 authorization on a per action basic more easily. For example, we can do:
 
 ```php
-public function edit($id)
+public function edit($id = null)
 {
     $article = $this->Article->get($id);
     $this->Authorization->authorize('update', $article);
