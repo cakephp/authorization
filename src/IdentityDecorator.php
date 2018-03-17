@@ -107,6 +107,28 @@ class IdentityDecorator implements IdentityInterface
     }
 
     /**
+     * Delegate property access to decorated identity.
+     *
+     * @param string $property The property to read.
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->identity->{$property};
+    }
+
+    /**
+     * Delegate property isset to decorated identity.
+     *
+     * @param string $property The property to read.
+     * @return mixed
+     */
+    public function __isset($property)
+    {
+        return isset($this->identity->{$property});
+    }
+
+    /**
      * Whether a offset exists
      *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
