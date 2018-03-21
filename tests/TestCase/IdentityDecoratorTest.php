@@ -124,4 +124,17 @@ class IdentityDecoratorTest extends TestCase
         $identity = new IdentityDecorator($auth, $inner);
         $this->assertSame($data, $identity->getOriginalData());
     }
+
+    public function testGetProperty()
+    {
+        $data = new Article(['id' => 2]);
+        $auth = $this->createMock(AuthorizationServiceInterface::class);
+        $identity = new IdentityDecorator($auth, $data);
+
+        $this->assertTrue(isset($identity->id));
+        $this->assertSame($data->id, $identity->id);
+
+        $this->assertFalse(isset($identity->unknown));
+        $this->assertNull($identity->unknown);
+    }
 }

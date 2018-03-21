@@ -4,7 +4,7 @@ Authorization is applied to your application as a middleware. The
 `AuthorizationMiddleware` handles the following responsibilities:
 
 * Decorating the request 'identity' with a decorator that adds the `can` and
-  `applyScope` methods.
+  `applyScope` if necessary.
 * Ensuring that authorization has been checked/bypassed in the request.
 
 To use the middleware, update the `middleware` hook of your `Application` with
@@ -43,6 +43,81 @@ class Application extends BaseApplication
 The authorization service requires a policy resolver. See the 
 [Policies](./Policies.md) documentation on what resolvers are available and how
 to use them.
+
+## Identity Decorator
+
+By default the `identity` in the request will be decorated (wrapped) with
+`Authorization\IdentityDecorator`. The decorator class proxies most read
+operations and method calls to the wrapped identity. If you have an existing
+`User` or identity class you can skip the decorator by implementing the
+`Authorization\IdentityInterface` and using the `identityDecorator` middleware
+option. First lets update our `User` class:
+
+```php
+namespace App\Model\Entity;
+
+use Authorization\AuthorizationServiceInterface;
+use Authorization\IdentityInterface;
+use Cake\ORM\Entity;
+
+
+class User extends Entity implements IdentityInterface
+{
+
+    /**
+     * Authorization\IdentityInterface method
+     */
+    public function can($action, $resource)
+    {
+        return $this->authorization->can($this, $action, $resource);
+    }
+
+    /**
+     * Authorization\IdentityInterface method
+     */
+    public function applyScope($action, $resource)
+    {
+        return $this->authorization->applyScope($this, $action, $resource);
+    }
+
+    /**
+     * Authorization\IdentityInterface method
+     */
+    public function getOriginalData()
+    {
+        return $this;
+    }
+
+    /**
+     * Setter to be used by the middleware.
+     */
+    public function setAuthorization($service)
+    {
+        $this->authorization = $service;
+
+        return $this;
+    }
+
+    // Other methods
+}
+```
+
+Now that our user implements the necessary interface, lets update our middleware
+setup:
+
+```php
+// In your Application::middleware() method;
+
+// Authorization
+$middleware->add(new AuthorizationMiddleware($this, [
+    'identityDecorator' => function ($auth, $user) {
+        return $user->setAuthorization($auth);
+    }
+]));
+```
+
+You no longer have to change any existing typehints, and can start using
+authorization policies anywhere you have access to your user.
 
 ### Ensuring Authorization is Applied
 
