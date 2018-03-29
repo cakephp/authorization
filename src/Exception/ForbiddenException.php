@@ -17,7 +17,6 @@ namespace Authorization\Exception;
 
 class ForbiddenException extends Exception
 {
-
     /**
      * {@inheritDoc}
      */

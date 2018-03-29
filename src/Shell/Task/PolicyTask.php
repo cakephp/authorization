@@ -80,7 +80,7 @@ class PolicyTask extends SimpleBakeTask
         }
 
         $variable = Inflector::variable($name);
-        if ($variable == 'user') {
+        if ($variable === 'user') {
             $variable = 'resource';
         }
 
@@ -92,7 +92,7 @@ class PolicyTask extends SimpleBakeTask
             'classname' => $className,
         ];
 
-        return array_merge($data, $vars);
+        return $vars + $data;
     }
 
     /**
@@ -105,7 +105,7 @@ class PolicyTask extends SimpleBakeTask
         $parser = parent::getOptionParser();
 
         return $parser
-            ->description('Bake policy classes for various supported object types.')
+            ->setDescription('Bake policy classes for various supported object types.')
             ->addOption('type', [
                 'help' => 'The object type to bake a policy for. If only one argument is used, type will be object.',
                 'default' => 'entity',
