@@ -47,7 +47,7 @@ class IdentityDecorator implements IdentityInterface
      *
      * @param \Authorization\AuthorizationServiceInterface $service The authorization service.
      * @param array|\ArrayAccess $identity Identity data
-     * @throws InvalidArgumentException When invalid identity data is passed.
+     * @throws \InvalidArgumentException When invalid identity data is passed.
      */
     public function __construct(AuthorizationServiceInterface $service, $identity)
     {

@@ -17,7 +17,6 @@ namespace Authorization\Exception;
 
 class MissingIdentityException extends Exception
 {
-
     /**
      * {@inheritDoc}
      */

@@ -33,7 +33,6 @@ use UnexpectedValueException;
  */
 class AuthorizationComponent extends Component
 {
-
     /**
      * Default config
      *
@@ -112,7 +111,7 @@ class AuthorizationComponent extends Component
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request
      * @return \Authorization\AuthorizationServiceInterface
-     * @throws InvalidArgumentException When invalid authorization service encountered.
+     * @throws \InvalidArgumentException When invalid authorization service encountered.
      */
     protected function getService(ServerRequestInterface $request)
     {
@@ -136,8 +135,8 @@ class AuthorizationComponent extends Component
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request
      * @return \Authorization\IdentityInterface
-     * @throws MissingIdentityException When identity is not present in a request.
-     * @throws InvalidArgumentException When invalid identity encountered.
+     * @throws \Authorization\Exception\MissingIdentityException When identity is not present in a request.
+     * @throws \InvalidArgumentException When invalid identity encountered.
      */
     protected function getIdentity(ServerRequestInterface $request)
     {
@@ -203,7 +202,7 @@ class AuthorizationComponent extends Component
      *
      * @param \Cake\Http\ServerRequest $request Server request.
      * @return string
-     * @throws UnexpectedValueException When invalid action type encountered.
+     * @throws \UnexpectedValueException When invalid action type encountered.
      */
     protected function getDefaultAction(ServerRequest $request)
     {

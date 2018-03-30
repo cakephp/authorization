@@ -26,7 +26,6 @@ use RuntimeException;
  */
 class CakeRedirectHandler extends RedirectHandler
 {
-
     /**
      * {@inheritDoc}
      */
@@ -45,7 +44,7 @@ class CakeRedirectHandler extends RedirectHandler
     /**
      * Constructor.
      *
-     * @throws RuntimeException When `Cake\Routing\Router` class cannot be found.
+     * @throws \RuntimeException When `Cake\Routing\Router` class cannot be found.
      */
     public function __construct()
     {

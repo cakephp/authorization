@@ -27,7 +27,7 @@ class HandlerFactory
      *
      * @param string $name UnauthorizedHandler name.
      * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
-     * @throws RuntimeException When invalid handler encountered.
+     * @throws \RuntimeException When invalid handler encountered.
      */
     public static function create($name)
     {

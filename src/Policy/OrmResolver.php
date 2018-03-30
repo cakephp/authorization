@@ -123,7 +123,7 @@ class OrmResolver implements ResolverInterface
         $policyClass = false;
 
         // plugin entities can have application overides defined.
-        if ($namespace != $this->appNamespace) {
+        if ($namespace !== $this->appNamespace) {
             $policyClass = App::className($name, 'Policy\\' . $namespace, 'Policy');
         }
 
