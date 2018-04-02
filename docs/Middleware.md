@@ -15,7 +15,7 @@ the following:
 use Authorization\Middleware\AuthorizationMiddleware;
 
 // inside your application's middleware hook.
-$middlewareStack->add(new AuthorizationMiddleware($this));
+$middlewareQueue->add(new AuthorizationMiddleware($this));
 ```
 
 By passing your application instance into the middlware, it can invoke the
