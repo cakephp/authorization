@@ -23,6 +23,7 @@ use Cake\TestSuite\TestCase;
 use RuntimeException;
 use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
+use TestApp\Policy\MagicCallPolicy;
 
 class AuthorizationServiceTest extends TestCase
 {
@@ -56,6 +57,23 @@ class AuthorizationServiceTest extends TestCase
 
         $service->can($user, 'add', new Article);
         $this->assertTrue($service->authorizationChecked());
+    }
+
+    public function testCallingMagicCallPolicy()
+    {
+        $resolver = new MapResolver([
+            Article::class => MagicCallPolicy::class
+        ]);
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'id' => 9,
+            'role' => 'admin'
+        ]);
+
+        $article = new Article();
+        $this->assertTrue($service->can($user, 'doThat', $article));
+        $this->assertFalse($service->can($user, 'cantDoThis', $article));
     }
 
     public function testAuthorizationCheckedWithApplyScope()
