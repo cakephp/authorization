@@ -56,7 +56,7 @@ class RequestAuthorizationMiddleware {
     /**
      * Constructor
      *
-     * @var array $config Configuration options
+     * @param array $config Configuration options
      */
     public function __construct($config = [])
     {
@@ -138,7 +138,7 @@ class RequestAuthorizationMiddleware {
     /**
      * Handles the case no identity is present or it is unauthorized
      *
-     * @param \Authorization\IdentityInterface;
+     * @param \Authorization\IdentityInterface $identity Identity
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
      * @param \Psr\Http\Message\ResponseInterface $response Response.
      * @return \Psr\Http\Message\ResponseInterface $response Response.
