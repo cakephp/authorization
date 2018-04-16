@@ -34,7 +34,8 @@ use RuntimeException;
  * each controller and action, against a role based access system or any other
  * kind of authorization process that controls access to certain actions.
  */
-class RequestAuthorizationMiddleware {
+class RequestAuthorizationMiddleware
+{
 
     use InstanceConfigTrait;
 
