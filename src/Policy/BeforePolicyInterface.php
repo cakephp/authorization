@@ -29,10 +29,10 @@ interface BeforePolicyInterface
      * If a boolean value is returned, the action check will be skipped and pre-authorization
      * check result will be returned. In case of `null`, the action check will take place.
      *
-     * @param \Authorization\IdentityInterface $identity Identity object.
+     * @param \Authorization\IdentityInterface|null $identity Identity object.
      * @param mixed $resource The resource being operated on.
      * @param string $action The action/operation being performed.
      * @return bool|null
      */
-    public function before(IdentityInterface $identity, $resource, $action);
+    public function before($identity, $resource, $action);
 }
