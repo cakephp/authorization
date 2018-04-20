@@ -134,7 +134,7 @@ class AuthorizationComponent extends Component
      * Get the identity from a request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request
-     * @return \Authorization\IdentityInterface
+     * @return \Authorization\IdentityInterface|null
      * @throws \Authorization\Exception\MissingIdentityException When identity is not present in a request.
      * @throws \InvalidArgumentException When invalid identity encountered.
      */
@@ -143,7 +143,7 @@ class AuthorizationComponent extends Component
         $identityAttribute = $this->getConfig('identityAttribute');
         $identity = $request->getAttribute($identityAttribute);
         if ($identity === null) {
-            throw new MissingIdentityException([$identityAttribute]);
+            return $identity;
         }
         if (!$identity instanceof IdentityInterface) {
             $type = is_object($identity) ? get_class($identity) : gettype($identity);

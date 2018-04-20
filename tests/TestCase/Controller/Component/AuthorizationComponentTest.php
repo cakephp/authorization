@@ -189,19 +189,6 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->authorize($article);
     }
 
-    public function testAuthorizeMissingIdentity()
-    {
-        $this->expectException(MissingIdentityException::class);
-        $this->expectExceptionCode(403);
-        $this->expectExceptionMessage('Identity is not present in `identity` request attribute.');
-
-        $this->Controller->request = $this->Controller->request
-            ->withoutAttribute('identity');
-
-        $article = new Article(['user_id' => 1]);
-        $this->Auth->authorize($article);
-    }
-
     public function testAuthorizeModelSuccess()
     {
         $service = new AuthorizationService(new OrmResolver());
