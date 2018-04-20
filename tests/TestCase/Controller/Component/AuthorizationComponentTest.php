@@ -65,6 +65,43 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth = new AuthorizationComponent($this->ComponentRegistry);
     }
 
+    public function testNullIdentityForbiddenException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Identity is not authorized to perform `view` on `TestApp\Model\Entity\Article`.');
+
+        $service = new AuthorizationService(new OrmResolver());
+        $request = new ServerRequest([
+            'params' => ['controller' => 'Articles', 'action' => 'view'],
+        ]);
+        $request = $request
+            ->withAttribute('authorization', $service);
+
+        $article = new Article(['visibility' => 'private']);
+        $controller = new Controller($request);
+        $componentRegistry = new ComponentRegistry($controller);
+        $auth = new AuthorizationComponent($componentRegistry);
+
+        $auth->authorize($article);
+    }
+
+    public function testNullIdentityAllowed()
+    {
+        $service = new AuthorizationService(new OrmResolver());
+        $request = new ServerRequest([
+            'params' => ['controller' => 'Articles', 'action' => 'view'],
+        ]);
+        $request = $request
+            ->withAttribute('authorization', $service);
+
+        $article = new Article(['visibility' => 'public']);
+        $controller = new Controller($request);
+        $componentRegistry = new ComponentRegistry($controller);
+        $auth = new AuthorizationComponent($componentRegistry);
+
+        $this->assertNull($auth->authorize($article));
+    }
+
     public function testAuthorizeUnresolvedPolicy()
     {
         $this->expectException(MissingPolicyException::class);
