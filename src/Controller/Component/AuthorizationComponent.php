@@ -64,8 +64,12 @@ class AuthorizationComponent extends Component
         if ($action === null) {
             $action = $this->getDefaultAction($request);
         }
+
         $identity = $this->getIdentity($request);
-        if (!$identity->can($action, $resource)) {
+        if (empty($identity) && $this->getService($this->request)->can(null, $action, $resource)) {
+            return;
+        }
+        if (empty($identity) || !$identity->can($action, $resource)) {
             throw new ForbiddenException([$action, get_class($resource)]);
         }
     }
