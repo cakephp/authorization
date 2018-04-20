@@ -26,6 +26,23 @@ use TestApp\Policy\ArticlePolicy;
 
 class AuthorizationServiceTest extends TestCase
 {
+    public function testNullUserCan()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = null;
+
+        $result = $service->can($user, 'view', new Article);
+        $this->assertFalse($result);
+
+        $result = $service->can($user, 'view', new Article(['visibility' => 'public']));
+        $this->assertTrue($result);
+    }
+
     public function testCan()
     {
         $resolver = new MapResolver([
