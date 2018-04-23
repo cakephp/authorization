@@ -54,8 +54,8 @@ Configure::write('App', [
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
-if(!getenv('PREFER_LOWEST')){
-	error_reporting(E_ALL ^ E_USER_DEPRECATED);
+if(!getenv('PREFER_LOWEST')) {
+    error_reporting(E_ALL ^ E_USER_DEPRECATED);
 }
 
 ConnectionManager::config('test', ['url' => getenv('db_dsn')]);
