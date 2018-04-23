@@ -73,7 +73,7 @@ class AuthorizationComponent extends Component
     }
 
     /**
-     * Check the policy for $resource, raising an exception on error.
+     * Check the policy for $resource, returns true if the action is allowed
      *
      * If $action is left undefined, the current controller action will
      * be used.
