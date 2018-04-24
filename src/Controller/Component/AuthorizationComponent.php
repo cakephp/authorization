@@ -60,6 +60,30 @@ class AuthorizationComponent extends Component
      */
     public function authorize($resource, $action = null)
     {
+        if ($action === null) {
+            $request = $this->getController()->request;
+            $action = $this->getDefaultAction($request);
+        }
+
+        if ($this->can($resource, $action)) {
+            return;
+        }
+
+        throw new ForbiddenException([$action, get_class($resource)]);
+    }
+
+    /**
+     * Check the policy for $resource, returns true if the action is allowed
+     *
+     * If $action is left undefined, the current controller action will
+     * be used.
+     *
+     * @param object $resource The resource to check authorization on.
+     * @param string|null $action The action to check authorization for.
+     * @return bool
+     */
+    public function can($resource, $action = null)
+    {
         $request = $this->getController()->request;
         if ($action === null) {
             $action = $this->getDefaultAction($request);
@@ -67,11 +91,14 @@ class AuthorizationComponent extends Component
 
         $identity = $this->getIdentity($request);
         if (empty($identity) && $this->getService($this->request)->can(null, $action, $resource)) {
-            return;
+            return true;
         }
-        if (empty($identity) || !$identity->can($action, $resource)) {
-            throw new ForbiddenException([$action, get_class($resource)]);
+
+        if (!empty($identity) && $identity->can($action, $resource)) {
+            return true;
         }
+
+        return false;
     }
 
     /**
