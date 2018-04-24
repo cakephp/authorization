@@ -55,6 +55,7 @@ Configure::write('App', [
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
+
 ConnectionManager::setConfig('test', ['url' => getenv('db_dsn')]);
 
 Plugin::load('Authorization', [
@@ -64,7 +65,7 @@ Plugin::load('Authorization', [
 // For policy task tests.
 Plugin::load('Bake');
 
-// Disable deprecations for now.
+// Disable deprecations for now when using 3.6
 if (version_compare(Configure::version(), '3.6.0', '>=')) {
     error_reporting(E_ALL ^ E_USER_DEPRECATED);
 }
