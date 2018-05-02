@@ -64,4 +64,22 @@ class ArticlePolicy
 
         return $article;
     }
+
+    /**
+     * Testing that the article can be viewed if its public and no user is logged in
+     *
+     * This test "null" user cases
+     *
+     * @param \Authorization\IdentityInterface $user
+     * @param Article $article
+     * @return bool
+     */
+    public function canView($user, Article $article)
+    {
+        if ($article->get('visibility') !== 'public' && empty($user)) {
+            return false;
+        }
+
+        return true;
+    }
 }

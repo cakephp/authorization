@@ -40,6 +40,7 @@ define('APP', ROOT . 'TestApp' . DS);
 define('TMP', sys_get_temp_dir() . DS);
 define('CONFIG', ROOT . DS . 'config'. DS);
 define('CACHE', TMP . 'cache' . DS);
+define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
 
 Configure::write('debug', true);
 Configure::write('App', [
@@ -54,10 +55,17 @@ Configure::write('App', [
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
-ConnectionManager::config('test', ['url' => getenv('db_dsn')]);
+
+ConnectionManager::setConfig('test', ['url' => getenv('db_dsn')]);
 
 Plugin::load('Authorization', [
     'path' => dirname(dirname(__FILE__)) . DS,
 ]);
+
 // For policy task tests.
 Plugin::load('Bake');
+
+// Disable deprecations for now when using 3.6
+if (version_compare(Configure::version(), '3.6.0', '>=')) {
+    error_reporting(E_ALL ^ E_USER_DEPRECATED);
+}

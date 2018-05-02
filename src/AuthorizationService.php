@@ -47,7 +47,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function can(IdentityInterface $user, $action, $resource)
+    public function can($user, $action, $resource)
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
@@ -72,7 +72,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function applyScope(IdentityInterface $user, $action, $resource)
+    public function applyScope($user, $action, $resource)
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
@@ -93,7 +93,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $method = 'can' . ucfirst($action);
 
-        if (!method_exists($policy, $method)) {
+        if (!method_exists($policy, $method) && !method_exists($policy, '__call')) {
             throw new MissingMethodException([$method, $action, get_class($policy)]);
         }
 

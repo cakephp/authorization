@@ -65,6 +65,43 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth = new AuthorizationComponent($this->ComponentRegistry);
     }
 
+    public function testNullIdentityForbiddenException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Identity is not authorized to perform `view` on `TestApp\Model\Entity\Article`.');
+
+        $service = new AuthorizationService(new OrmResolver());
+        $request = new ServerRequest([
+            'params' => ['controller' => 'Articles', 'action' => 'view'],
+        ]);
+        $request = $request
+            ->withAttribute('authorization', $service);
+
+        $article = new Article(['visibility' => 'private']);
+        $controller = new Controller($request);
+        $componentRegistry = new ComponentRegistry($controller);
+        $auth = new AuthorizationComponent($componentRegistry);
+
+        $auth->authorize($article);
+    }
+
+    public function testNullIdentityAllowed()
+    {
+        $service = new AuthorizationService(new OrmResolver());
+        $request = new ServerRequest([
+            'params' => ['controller' => 'Articles', 'action' => 'view'],
+        ]);
+        $request = $request
+            ->withAttribute('authorization', $service);
+
+        $article = new Article(['visibility' => 'public']);
+        $controller = new Controller($request);
+        $componentRegistry = new ComponentRegistry($controller);
+        $auth = new AuthorizationComponent($componentRegistry);
+
+        $this->assertNull($auth->authorize($article));
+    }
+
     public function testAuthorizeUnresolvedPolicy()
     {
         $this->expectException(MissingPolicyException::class);
@@ -80,7 +117,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->authorize($article);
     }
 
-    public function testAuthorizeSuccessCheckImplictAction()
+    public function testAuthorizeSuccessCheckImplicitAction()
     {
         $article = new Article(['user_id' => 1]);
         $this->assertNull($this->Auth->authorize($article));
@@ -110,7 +147,7 @@ class AuthorizationComponentTest extends TestCase
         $this->assertNull($this->Auth->authorize($article));
     }
 
-    public function testApplyScopeImplictAction()
+    public function testApplyScopeImplicitAction()
     {
         $articles = new ArticlesTable();
         $query = $this->createMock(QueryInterface::class);
@@ -151,7 +188,7 @@ class AuthorizationComponentTest extends TestCase
         $this->assertSame($query, $result);
     }
 
-    public function testApplyScopExplictAction()
+    public function testApplyScopExplicitAction()
     {
         $articles = new ArticlesTable();
         $query = $this->createMock(QueryInterface::class);
@@ -171,7 +208,7 @@ class AuthorizationComponentTest extends TestCase
         $this->assertSame($query, $result);
     }
 
-    public function testAuthorizeSuccessCheckExplictAction()
+    public function testAuthorizeSuccessCheckExplicitAction()
     {
         $article = new Article(['user_id' => 1]);
         $this->assertNull($this->Auth->authorize($article, 'edit'));
@@ -184,19 +221,6 @@ class AuthorizationComponentTest extends TestCase
 
         $this->Controller->request = $this->Controller->request
             ->withAttribute('identity', 'derp');
-
-        $article = new Article(['user_id' => 1]);
-        $this->Auth->authorize($article);
-    }
-
-    public function testAuthorizeMissingIdentity()
-    {
-        $this->expectException(MissingIdentityException::class);
-        $this->expectExceptionCode(403);
-        $this->expectExceptionMessage('Identity is not present in `identity` request attribute.');
-
-        $this->Controller->request = $this->Controller->request
-            ->withoutAttribute('identity');
 
         $article = new Article(['user_id' => 1]);
         $this->Auth->authorize($article);
@@ -347,5 +371,16 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->setConfig('skipAuthorization', ['edit']);
         $this->Auth->authorizeAction();
         $this->assertTrue($service->authorizationChecked());
+    }
+
+    public function testCan()
+    {
+        $article = new Article(['user_id' => 1]);
+        $this->assertTrue($this->Auth->can($article));
+        $this->assertTrue($this->Auth->can($article, 'delete'));
+
+        $article = new Article(['user_id' => 2]);
+        $this->assertFalse($this->Auth->can($article));
+        $this->assertFalse($this->Auth->can($article, 'delete'));
     }
 }
