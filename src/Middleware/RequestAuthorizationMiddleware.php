@@ -16,10 +16,7 @@ namespace Authorization\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
-use Authorization\Exception\MissingIdentityException;
-use Authorization\IdentityInterface;
 use Cake\Core\InstanceConfigTrait;
-use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -47,10 +44,6 @@ class RequestAuthorizationMiddleware
     protected $_defaultConfig = [
         'authorizationAttribute' => 'authorization',
         'identityAttribute' => 'identity',
-        'redirectUrl' => null,
-        'unauthorizedHandler' => null,
-        'missingIdentityHandler' => null,
-        'allowAccessWhenIdentityIsMissing' => false,
         'canMethod' => 'access'
     ];
 
@@ -76,9 +69,9 @@ class RequestAuthorizationMiddleware
         $service = ($request->getAttribute($serviceAttribute));
 
         if (!$service instanceof AuthorizationServiceInterface) {
-            $errorMessage = __CLASS__ . ' could not find the authorization service in the request attribute. '
-                . 'Make sure you added the AuthorizationMiddleware before this middleware or that you '
-                . 'somehow else added the service to the requests `' . $serviceAttribute . '` attribute.';
+            $errorMessage = __CLASS__ . ' could not find the authorization service in the request attribute. ' .
+                'Make sure you added the AuthorizationMiddleware before this middleware or that you ' .
+                'somehow else added the service to the requests `' . $serviceAttribute . '` attribute.';
 
             throw new RuntimeException($errorMessage);
         }
@@ -99,80 +92,10 @@ class RequestAuthorizationMiddleware
         $service = $this->getServiceFromRequest($request);
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
-        if ($identity instanceof IdentityInterface) {
-            if (!$service->can($identity, $this->getConfig('canMethod'), $request)) {
-                $response = $this->handleUnauthorized($identity, $request, $response);
-            }
-        } else {
-            $response = $this->handleMissingIdentity($request, $response);
+        if (!$service->can($identity, $this->getConfig('canMethod'), $request)) {
+            throw new ForbiddenException();
         }
 
         return $next($request, $response);
-    }
-
-    /**
-     * Handles the case no identity is present
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
-     * @param \Psr\Http\Message\ResponseInterface $response Response.
-     * @return \Psr\Http\Message\ResponseInterface $response Response.
-     */
-    public function handleMissingIdentity($request, $response)
-    {
-        $handler = $this->getConfig('missingIdentityHandler');
-        if (is_callable($handler)) {
-            return $handler($request, $response);
-        }
-
-        if ($this->getConfig('allowAccessWhenIdentityIsMissing')) {
-            return $response;
-        }
-
-        $url = $this->getConfig('redirectUrl');
-        if (!empty($url)) {
-            return $this->redirect($response, $url);
-        }
-
-        throw new MissingIdentityException();
-    }
-
-    /**
-     * Handles the case no identity is present or it is unauthorized
-     *
-     * @param \Authorization\IdentityInterface $identity Identity
-     * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
-     * @param \Psr\Http\Message\ResponseInterface $response Response.
-     * @return \Psr\Http\Message\ResponseInterface $response Response.
-     */
-    public function handleUnauthorized($identity, $request, $response)
-    {
-        $handler = $this->getConfig('unauthorizedHandler');
-        if (is_callable($handler)) {
-            return $handler($identity, $request, $response);
-        }
-
-        $url = $this->getConfig('redirectUrl');
-        if (!empty($url)) {
-            return $this->redirect($response, $url);
-        }
-
-        throw new ForbiddenException();
-    }
-
-    /**
-     * Handles the redirect
-     *
-     * @param \Psr\Http\Message\ResponseInterface $response Response.
-     * @param string|array $url URL to redirect to
-     * @return \Psr\Http\Message\ResponseInterface $response Response.
-     */
-    public function redirect(ResponseInterface $response, $url)
-    {
-        if (is_array($url)) {
-            $url = Router::url($url);
-        }
-
-        return $response->withStatus(302)
-            ->withHeader('Location', $url);
     }
 }
