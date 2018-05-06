@@ -1,28 +1,28 @@
 <?php
 namespace TestApp\Policy;
 
+use Cake\Http\ServerRequest;
+
 /**
  * For testing request based policies
  */
 class RequestPolicy
 {
-    public function canIndex($identity, $request)
+    /**
+     * Method to check if the request can be accessed
+     *
+     * @param null|\Authorization\IdentityInterface Identity
+     * @param \Cake\Http\ServerRequest $request Request
+     * @return bool
+     */
+    public function canAccess($identity, ServerRequest $request)
     {
-        return true;
-    }
+        if ($request->getParam('controller') === 'Articles'
+            && $request->getParam('action') === 'index'
+        ) {
+            return true;
+        }
 
-    public function canAdd($identity, $request)
-    {
-        return true;
-    }
-
-    public function canEdit($identity, $request)
-    {
-        return true;
-    }
-
-    public function canDelete($identity, $request)
-    {
         return false;
     }
 }

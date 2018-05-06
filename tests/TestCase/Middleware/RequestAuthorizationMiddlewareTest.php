@@ -15,26 +15,16 @@
 namespace Authorization\Test\TestCase\Middleware;
 
 use Authorization\AuthorizationService;
-use Authorization\AuthorizationServiceInterface;
-use Authorization\Exception\AuthorizationRequiredException;
-use Authorization\Exception\Exception;
-use Authorization\IdentityDecorator;
-use Authorization\IdentityInterface;
+use Authorization\Exception\ForbiddenException;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Middleware\RequestAuthorizationMiddleware;
 use Authorization\Policy\MapResolver;
-use Cake\Core\HttpApplicationInterface;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
-use InvalidArgumentException;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use stdClass;
-use TestApp\Identity;
 use TestApp\Policy\RequestPolicy;
+use Zend\Diactoros\Uri;
 
 /**
  * RequestAuthorizationMiddlewareTest
@@ -57,22 +47,37 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
     public function testInvokeService()
     {
-        $request = (new ServerRequest())
+        $request = (new ServerRequest([
+                'uri' => new Uri('/articles/index')
+            ]))
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
 
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) {
+            return $response;
         };
 
         $resolver = new MapResolver([
-            ServerRequest::class => RequestPolicy::class
+            ServerRequest::class => new RequestPolicy()
         ]);
 
-        $middleware = new AuthorizationMiddleware(new AuthorizationService($resolver));
+        $authService = new AuthorizationService($resolver);
+        $request = $request->withAttribute('authorization', $authService);
+
+        $middleware = new AuthorizationMiddleware($authService, [
+            'requireAuthorizationCheck' => false
+        ]);
         $middleware($request, $response, $next);
 
+        $middleware = new RequestAuthorizationMiddleware();
+        $middleware($request, $response, $next);
+
+        $request = $request
+            ->withParam('action', 'add')
+            ->withParam('controller', 'Articles');
+
+        $this->expectException(ForbiddenException::class);
         $middleware = new RequestAuthorizationMiddleware();
         $middleware($request, $response, $next);
     }

@@ -44,7 +44,7 @@ class RequestAuthorizationMiddleware
     protected $_defaultConfig = [
         'authorizationAttribute' => 'authorization',
         'identityAttribute' => 'identity',
-        'canMethod' => 'access'
+        'method' => 'access'
     ];
 
     /**
@@ -92,7 +92,7 @@ class RequestAuthorizationMiddleware
         $service = $this->getServiceFromRequest($request);
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
-        if (!$service->can($identity, $this->getConfig('canMethod'), $request)) {
+        if (!$service->can($identity, $this->getConfig('method'), $request)) {
             throw new ForbiddenException();
         }
 
