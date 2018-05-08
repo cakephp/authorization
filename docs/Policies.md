@@ -48,6 +48,10 @@ public function canUpdate(IdentityInterface $user, Article $article)
 Policy methods must return `true` to indicate success. All other values will be
 interpreted as failure.
 
+Policy methods will get ``null`` for the ``$user`` parameter when handling
+unauthencticated users. If you want to automatically fail policy methods for
+anonymous users you can use the `IdentityInterface` typehint.
+
 ### Policy Scopes
 
 In addition to policies being able to define pass/fail authorization checks,

@@ -70,7 +70,7 @@ class ArticlePolicy
      *
      * This test "null" user cases
      *
-     * @param \Authorization\IdentityInterface $user
+     * @param \Authorization\IdentityInterface|null $user
      * @param Article $article
      * @return bool
      */
