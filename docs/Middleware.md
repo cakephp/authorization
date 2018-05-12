@@ -176,4 +176,4 @@ be suffixed with `Handler` suffix and reside under your app's or plugin's
 
 Configuration options are passed to the handler's `handle()` method as the last parameter.
 
-Handlers catch only those exceptions which extend `Authorization\Exception\Exception` class.
+Handlers catch only those exceptions which extend the `Authorization\Exception\Exception` class.
