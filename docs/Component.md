@@ -29,7 +29,7 @@ $this->loadComponent('Authorization.Authorization', [
         'index',
         'add',
     ]
-];
+]);
 ```
 
 You can also configure actions to skip authorization. This will make actions *public*,
@@ -43,7 +43,7 @@ $this->loadComponent('Authorization.Authorization', [
     'skipAuthorization' => [
         'login',
     ]
-];
+]);
 ```
 
 ## Checking Authorization
