@@ -4,8 +4,6 @@ This middleware is useful when you want to authorize your requests, for example 
 
 This **must** be added after the Authorization, Authentication and RoutingMiddleware in the Middleware Queue!
 
-This middleware is useful when you want to authorize your requests, for example each controller and action, against a role based access system or any other kind of authorization process that controls access to certain actions.
-
 The logic of handling the request authorization will be implemented in the request policy. You can add all your logic there or just pass the information from the request into an ACL or RBAC implementation.
 
 ## Using it
