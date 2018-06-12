@@ -7,35 +7,36 @@ Authorization is applied to your application as a middleware. The
   `applyScope` if necessary.
 * Ensuring that authorization has been checked/bypassed in the request.
 
-To use the middleware, update the `middleware` hook of your `Application` with
-the following:
+To use the middleware implement `AuthorizationServiceProviderInterface` in your 
+application class. Then pass your app instance into the middlware and add the 
+middleware to the queue. 
 
-```php
-// Import the class.
-use Authorization\Middleware\AuthorizationMiddleware;
-
-// inside your application's middleware hook.
-$middlewareQueue->add(new AuthorizationMiddleware($this));
-```
-
-By passing your application instance into the middlware, it can invoke the
-``authorization`` hook method on your application which should return
-a configured `AuthorizationService`. A very simple example would be:
+A very simple example would be:
 
 ```php
 namespace App;
 
 use Authorization\AuthorizationService;
+use Authorization\AuthorizationServiceProviderInterface;
+use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
 use Cake\Http\BaseApplication;
 
-class Application extends BaseApplication
+class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 {
-    public function authorization($request)
+    public function getAuthorizationService(ServerRequestInterface $request, ResponseInterface $response)
     {
         $resolver = new OrmResolver();
 
         return new AuthorizationService($resolver);
+    }
+
+    public function middleware($middlewareQueue)
+    {
+        // other middleware
+        $middlewareQueue->add(new AuthorizationMiddleware($this));
+
+        return $middlewareQueue;
     }
 }
 ```
@@ -109,7 +110,7 @@ setup:
 // In your Application::middleware() method;
 
 // Authorization
-$middleware->add(new AuthorizationMiddleware($this, [
+$middlewareQueue->add(new AuthorizationMiddleware($this, [
     'identityDecorator' => function ($auth, $user) {
         return $user->setAuthorization($auth);
     }
@@ -130,7 +131,7 @@ a helpful aid during development/testing. You can disable this behavior via an
 option:
 
 ```php
-$middlewareStack->add(new AuthorizationMiddleware($this, [
+$middlewareQueue->add(new AuthorizationMiddleware($this, [
     'requireAuthorizationCheck' => false
 ]));
 ```
@@ -157,7 +158,7 @@ Both redirect handlers share the same configuration options:
 For example:
 
 ```php
-$middlewareStack->add(new AuthorizationMiddleware($this, [
+$middlewareQueue->add(new AuthorizationMiddleware($this, [
     'unauthorizedHandler' => [
         'className' => 'Authorization.Redirect',
         'url' => '/users/login',

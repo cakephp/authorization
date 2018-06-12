@@ -15,12 +15,12 @@
 namespace Authorization\Test\TestCase\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
+use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Exception\AuthorizationRequiredException;
 use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
-use Cake\Core\HttpApplicationInterface;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
@@ -78,13 +78,10 @@ class AuthorizationMiddlewareTest extends TestCase
     public function testInvokeApp()
     {
         $service = $this->createMock(AuthorizationServiceInterface::class);
-
-        $application = $this->getMockBuilder(HttpApplicationInterface::class)
-            ->setMethods(['authorization', 'middleware', 'routes', 'bootstrap', '__invoke'])
-            ->getMock();
-        $application
+        $provider = $this->createMock(AuthorizationServiceProviderInterface::class);
+        $provider
             ->expects($this->once())
-            ->method('authorization')
+            ->method('getAuthorizationService')
             ->with(
                 $this->isInstanceOf(ServerRequestInterface::class),
                 $this->isInstanceOf(ResponseInterface::class)
@@ -97,7 +94,7 @@ class AuthorizationMiddlewareTest extends TestCase
             return $request;
         };
 
-        $middleware = new AuthorizationMiddleware($application, ['requireAuthorizationCheck' => false]);
+        $middleware = new AuthorizationMiddleware($provider, ['requireAuthorizationCheck' => false]);
 
         $result = $middleware($request, $response, $next);
 
@@ -106,40 +103,12 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->assertNull($result->getAttribute('identity'));
     }
 
-    public function testInvokeAppMissing()
-    {
-        $service = $this->createMock(AuthorizationServiceInterface::class);
-
-        $application = $this->getMockBuilder(HttpApplicationInterface::class)
-            ->setMethods(['middleware', 'routes', 'bootstrap', '__invoke'])
-            ->getMock();
-
-        $request = new ServerRequest();
-        $response = new Response();
-        $next = function ($request) {
-            return $request;
-        };
-
-        $middleware = new AuthorizationMiddleware($application, ['requireAuthorizationCheck' => false]);
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Method `authorization` has not been defined in your `Application` class.');
-
-        $result = $middleware($request, $response, $next);
-    }
-
     public function testInvokeAppInvalid()
     {
-        $application = $this->getMockBuilder(HttpApplicationInterface::class)
-            ->setMethods(['middleware', 'routes', 'bootstrap', '__invoke'])
-            ->getMock();
-
-        $application = $this->getMockBuilder(HttpApplicationInterface::class)
-            ->setMethods(['authorization', 'middleware', 'routes', 'bootstrap', '__invoke'])
-            ->getMock();
-        $application
+        $provider = $this->createMock(AuthorizationServiceProviderInterface::class);
+        $provider
             ->expects($this->once())
-            ->method('authorization')
+            ->method('getAuthorizationService')
             ->with(
                 $this->isInstanceOf(ServerRequestInterface::class),
                 $this->isInstanceOf(ResponseInterface::class)
@@ -152,11 +121,11 @@ class AuthorizationMiddlewareTest extends TestCase
             return $request;
         };
 
-        $middleware = new AuthorizationMiddleware($application, ['requireAuthorizationCheck' => false]);
+        $middleware = new AuthorizationMiddleware($provider, ['requireAuthorizationCheck' => false]);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Invalid service returned from `authorization` method. ' .
+            'Invalid service returned from the provider. ' .
             '`stdClass` does not implement `Authorization\AuthorizationServiceInterface`.'
         );
 
@@ -176,7 +145,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
             'Subject must be an instance of `Authorization\AuthorizationServiceInterface` ' .
-            'or `Cake\Core\HttpApplicationInterface`, `stdClass` given.'
+            'or `Authorization\AuthorizationServiceProviderInterface`, `stdClass` given.'
         );
 
         $middleware = new AuthorizationMiddleware(new stdClass());
