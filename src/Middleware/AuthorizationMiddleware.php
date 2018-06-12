@@ -15,12 +15,12 @@
 namespace Authorization\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
+use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Exception\AuthorizationRequiredException;
 use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
-use Cake\Core\HttpApplicationInterface;
 use Cake\Core\InstanceConfigTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
@@ -60,23 +60,23 @@ class AuthorizationMiddleware
     /**
      * Authorization service or application instance.
      *
-     * @var \Authorization\AuthorizationServiceInterface|\Cake\Core\HttpApplicationInterface
+     * @var \Authorization\AuthorizationServiceInterface|\Authorization\AuthorizationServiceProviderInterface
      */
     protected $subject;
 
     /**
      * Constructor.
      *
-     * @param \Authorization\AuthorizationServiceInterface|\Cake\Core\HttpApplicationInterface $subject Authorization service or application instance.
+     * @param \Authorization\AuthorizationServiceInterface|\Authorization\AuthorizationServiceProviderInterface $subject Authorization service or provider instance.
      * @param array $config Config array.
      * @throws \InvalidArgumentException
      */
     public function __construct($subject, array $config = [])
     {
-        if (!$subject instanceof AuthorizationServiceInterface && !$subject instanceof HttpApplicationInterface) {
+        if (!$subject instanceof AuthorizationServiceInterface && !$subject instanceof AuthorizationServiceProviderInterface) {
             $expected = implode('` or `', [
                 AuthorizationServiceInterface::class,
-                HttpApplicationInterface::class
+                AuthorizationServiceProviderInterface::class
             ]);
             $type = is_object($subject) ? get_class($subject) : gettype($subject);
             $message = sprintf('Subject must be an instance of `%s`, `%s` given.', $expected, $type);
@@ -152,22 +152,14 @@ class AuthorizationMiddleware
      */
     protected function getAuthorizationService($request, $response)
     {
-        if ($this->subject instanceof AuthorizationServiceInterface) {
-            return $this->subject;
+        $service = $this->subject;
+        if ($this->subject instanceof AuthorizationServiceProviderInterface) {
+            $service = $this->subject->getAuthorizationService($request, $response);
         }
-
-        $method = 'authorization';
-        if (!method_exists($this->subject, $method)) {
-            $message = sprintf('Method `%s` has not been defined in your `Application` class.', $method);
-            throw new RuntimeException($message);
-        }
-
-        $service = $this->subject->$method($request, $response);
 
         if (!$service instanceof AuthorizationServiceInterface) {
             throw new RuntimeException(sprintf(
-                'Invalid service returned from `%s` method. `%s` does not implement `%s`.',
-                $method,
+                'Invalid service returned from the provider. `%s` does not implement `%s`.',
                 is_object($service) ? get_class($service) : gettype($service),
                 AuthorizationServiceInterface::class
             ));
