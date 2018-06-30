@@ -24,8 +24,17 @@ imports:
 
 ```php
 use Authorization\AuthorizationService;
+use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+```
+
+Add the `AuthorizationProviderInterface` to the implemented interfaces on your application:
+
+```php
+class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 ```
 
 Then add the following to your `middleware()` method:
@@ -41,7 +50,7 @@ define the `AuthorizationService` it wants to use. Add the following method your
 **src/Application.php**
 
 ```php
-public function authorization($request)
+public function getAuthorizationService(ServerRequestInterface $request, ResponseInterface $response)
 {
     $resolver = new OrmResolver();
 
