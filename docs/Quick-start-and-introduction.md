@@ -9,8 +9,12 @@ Project's ROOT directory (where the **composer.json** file is located)
 php composer.phar require cakephp/authorization
 ```
 
-Load the plugin by adding the following statement in your project's `config/bootstrap.php`
+Load the plugin by adding the following statement in your project's `src/Application.php`
 
+```php
+$this->addPlugin('Authorization');
+```
+Prior to 3.6.0
 ```php
 Plugin::load('Authorization');
 ```
