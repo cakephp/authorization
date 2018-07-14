@@ -28,8 +28,11 @@ php composer.phar require cakephp/authorization
 ```
 
 Load the plugin by adding the following statement in your project's
-`config/bootstrap.php`:
-
+`src/Application.php`:
+```php
+$this->addPlugin('Authorization');
+```
+Prior to 3.6.0
 ```php
 Plugin::load('Authorization');
 ```
