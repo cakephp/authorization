@@ -324,16 +324,16 @@ class AuthorizationComponentTest extends TestCase
     {
         $events = $this->Auth->implementedEvents();
         $this->assertEquals([
-            'Controller.initialize' => 'authorizeAction'
+            'Controller.startup' => 'authorizeAction'
         ], $events);
     }
 
     public function testImplementedCustom()
     {
-        $this->Auth->setConfig('authorizationEvent', 'Controller.startup');
+        $this->Auth->setConfig('authorizationEvent', 'Controller.initialize');
         $events = $this->Auth->implementedEvents();
         $this->assertEquals([
-            'Controller.startup' => 'authorizeAction'
+            'Controller.initialize' => 'authorizeAction'
         ], $events);
     }
 

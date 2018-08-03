@@ -41,7 +41,7 @@ class AuthorizationComponent extends Component
     protected $_defaultConfig = [
         'identityAttribute' => 'identity',
         'serviceAttribute' => 'authorization',
-        'authorizationEvent' => 'Controller.initialize',
+        'authorizationEvent' => 'Controller.startup',
         'skipAuthorization' => [],
         'authorizeModel' => [],
         'actionMap' => []
