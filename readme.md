@@ -8,9 +8,6 @@ Authorization stack for the CakePHP framework.
 
 This plugin is for CakePHP 3.5+.
 
-**:warning: This is still under active development and APIs may change 
-  without notice :warning:**
-
 ## Authorization not Authentication
 
 This plugin intends to provide a framework around authorization and access
