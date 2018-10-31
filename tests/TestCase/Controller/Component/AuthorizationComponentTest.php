@@ -33,6 +33,7 @@ use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\ArticlesTablePolicy;
+use TestApp\Policy\StringResolver;
 use UnexpectedValueException;
 
 /**
@@ -117,6 +118,28 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->authorize($article);
     }
 
+    public function testAuthorizeFailedCheckStringResolver()
+    {
+        // Reset the system to use the string resolver
+        $service = new AuthorizationService(new StringResolver());
+        $identity = new IdentityDecorator($service, ['can_index' => false]);
+        $request = new ServerRequest([
+            'params' => ['controller' => 'Articles', 'action' => 'index'],
+        ]);
+
+        $request = $request
+            ->withAttribute('authorization', $service)
+            ->withAttribute('identity', $identity);
+
+        $this->Controller = new Controller($request);
+        $this->ComponentRegistry = new ComponentRegistry($this->Controller);
+        $this->Auth = new AuthorizationComponent($this->ComponentRegistry);
+
+        $this->expectException(ForbiddenException::class);
+
+        $this->Auth->authorize('ArticlesTable');
+    }
+
     public function testAuthorizeSuccessCheckImplicitAction()
     {
         $article = new Article(['user_id' => 1]);
@@ -145,6 +168,26 @@ class AuthorizationComponentTest extends TestCase
 
         $this->Auth->setConfig('actionMap', ['edit' => 'modify']);
         $this->assertNull($this->Auth->authorize($article));
+    }
+
+    public function testAuthorizeSuccessCheckStringResolver()
+    {
+        // Reset the system to use the string resolver
+        $service = new AuthorizationService(new StringResolver());
+        $identity = new IdentityDecorator($service, ['can_index' => true]);
+        $request = new ServerRequest([
+            'params' => ['controller' => 'Articles', 'action' => 'index'],
+        ]);
+
+        $request = $request
+            ->withAttribute('authorization', $service)
+            ->withAttribute('identity', $identity);
+
+        $this->Controller = new Controller($request);
+        $this->ComponentRegistry = new ComponentRegistry($this->Controller);
+        $this->Auth = new AuthorizationComponent($this->ComponentRegistry);
+
+        $this->assertNull($this->Auth->authorize('ArticlesTable'));
     }
 
     public function testApplyScopeImplicitAction()

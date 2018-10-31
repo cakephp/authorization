@@ -69,7 +69,7 @@ class AuthorizationComponent extends Component
             return;
         }
 
-        throw new ForbiddenException([$action, get_class($resource)]);
+        throw new ForbiddenException([$action, is_object($resource) ? get_class($resource) : (is_string($resource) ? $resource : gettype($resource))]);
     }
 
     /**
