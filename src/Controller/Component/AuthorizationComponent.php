@@ -71,7 +71,7 @@ class AuthorizationComponent extends Component
 
         if (is_object($resource)) {
             $name = get_class($resource);
-        } else if (is_string($resource)) {
+        } elseif (is_string($resource)) {
             $name = $resource;
         } else {
             $name = gettype($resource);
