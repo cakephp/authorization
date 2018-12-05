@@ -65,7 +65,7 @@ class AuthorizationComponent extends Component
             $action = $this->getDefaultAction($request);
         }
 
-        if ($this->can($resource, $action)) {
+        if ($this->_can($resource, $action)) {
             return;
         }
 
@@ -80,7 +80,13 @@ class AuthorizationComponent extends Component
     }
 
     /**
-     * Check the policy for $resource, returns true if the action is allowed
+     * Check the policy for $resource, returns true if the action is allowed.
+     *
+     * To support policies throwing their own exceptions (potentially required
+     * in order for `authorize` checks to work in advanced scenarios), any
+     * Forbidden and MissingIdentity exceptions will be caught and result in
+     * a false return value. If you have your own custom exceptions, you can
+     * ensure that they will be dealt with here by extending one of these two.
      *
      * If $action is left undefined, the current controller action will
      * be used.
@@ -91,11 +97,30 @@ class AuthorizationComponent extends Component
      */
     public function can($resource, $action = null)
     {
-        $request = $this->getController()->request;
         if ($action === null) {
+            $request = $this->getController()->request;
             $action = $this->getDefaultAction($request);
         }
 
+        try {
+            return $this->_can($resource, $action);
+        } catch (ForbiddenException $ex) {
+            return false;
+        } catch (MissingIdentityException $ex) {
+            return false;
+        }
+    }
+
+    /**
+     * Check the policy for $resource, returns true if the action is allowed
+     *
+     * @param object $resource The resource to check authorization on.
+     * @param string $action The action to check authorization for.
+     * @return bool
+     */
+    protected function _can($resource, $action)
+    {
+        $request = $this->getController()->request;
         $identity = $this->getIdentity($request);
         if (empty($identity) && $this->getService($this->request)->can(null, $action, $resource)) {
             return true;

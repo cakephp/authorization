@@ -140,6 +140,14 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->authorize('ArticlesTable');
     }
 
+    public function testAuthorizePolicyException()
+    {
+        $this->expectException(MissingIdentityException::class);
+
+        $article = new Article(['user_id' => 99]);
+        $this->Auth->authorize($article, 'exception');
+    }
+
     public function testAuthorizeSuccessCheckImplicitAction()
     {
         $article = new Article(['user_id' => 1]);
@@ -425,5 +433,7 @@ class AuthorizationComponentTest extends TestCase
         $article = new Article(['user_id' => 2]);
         $this->assertFalse($this->Auth->can($article));
         $this->assertFalse($this->Auth->can($article, 'delete'));
+
+        $this->assertFalse($this->Auth->can($article, 'exception'));
     }
 }

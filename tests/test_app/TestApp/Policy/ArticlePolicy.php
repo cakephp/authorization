@@ -82,4 +82,17 @@ class ArticlePolicy
 
         return true;
     }
+
+    /**
+     * Testing that exceptions are properly handled
+     *
+     * @param \Authorization\IdentityInterface|null $user
+     * @param Article $article
+     * @return bool
+     * @throws \Authorization\Exception\MissingIdentityException
+     */
+    public function canException($user, Article $article)
+    {
+        throw new \Authorization\Exception\MissingIdentityException();
+    }
 }
