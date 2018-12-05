@@ -122,7 +122,7 @@ class AuthorizationComponent extends Component
     {
         $request = $this->getController()->request;
         $identity = $this->getIdentity($request);
-        if (empty($identity) && $this->getService($this->request)->can(null, $action, $resource)) {
+        if (empty($identity) && $this->getService($request)->can(null, $action, $resource)) {
             return true;
         }
 
