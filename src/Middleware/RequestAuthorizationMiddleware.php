@@ -94,11 +94,11 @@ class RequestAuthorizationMiddleware
         $service = $this->getServiceFromRequest($request);
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
-        $result = !$service->can($identity, $this->getConfig('method'), $request);
+        $result = $service->can($identity, $this->getConfig('method'), $request);
         if (!$result instanceof ResultInterface) {
             $result = new Result($result);
         }
-        if ($result->getStatus()) {
+        if (!$result->getStatus()) {
             throw new ForbiddenException($result);
         }
 
