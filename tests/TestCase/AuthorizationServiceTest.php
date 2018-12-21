@@ -273,7 +273,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Pre-authorization check must return `bool` or `null`.');
+        $this->expectExceptionMessage('Pre-authorization check must return `Authorization\Policy\ResultInterface`, `bool` or `null`.');
 
         $service->can($user, 'add', $entity);
     }
