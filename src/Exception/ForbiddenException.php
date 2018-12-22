@@ -52,7 +52,7 @@ class ForbiddenException extends Exception
 
             parent::__construct($message, $code, $previous);
         } else {
-            //shift off first argument fort BC
+            //shift off first argument for BC
             parent::__construct($result, $message, $code);
         }
     }
