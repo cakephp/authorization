@@ -81,4 +81,52 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         $middleware = new RequestAuthorizationMiddleware();
         $middleware($request, $response, $next);
     }
+
+    public function testInvokeServiceWithResult()
+    {
+        $request = (new ServerRequest([
+                'uri' => new Uri('/articles/index')
+            ]))
+            ->withParam('action', 'index')
+            ->withParam('controller', 'Articles');
+
+        $response = new Response();
+        $next = function ($request, $response) {
+            return $response;
+        };
+
+        $resolver = new MapResolver([
+            ServerRequest::class => new RequestPolicy()
+        ]);
+
+        $authService = new AuthorizationService($resolver);
+        $request = $request->withAttribute('authorization', $authService);
+
+        $middleware = new AuthorizationMiddleware($authService, [
+            'requireAuthorizationCheck' => false
+        ]);
+        $middleware($request, $response, $next);
+
+        $middleware = new RequestAuthorizationMiddleware([
+            'method' => 'enter',
+        ]);
+        $middleware($request, $response, $next);
+
+        $request = $request
+            ->withParam('action', 'add')
+            ->withParam('controller', 'Articles');
+
+        $this->expectException(ForbiddenException::class);
+        $middleware = new RequestAuthorizationMiddleware([
+            'method' => 'enter',
+        ]);
+
+        try {
+            $middleware($request, $response, $next);
+        } catch (ForbiddenException $e) {
+            $this->assertEquals('wrong action', $e->getResult()->getReason());
+
+            throw $e;
+        }
+    }
 }
