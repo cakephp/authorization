@@ -1,6 +1,7 @@
 <?php
 namespace TestApp\Policy;
 
+use Authorization\Policy\Result;
 use TestApp\Model\Entity\Article;
 
 class ArticlePolicy
@@ -81,5 +82,23 @@ class ArticlePolicy
         }
 
         return true;
+    }
+
+    /**
+     * Testing that the article can be published
+     *
+     * This tests Result objects.
+     *
+     * @param \Authorization\IdentityInterface|null $user
+     * @param Article $article
+     * @return Result
+     */
+    public function canPublish($user, Article $article)
+    {
+        if ($article->get('visibility') === 'public') {
+            return new Result(false, 'public');
+        }
+
+        return new Result($article->get('user_id') === $user['id']);
     }
 }

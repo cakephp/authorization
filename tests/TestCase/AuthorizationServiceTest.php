@@ -62,6 +62,22 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function testCanWithResult()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin'
+        ]);
+
+        $result = $service->can($user, 'publish', new Article);
+        $this->assertInstanceOf(ResultInterface::class, $result);
+    }
+
     public function testAuthorizationCheckedWithCan()
     {
         $resolver = new MapResolver([
