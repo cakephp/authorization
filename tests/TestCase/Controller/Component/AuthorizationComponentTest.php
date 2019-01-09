@@ -17,11 +17,11 @@ namespace Authorization\Test\TestCase\Controller\Component;
 use Authorization\AuthorizationService;
 use Authorization\Controller\Component\AuthorizationComponent;
 use Authorization\Exception\ForbiddenException;
-use Authorization\Exception\MissingIdentityException;
 use Authorization\IdentityDecorator;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
+use Authorization\Policy\ResultInterface;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Datasource\QueryInterface;
@@ -41,6 +41,11 @@ use UnexpectedValueException;
  */
 class AuthorizationComponentTest extends TestCase
 {
+    /**
+     *
+     * @var \Authorization\Controller\Component\AuthorizationComponent
+     */
+    protected $Auth;
 
     /**
      * setUp method
@@ -118,6 +123,22 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->authorize($article);
     }
 
+    public function testAuthorizeFailedCheckWithResult()
+    {
+        $this->expectException(ForbiddenException::class);
+
+        $article = new Article(['user_id' => 1, 'visibility' => 'public']);
+        try {
+            $this->Auth->authorize($article, 'publish');
+        } catch (ForbiddenException $e) {
+            $result = $e->getResult();
+            $this->assertEquals('public', $result->getReason());
+            $this->assertFalse($result->getStatus());
+
+            throw $e;
+        }
+    }
+
     public function testAuthorizeFailedCheckStringResolver()
     {
         // Reset the system to use the string resolver
@@ -188,6 +209,12 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth = new AuthorizationComponent($this->ComponentRegistry);
 
         $this->assertNull($this->Auth->authorize('ArticlesTable'));
+    }
+
+    public function testAuthorizeSuccessfulCheckWithResult()
+    {
+        $article = new Article(['user_id' => 1]);
+        $this->assertNull($this->Auth->authorize($article, 'publish'));
     }
 
     public function testApplyScopeImplicitAction()
@@ -425,5 +452,12 @@ class AuthorizationComponentTest extends TestCase
         $article = new Article(['user_id' => 2]);
         $this->assertFalse($this->Auth->can($article));
         $this->assertFalse($this->Auth->can($article, 'delete'));
+    }
+
+    public function testCanWithResult()
+    {
+        $article = new Article(['user_id' => 1]);
+        $result = $this->Auth->can($article, 'publish');
+        $this->assertInstanceOf(ResultInterface::class, $result);
     }
 }

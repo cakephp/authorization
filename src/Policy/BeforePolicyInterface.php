@@ -14,8 +14,6 @@
  */
 namespace Authorization\Policy;
 
-use Authorization\IdentityInterface;
-
 /**
  * This interface should be implemented if a policy class needs to perform a
  * pre-authorization check before the action access check takes place.
@@ -32,7 +30,7 @@ interface BeforePolicyInterface
      * @param \Authorization\IdentityInterface|null $identity Identity object.
      * @param mixed $resource The resource being operated on.
      * @param string $action The action/operation being performed.
-     * @return bool|null
+     * @return \Authorization\Policy\ResultInterface|bool|null
      */
     public function before($identity, $resource, $action);
 }

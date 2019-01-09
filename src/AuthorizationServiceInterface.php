@@ -28,7 +28,7 @@ interface AuthorizationServiceInterface
      * @param \Authorization\IdentityInterface|null $user The user to check permissions for.
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
-     * @return bool
+     * @return bool|\Authorization\Policy\ResultInterface
      */
     public function can($user, $action, $resource);
 

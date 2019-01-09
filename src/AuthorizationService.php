@@ -17,6 +17,7 @@ namespace Authorization;
 use Authorization\Policy\BeforePolicyInterface;
 use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\ResolverInterface;
+use Authorization\Policy\ResultInterface;
 use RuntimeException;
 
 class AuthorizationService implements AuthorizationServiceInterface
@@ -55,16 +56,21 @@ class AuthorizationService implements AuthorizationServiceInterface
         if ($policy instanceof BeforePolicyInterface) {
             $result = $policy->before($user, $resource, $action);
 
-            if (is_bool($result)) {
+            if ($result instanceof ResultInterface || is_bool($result)) {
                 return $result;
             }
             if ($result !== null) {
-                throw new RuntimeException('Pre-authorization check must return `bool` or `null`.');
+                $message = sprintf('Pre-authorization check must return `%s`, `bool` or `null`.', ResultInterface::class);
+                throw new RuntimeException($message);
             }
         }
 
         $handler = $this->getCanHandler($policy, $action);
         $result = $handler($user, $resource);
+
+        if ($result instanceof ResultInterface) {
+            return $result;
+        }
 
         return $result === true;
     }
