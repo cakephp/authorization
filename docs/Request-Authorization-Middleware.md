@@ -50,5 +50,5 @@ In your `Application.php` make sure you're loading the RequestAuthorizationMiddl
 ```php
 // Add authorization (after authentication if you are using that plugin too).
 $middleware->add(new AuthorizationMiddleware($this));
-$middleware->add(new RequestAuthorizationMiddleware())
+$middleware->add(new RequestAuthorizationMiddleware());
 ```
