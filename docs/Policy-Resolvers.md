@@ -20,16 +20,16 @@ objects, or factory callables:
 ```php
 use Authorization\Policy\MapResolver;
 
-$map = new MapResolver();
+$mapResolver = new MapResolver();
 
 // Map a resource class to a policy classname
-$map->map(Article::class, ArticlePolicy::class);
+$mapResolver->map(Article::class, ArticlePolicy::class);
 
 // Map a resource class to a policy instance.
-$map->map(Article::class, new ArticlePolicy());
+$mapResolver->map(Article::class, new ArticlePolicy());
 
 // Map a resource class to a factory function
-$map->map(Article::class, function ($resource, $mapResolver) {
+$mapResolver->map(Article::class, function ($resource, $mapResolver) {
     // Return a policy object.
 });
 ```
@@ -88,12 +88,12 @@ use Authorization\Policy\ResolverCollection;
 use Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
 
-$orm = new OrmResolver();
-$map = new MapResolver();
+$ormResolver = new OrmResolver();
+$mapResolver = new MapResolver();
 
 // Check the map resolver, and fallback to the orm resolver if
 // a resource is not explicitly mapped.
-$resolver = new ResolverCollection([$map, $orm]);
+$resolver = new ResolverCollection([$mapResolver, $ormResolver]);
 ```
 
 ## Creating a Resolver

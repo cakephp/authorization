@@ -38,15 +38,18 @@ class RequestPolicy implements RequestPolicyInterface
 }
 ```
 
-Map the request class to the policy.
+Map the request class to the policy inside `Application::getAuthorizationService()`:
 
 ```php
 use App\Policy\RequestPolicy;
+use Authorization\AuthorizationService;
 use Authorization\Policy\MapResolver;
 use Cake\Http\ServerRequest;
 
-$map = new MapResolver();
-$map->map(ServerRequest::class, RequestPolicy::class);
+$mapResolver = new MapResolver();
+$mapResolver->map(ServerRequest::class, RequestPolicy::class);
+
+return new AuthorizationService($resolver);
 ```
 
 In your `Application.php` make sure you're loading the RequestAuthorizationMiddleware **after** the AuthorizationMiddleware! 
