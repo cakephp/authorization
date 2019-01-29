@@ -8,15 +8,20 @@ The logic of handling the request authorization will be implemented in the reque
 
 ## Using it
 
-Create a policy for handling the request object.
+Create a policy for handling the request object. The plugin ships with an interface here to implement.
 
 ```php
-class RequestPolicy
+namespace App\Policy;
+
+use Authorization\Policy\RequestPolicyInterface;
+use Cake\Http\ServerRequest;
+
+class RequestPolicy implements RequestPolicyInterface
 {
     /**
      * Method to check if the request can be accessed
      *
-     * @param null|\Authorization\IdentityInterface Identity
+     * @param \Authorization\IdentityInterface|null Identity
      * @param \Cake\Http\ServerRequest $request Server Request
      * @return bool
      */
@@ -31,7 +36,6 @@ class RequestPolicy
         return false;
     }
 }
-
 ```
 
 Map the request class to the policy.
