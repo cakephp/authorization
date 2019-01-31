@@ -6,7 +6,7 @@
 
 Authorization stack for the CakePHP framework.
 
-This plugin is for CakePHP 3.5+.
+This branch is for CakePHP 3.x.
 
 ## Authorization not Authentication
 
@@ -18,7 +18,7 @@ packaged into a separate [authentication plugin](https://github.com/cakephp/auth
 ## Installation
 
 You can install this plugin into your CakePHP application using 
-[composer](http://getcomposer.org):
+[composer](https://getcomposer.org):
 
 ```
 php composer.phar require cakephp/authorization
