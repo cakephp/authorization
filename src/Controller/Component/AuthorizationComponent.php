@@ -265,7 +265,7 @@ class AuthorizationComponent extends Component
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             $this->getConfig('authorizationEvent') => 'authorizeAction'
