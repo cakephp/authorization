@@ -30,7 +30,7 @@ interface IdentityInterface extends ArrayAccess
      *
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
-     * @return bool
+     * @return bool|\Authorization\Policy\ResultInterface
      */
     public function can($action, $resource);
 

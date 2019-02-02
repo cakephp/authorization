@@ -15,6 +15,17 @@ if ($user->can('delete', $article)) {
 }
 ```
 
+If your policies return [Result objects](../Policies.md#policy-result-objects) 
+be sure to check their status as  `can()` returns the result instance:
+
+```php
+// Assuming our policy returns a result.
+$result = $user->can('delete', $article);
+if ($result->getStatus()) {
+    // Do deletion
+}
+```
+
 You can also use the `identity` to apply scopes:
 
 ```php

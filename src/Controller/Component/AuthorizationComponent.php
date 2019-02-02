@@ -16,8 +16,9 @@ namespace Authorization\Controller\Component;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
-use Authorization\Exception\MissingIdentityException;
 use Authorization\IdentityInterface;
+use Authorization\Policy\Result;
+use Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
 use Cake\Http\ServerRequest;
 use InvalidArgumentException;
@@ -65,7 +66,11 @@ class AuthorizationComponent extends Component
             $action = $this->getDefaultAction($request);
         }
 
-        if ($this->can($resource, $action)) {
+        $result = $this->can($resource, $action);
+        if (!$result instanceof ResultInterface) {
+            $result = new Result($result);
+        }
+        if ($result->getStatus()) {
             return;
         }
 
@@ -76,7 +81,7 @@ class AuthorizationComponent extends Component
         } else {
             $name = gettype($resource);
         }
-        throw new ForbiddenException([$action, $name]);
+        throw new ForbiddenException($result, [$action, $name]);
     }
 
     /**
@@ -87,7 +92,7 @@ class AuthorizationComponent extends Component
      *
      * @param object $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
-     * @return bool
+     * @return bool|\Authorization\Policy\ResultInterface
      */
     public function can($resource, $action = null)
     {
@@ -97,15 +102,11 @@ class AuthorizationComponent extends Component
         }
 
         $identity = $this->getIdentity($request);
-        if (empty($identity) && $this->getService($this->request)->can(null, $action, $resource)) {
-            return true;
+        if (empty($identity)) {
+            return $this->getService($this->request)->can(null, $action, $resource);
         }
 
-        if (!empty($identity) && $identity->can($action, $resource)) {
-            return true;
-        }
-
-        return false;
+        return $identity->can($action, $resource);
     }
 
     /**

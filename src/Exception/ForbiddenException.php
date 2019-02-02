@@ -15,6 +15,8 @@
 
 namespace Authorization\Exception;
 
+use Authorization\Policy\ResultInterface;
+
 class ForbiddenException extends Exception
 {
     /**
@@ -26,4 +28,42 @@ class ForbiddenException extends Exception
      * {@inheritDoc}
      */
     protected $_messageTemplate = 'Identity is not authorized to perform `%s` on `%s`.';
+
+    /**
+     * Policy check result.
+     *
+     * @var \Authorization\Policy\ResultInterface|null
+     */
+    protected $result;
+
+    /**
+     * Constructor
+     *
+     * @param ResultInterface|null $result Policy check result.
+     * @param string|array $message Either the string of the error message, or an array of attributes
+     *   that are made available in the view, and sprintf()'d into Exception::$_messageTemplate
+     * @param int|null $code The code of the error, is also the HTTP status code for the error.
+     * @param \Exception|null $previous the previous exception.
+     */
+    public function __construct($result = null, $message = '', $code = null, $previous = null)
+    {
+        if ($result instanceof ResultInterface) {
+            $this->result = $result;
+
+            parent::__construct($message, $code, $previous);
+        } else {
+            //shift off first argument for BC
+            parent::__construct($result, $message, $code);
+        }
+    }
+
+    /**
+     * Returns policy check result if passed to the exception.
+     *
+     * @return \Authorization\Policy\ResultInterface|null
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
 }

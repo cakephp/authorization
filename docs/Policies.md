@@ -45,12 +45,30 @@ public function canUpdate(IdentityInterface $user, Article $article)
 }
 ```
 
-Policy methods must return `true` to indicate success. All other values will be
-interpreted as failure.
-
-Policy methods will get ``null`` for the ``$user`` parameter when handling
+Policy methods will receive ``null`` for the ``$user`` parameter when handling
 unauthencticated users. If you want to automatically fail policy methods for
 anonymous users you can use the `IdentityInterface` typehint.
+
+### Policy Result Objects
+
+In addition to booleans, policy methods can return ``Result`` objects which
+allow more context to be provided on why the policy passed/failed.
+
+```php
+use Authorization\Policy\Result;
+
+public function canUpdate(IdentityInterface $user, Article $article)
+{
+    if ($user->id == $article->user_id) {
+        return new Result(true);
+    }
+    // Results let you define a 'reason' for the failure.
+    return new Result(false, 'not-owner');
+}
+```
+
+Any return value that is not `true` or a `ResultInterface` object will be
+considered a failure.
 
 ### Policy Scopes
 
