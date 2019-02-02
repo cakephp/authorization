@@ -12,18 +12,18 @@
  * @since         1.0.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace Authorization\Test\TestCase\Shell\Task;
+namespace Authorization\Test\TestCase\Command;
 
-use Bake\Shell\Task\BakeTemplateTask;
-use Cake\Console\Shell;
+use Cake\Console\Command;
 use Cake\Core\Configure;
-use Cake\Core\Plugin;
+use Cake\Core\Plugin as CorePlugin;
+use Cake\Routing\Router;
 use Cake\TestSuite\ConsoleIntegrationTestCase;
 
 /**
- * PolicyTask class
+ * PolicyCommand test class
  */
-class PolicyTaskTest extends ConsoleIntegrationTestCase
+class PolicyCommandTest extends ConsoleIntegrationTestCase
 {
     /**
      * @var string
@@ -38,9 +38,11 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        Router::reload();
 
-        $this->comparisonDir = dirname(dirname(dirname(__DIR__))) . DS . 'comparisons' . DS;
-        Plugin::load('TestPlugin');
+        $this->comparisonDir = dirname(dirname(__DIR__)) . DS . 'comparisons' . DS;
+        $this->useCommandRunner();
+        $this->loadPlugins(['TestPlugin']);
     }
 
     public function tearDown()
@@ -58,7 +60,7 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
         $this->generatedFile = APP . 'Policy/BookmarkPolicy.php';
 
         $this->exec('bake policy Bookmark');
-        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertFileExists($this->generatedFile);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
     }
@@ -68,7 +70,7 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
         $this->generatedFile = APP . 'Policy/BookmarkPolicy.php';
 
         $this->exec('bake policy --type entity Bookmark');
-        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
         $this->assertFileEquals(
@@ -82,7 +84,7 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
         $this->generatedFile = APP . 'Policy/ThingPolicy.php';
 
         $this->exec('bake policy --type object Thing');
-        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
         $this->assertFileEquals(
@@ -96,7 +98,7 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
         $this->generatedFile = APP . 'Policy/BookmarksTablePolicy.php';
 
         $this->exec('bake policy --type table Bookmarks');
-        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
         $this->assertFileEquals(
@@ -110,7 +112,7 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
         $this->generatedFile = ROOT . 'Plugin/TestPlugin/src/Policy/UserPolicy.php';
 
         $this->exec('bake policy TestPlugin.User');
-        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
         $this->assertFileEquals(
@@ -124,7 +126,7 @@ class PolicyTaskTest extends ConsoleIntegrationTestCase
         $this->generatedFile = ROOT . 'Plugin/TestPlugin/src/Policy/UsersTablePolicy.php';
 
         $this->exec('bake policy --type table TestPlugin.Users');
-        $this->assertExitCode(Shell::CODE_SUCCESS);
+        $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
         $this->assertFileEquals(
