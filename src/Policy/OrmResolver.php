@@ -69,7 +69,7 @@ class OrmResolver implements ResolverInterface
             return $this->getRepositoryPolicy($resource);
         }
         if ($resource instanceof QueryInterface) {
-            return $this->getRepositoryPolicy($resource->repository());
+            return $this->getRepositoryPolicy($resource->getRepository());
         }
         $name = is_object($resource) ? get_class($resource) : gettype($resource);
         throw new MissingPolicyException([$name]);
@@ -120,7 +120,7 @@ class OrmResolver implements ResolverInterface
     protected function findPolicy($class, $name, $namespace)
     {
         $namespace = $this->getNamespace($namespace);
-        $policyClass = false;
+        $policyClass = null;
 
         // plugin entities can have application overides defined.
         if ($namespace !== $this->appNamespace) {
@@ -128,11 +128,11 @@ class OrmResolver implements ResolverInterface
         }
 
         // Check the application/plugin.
-        if ($policyClass === false) {
+        if ($policyClass === null) {
             $policyClass = App::className($namespace . '.' . $name, 'Policy', 'Policy');
         }
 
-        if ($policyClass === false) {
+        if ($policyClass === null) {
             throw new MissingPolicyException([$class]);
         }
 
