@@ -42,10 +42,14 @@ use UnexpectedValueException;
 class AuthorizationComponentTest extends TestCase
 {
     /**
-     *
      * @var \Authorization\Controller\Component\AuthorizationComponent
      */
     protected $Auth;
+
+    /**
+     * @var \Cake\Http\ServerRequest
+     */
+    protected $request;
 
     /**
      * setUp method
@@ -62,11 +66,11 @@ class AuthorizationComponentTest extends TestCase
         $request = new ServerRequest([
             'params' => ['controller' => 'Articles', 'action' => 'edit'],
         ]);
-        $request = $request
+        $this->request = $request
             ->withAttribute('authorization', $service)
             ->withAttribute('identity', $identity);
 
-        $this->Controller = new Controller($request);
+        $this->Controller = new Controller($this->request);
         $this->ComponentRegistry = new ComponentRegistry($this->Controller);
         $this->Auth = new AuthorizationComponent($this->ComponentRegistry);
     }
@@ -175,8 +179,8 @@ class AuthorizationComponentTest extends TestCase
         ]));
 
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
+        $this->Controller->setRequest($this->request
+            ->withAttribute('identity', $identity));
 
         $policy->expects($this->never())
             ->method('canEdit');
@@ -221,7 +225,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $articles = new ArticlesTable();
         $query = $this->createMock(QueryInterface::class);
-        $query->method('repository')
+        $query->method('getRepository')
             ->willReturn($articles);
 
         $query->expects($this->once())
@@ -241,7 +245,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $articles = new ArticlesTable();
         $query = $this->createMock(QueryInterface::class);
-        $query->method('repository')
+        $query->method('getRepository')
             ->willReturn($articles);
 
         $query->expects($this->once())
@@ -262,7 +266,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $articles = new ArticlesTable();
         $query = $this->createMock(QueryInterface::class);
-        $query->method('repository')
+        $query->method('getRepository')
             ->willReturn($articles);
 
         $query->expects($this->once())
@@ -289,8 +293,8 @@ class AuthorizationComponentTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageRegexp('/Expected that `identity` would be/');
 
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', 'derp');
+        $this->Controller->setRequest($this->request
+            ->withAttribute('identity', 'derp'));
 
         $article = new Article(['user_id' => 1]);
         $this->Auth->authorize($article);
@@ -300,8 +304,8 @@ class AuthorizationComponentTest extends TestCase
     {
         $service = new AuthorizationService(new OrmResolver());
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
+        $this->Controller->setRequest($this->request
+            ->withAttribute('identity', $identity));
 
         $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
@@ -311,8 +315,8 @@ class AuthorizationComponentTest extends TestCase
     {
         $service = new AuthorizationService(new OrmResolver());
         $identity = new IdentityDecorator($service, ['can_edit' => false]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
+        $this->Controller->setRequest($this->request
+            ->withAttribute('identity', $identity));
 
         $this->Auth->setConfig('authorizeModel', ['edit']);
         $this->expectException(ForbiddenException::class);
@@ -329,8 +333,8 @@ class AuthorizationComponentTest extends TestCase
         ]));
 
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
+        $this->Controller->setRequest($this->request
+            ->withAttribute('identity', $identity));
 
         $policy->expects($this->never())
             ->method('canEdit');
@@ -343,8 +347,8 @@ class AuthorizationComponentTest extends TestCase
     {
         $service = new AuthorizationService(new OrmResolver());
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
+        $this->Controller->setRequest($this->request
+            ->withAttribute('identity', $identity));
 
         $this->Auth->setConfig('authorizeModel', ['edit']);
         $result = $this->Auth->authorizeAction();
@@ -359,8 +363,8 @@ class AuthorizationComponentTest extends TestCase
         ]));
 
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
+        $this->Controller->setRequest($this->request
+            ->withAttribute('identity', $identity));
 
         $policy->expects($this->never())
             ->method('canEdit');
@@ -379,8 +383,8 @@ class AuthorizationComponentTest extends TestCase
     {
         $service = new AuthorizationService(new OrmResolver());
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('identity', $identity);
+        $this->Controller->setRequest($this->request
+            ->withAttribute('identity', $identity));
 
         $this->Auth->setConfig('authorizeModel', ['edit']);
         $this->Auth->setConfig('actionMap', ['edit' => new stdClass]);
@@ -409,7 +413,7 @@ class AuthorizationComponentTest extends TestCase
 
     public function testSkipAuthorization()
     {
-        $service = $this->Controller->request->getAttribute('authorization');
+        $service = $this->Controller->getRequest()->getAttribute('authorization');
         $this->assertFalse($service->authorizationChecked());
 
         $this->Auth->skipAuthorization();
@@ -418,8 +422,8 @@ class AuthorizationComponentTest extends TestCase
 
     public function testSkipAuthorizationBadService()
     {
-        $this->Controller->request = $this->Controller->request
-            ->withAttribute('authorization', 'derp');
+        $this->Controller->setRequest($this->request
+            ->withAttribute('authorization', 'derp'));
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageRegexp('/Expected that `authorization` would be/');
@@ -428,7 +432,7 @@ class AuthorizationComponentTest extends TestCase
 
     public function testAuthorizeNotSkipped()
     {
-        $service = $this->Controller->request->getAttribute('authorization');
+        $service = $this->Controller->getRequest()->getAttribute('authorization');
 
         $this->Auth->authorizeAction();
         $this->assertFalse($service->authorizationChecked());
@@ -436,7 +440,7 @@ class AuthorizationComponentTest extends TestCase
 
     public function testAuthorizeActionSkipped()
     {
-        $service = $this->Controller->request->getAttribute('authorization');
+        $service = $this->Controller->getRequest()->getAttribute('authorization');
 
         $this->Auth->setConfig('skipAuthorization', ['edit']);
         $this->Auth->authorizeAction();
