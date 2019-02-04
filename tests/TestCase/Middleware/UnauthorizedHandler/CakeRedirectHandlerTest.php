@@ -72,8 +72,8 @@ class CakeRedirectHandlerTest extends TestCase
                 Exception::class,
             ],
             'url' => [
-                '_name' => 'login'
-            ]
+                '_name' => 'login',
+            ],
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
@@ -95,9 +95,9 @@ class CakeRedirectHandlerTest extends TestCase
             'url' => [
                 '_name' => 'login',
                 '?' => [
-                    'foo' => 'bar'
+                    'foo' => 'bar',
                 ],
-            ]
+            ],
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -17,9 +18,6 @@ namespace TestApp\Policy;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\ResolverInterface;
 use Cake\Core\App;
-use Cake\Datasource\EntityInterface;
-use Cake\Datasource\QueryInterface;
-use Cake\Datasource\RepositoryInterface;
 
 /**
  * Very simple policy resolver that accepts string policy names.

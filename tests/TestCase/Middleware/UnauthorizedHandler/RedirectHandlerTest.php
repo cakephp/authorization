@@ -29,7 +29,7 @@ class RedirectHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = new ServerRequest([
-            'environment' => ['REQUEST_METHOD' => 'GET']
+            'environment' => ['REQUEST_METHOD' => 'GET'],
         ]);
         $response = new Response();
 
@@ -52,8 +52,8 @@ class RedirectHandlerTest extends TestCase
             'environment' => [
                 'REQUEST_METHOD' => 'GET',
                 'PATH_INFO' => '/path',
-                'QUERY_STRING' => 'key=value'
-            ]
+                'QUERY_STRING' => 'key=value',
+            ],
         ]);
         $response = new Response();
 
@@ -61,7 +61,7 @@ class RedirectHandlerTest extends TestCase
             'exceptions' => [
                 Exception::class,
             ],
-            'url' => '/login?foo=bar'
+            'url' => '/login?foo=bar',
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
@@ -74,7 +74,7 @@ class RedirectHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = new ServerRequest([
-            'environment' => ['REQUEST_METHOD' => 'GET']
+            'environment' => ['REQUEST_METHOD' => 'GET'],
         ]);
         $response = new Response();
 
@@ -114,8 +114,8 @@ class RedirectHandlerTest extends TestCase
             'environment' => [
                 'REQUEST_METHOD' => $method,
                 'PATH_INFO' => '/path',
-                'QUERY_STRING' => 'key=value'
-            ]
+                'QUERY_STRING' => 'key=value',
+            ],
         ]);
         $response = new Response();
 
@@ -123,7 +123,7 @@ class RedirectHandlerTest extends TestCase
             'exceptions' => [
                 Exception::class,
             ],
-            'url' => '/login?foo=bar'
+            'url' => '/login?foo=bar',
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());

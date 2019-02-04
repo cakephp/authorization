@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Authorization\Test\TestCase\Command;
 
 use Cake\Console\Command;
-use Cake\Core\Configure;
-use Cake\Core\Plugin as CorePlugin;
 use Cake\Routing\Router;
 use Cake\TestSuite\ConsoleIntegrationTestCase;
 

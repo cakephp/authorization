@@ -117,7 +117,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $this->expectException(MissingPolicyException::class);
 
-        $this->Auth->authorize(new stdClass);
+        $this->Auth->authorize(new stdClass());
     }
 
     public function testAuthorizeFailedCheck()
@@ -176,7 +176,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $policy = $this->createMock(ArticlePolicy::class);
         $service = new AuthorizationService(new MapResolver([
-            Article::class => $policy
+            Article::class => $policy,
         ]));
 
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
@@ -232,7 +232,7 @@ class AuthorizationComponentTest extends TestCase
         $query->expects($this->once())
             ->method('where')
             ->with([
-                'user_id' => 1
+                'user_id' => 1,
             ])
             ->willReturn($query);
 
@@ -252,7 +252,7 @@ class AuthorizationComponentTest extends TestCase
         $query->expects($this->once())
             ->method('where')
             ->with([
-                'identity_id' => 1
+                'identity_id' => 1,
             ])
             ->willReturn($query);
 
@@ -273,7 +273,7 @@ class AuthorizationComponentTest extends TestCase
         $query->expects($this->once())
             ->method('where')
             ->with([
-                'identity_id' => 1
+                'identity_id' => 1,
             ])
             ->willReturn($query);
 
@@ -330,7 +330,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $policy = $this->createMock(ArticlesTablePolicy::class);
         $service = new AuthorizationService(new MapResolver([
-            ArticlesTable::class => $policy
+            ArticlesTable::class => $policy,
         ]));
 
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
@@ -360,7 +360,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $policy = $this->createMock(ArticlesTablePolicy::class);
         $service = new AuthorizationService(new MapResolver([
-            ArticlesTable::class => $policy
+            ArticlesTable::class => $policy,
         ]));
 
         $identity = new IdentityDecorator($service, ['can_edit' => true]);
@@ -388,7 +388,7 @@ class AuthorizationComponentTest extends TestCase
             ->withAttribute('identity', $identity));
 
         $this->Auth->setConfig('authorizeModel', ['edit']);
-        $this->Auth->setConfig('actionMap', ['edit' => new stdClass]);
+        $this->Auth->setConfig('actionMap', ['edit' => new stdClass()]);
 
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Invalid action type for `edit`. Expected `string` or `null`, got `stdClass`.');
@@ -399,7 +399,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $events = $this->Auth->implementedEvents();
         $this->assertEquals([
-            'Controller.startup' => 'authorizeAction'
+            'Controller.startup' => 'authorizeAction',
         ], $events);
     }
 
@@ -408,7 +408,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Auth->setConfig('authorizationEvent', 'Controller.initialize');
         $events = $this->Auth->implementedEvents();
         $this->assertEquals([
-            'Controller.initialize' => 'authorizeAction'
+            'Controller.initialize' => 'authorizeAction',
         ], $events);
     }
 
