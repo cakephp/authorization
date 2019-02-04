@@ -73,7 +73,7 @@ class PolicyCommand extends SimpleBakeCommand
         $data = parent::templateData($arguments);
 
         $name = $this->_getName($arguments->getArgument('name'));
-        $type = $this->type = $arguments->getOption('type');
+        $type = $this->type = (string)$arguments->getOption('type');
 
         $suffix = '';
         if ($type === 'table') {
