@@ -31,7 +31,7 @@ use TestPlugin\Policy\TagPolicy;
 
 class OrmResolverTest extends TestCase
 {
-    public $fixtures = ['core.articles'];
+    public $fixtures = ['core.Articles'];
 
     public function testGetPolicyUnknownObject()
     {
