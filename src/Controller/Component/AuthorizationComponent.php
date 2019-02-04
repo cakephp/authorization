@@ -62,7 +62,7 @@ class AuthorizationComponent extends Component
     public function authorize($resource, $action = null)
     {
         if ($action === null) {
-            $request = $this->getController()->request;
+            $request = $this->getController()->getRequest();
             $action = $this->getDefaultAction($request);
         }
 
@@ -96,14 +96,14 @@ class AuthorizationComponent extends Component
      */
     public function can($resource, $action = null)
     {
-        $request = $this->getController()->request;
+        $request = $this->getController()->getRequest();
         if ($action === null) {
             $action = $this->getDefaultAction($request);
         }
 
         $identity = $this->getIdentity($request);
         if (empty($identity)) {
-            return $this->getService($this->request)->can(null, $action, $resource);
+            return $this->getService($request)->can(null, $action, $resource);
         }
 
         return $identity->can($action, $resource);
@@ -121,7 +121,7 @@ class AuthorizationComponent extends Component
      */
     public function applyScope($resource, $action = null)
     {
-        $request = $this->getController()->request;
+        $request = $this->getController()->getRequest();
         if ($action === null) {
             $action = $this->getDefaultAction($request);
         }
@@ -137,7 +137,7 @@ class AuthorizationComponent extends Component
      */
     public function skipAuthorization()
     {
-        $request = $this->getController()->request;
+        $request = $this->getController()->getRequest();
         $service = $this->getService($request);
 
         $service->skipAuthorization();
@@ -206,7 +206,7 @@ class AuthorizationComponent extends Component
      */
     public function authorizeAction()
     {
-        $request = $this->getController()->request;
+        $request = $this->getController()->getRequest();
         $action = $request->getParam('action');
 
         $skipAuthorization = $this->checkAction($action, 'skipAuthorization');
@@ -265,7 +265,7 @@ class AuthorizationComponent extends Component
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             $this->getConfig('authorizationEvent') => 'authorizeAction'

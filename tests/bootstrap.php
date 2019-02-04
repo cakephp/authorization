@@ -15,7 +15,7 @@
 // @codingStandardsIgnoreFile
 
 use Cake\Core\Configure;
-use Cake\Core\Plugin;
+use Cake\Core\Plugin as CorePlugin;
 use Cake\Datasource\ConnectionManager;
 
 $findRoot = function ($root) {
@@ -48,7 +48,7 @@ Configure::write('App', [
     'encoding' => 'UTF-8',
     'paths' => [
         'plugins' => [ROOT . 'Plugin' . DS],
-        'templates' => [ROOT . 'TestApp' . DS . 'Template' . DS]
+        'templates' => [ROOT . 'templates' . DS]
     ]
 ]);
 
@@ -58,14 +58,4 @@ if (!getenv('db_dsn')) {
 
 ConnectionManager::setConfig('test', ['url' => getenv('db_dsn')]);
 
-Plugin::load('Authorization', [
-    'path' => dirname(dirname(__FILE__)) . DS,
-]);
-
-// For policy task tests.
-Plugin::load('Bake');
-
-// Disable deprecations for now when using 3.6
-if (version_compare(Configure::version(), '3.6.0', '>=')) {
-    error_reporting(E_ALL ^ E_USER_DEPRECATED);
-}
+CorePlugin::getCollection()->add(new \Authorization\Plugin());

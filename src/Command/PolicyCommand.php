@@ -12,15 +12,18 @@
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Authorization\Shell\Task;
+namespace Authorization\Command;
 
-use Bake\Shell\Task\SimpleBakeTask;
+use Bake\Command\SimpleBakeCommand;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
+use Cake\Console\ConsoleOptionParser;
 use Cake\Utility\Inflector;
 
 /**
  * Bake task for building policy classes
  */
-class PolicyTask extends SimpleBakeTask
+class PolicyCommand extends SimpleBakeCommand
 {
     /**
      * path to Policy directory
@@ -30,9 +33,14 @@ class PolicyTask extends SimpleBakeTask
     public $pathFragment = 'Policy/';
 
     /**
+     * @var string
+     */
+    protected $type;
+
+    /**
      * {@inheritDoc}
      */
-    public function name()
+    public function name(): string
     {
         return 'policy';
     }
@@ -40,9 +48,9 @@ class PolicyTask extends SimpleBakeTask
     /**
      * {@inheritDoc}
      */
-    public function fileName($name)
+    public function fileName(string $name): string
     {
-        if ($this->param('type') === 'table') {
+        if ($this->type === 'table') {
             $name .= 'Table';
         }
 
@@ -52,7 +60,7 @@ class PolicyTask extends SimpleBakeTask
     /**
      * {@inheritDoc}
      */
-    public function template()
+    public function template(): string
     {
         return 'Authorization.policy';
     }
@@ -60,12 +68,12 @@ class PolicyTask extends SimpleBakeTask
     /**
      * {@inheritDoc}
      */
-    public function templateData()
+    public function templateData(Arguments $arguments): array
     {
-        $data = parent::templateData();
+        $data = parent::templateData($arguments);
 
-        $name = $this->_getName($this->args[0]);
-        $type = $this->param('type');
+        $name = $this->_getName($arguments->getArgument('name'));
+        $type = $this->type = (string)$arguments->getOption('type');
 
         $suffix = '';
         if ($type === 'table') {
@@ -98,14 +106,18 @@ class PolicyTask extends SimpleBakeTask
     /**
      * Gets the option parser instance and configures it.
      *
+     * @param \Cake\Console\ConsoleOptionParser $parser The parser to update.
      * @return \Cake\Console\ConsoleOptionParser
      */
-    public function getOptionParser()
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = parent::getOptionParser();
+        $parser = $this->_setCommonOptions($parser);
 
         return $parser
             ->setDescription('Bake policy classes for various supported object types.')
+            ->addArgument('name', [
+                'help' => 'The name of the policy class to create.',
+            ])
             ->addOption('type', [
                 'help' => 'The object type to bake a policy for. If only one argument is used, type will be object.',
                 'default' => 'entity',
@@ -118,9 +130,11 @@ class PolicyTask extends SimpleBakeTask
      * Do nothing (for now)
      *
      * @param string $className The class to bake a test for.
+     * @param \Cake\Console\Arguments $args The arguments object
+     * @param \Cake\Console\ConsoleIo $io The consoleio object
      * @return void
      */
-    public function bakeTest($className)
+    public function bakeTest(string $className, Arguments $args, ConsoleIo $io): void
     {
         // Do nothing as TestTask is not aware of policies for now.
     }
