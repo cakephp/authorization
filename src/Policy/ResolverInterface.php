@@ -20,7 +20,6 @@ namespace Authorization\Policy;
  */
 interface ResolverInterface
 {
-
     /**
      * Resolves the policy object based on the authorization resource.
      *

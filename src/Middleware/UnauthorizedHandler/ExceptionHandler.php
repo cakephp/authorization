@@ -24,12 +24,15 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ExceptionHandler implements HandlerInterface
 {
-
     /**
      * {@inheritDoc}
      */
-    public function handle(Exception $exception, ServerRequestInterface $request, ResponseInterface $response, array $options = [])
-    {
+    public function handle(
+        Exception $exception,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $options = []
+    ) {
         throw $exception;
     }
 }

@@ -46,7 +46,7 @@ class AuthorizationComponent extends Component
         'authorizationEvent' => 'Controller.startup',
         'skipAuthorization' => [],
         'authorizeModel' => [],
-        'actionMap' => []
+        'actionMap' => [],
     ];
 
     /**
@@ -269,7 +269,7 @@ class AuthorizationComponent extends Component
     public function implementedEvents(): array
     {
         return [
-            $this->getConfig('authorizationEvent') => 'authorizeAction'
+            $this->getConfig('authorizationEvent') => 'authorizeAction',
         ];
     }
 }

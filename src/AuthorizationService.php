@@ -61,7 +61,10 @@ class AuthorizationService implements AuthorizationServiceInterface
                 return $result;
             }
             if ($result !== null) {
-                $message = sprintf('Pre-authorization check must return `%s`, `bool` or `null`.', ResultInterface::class);
+                $message = sprintf(
+                    'Pre-authorization check must return `%s`, `bool` or `null`.',
+                    ResultInterface::class
+                );
                 throw new RuntimeException($message);
             }
         }

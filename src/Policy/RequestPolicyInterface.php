@@ -15,7 +15,6 @@ declare(strict_types=1);
  */
 namespace Authorization\Policy;
 
-use Authorization\IdentityInterface;
 use Cake\Http\ServerRequest;
 
 /**

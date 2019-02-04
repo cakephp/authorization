@@ -36,7 +36,6 @@ use RuntimeException;
  */
 class RequestAuthorizationMiddleware
 {
-
     use InstanceConfigTrait;
 
     /**
@@ -47,7 +46,7 @@ class RequestAuthorizationMiddleware
     protected $_defaultConfig = [
         'authorizationAttribute' => 'authorization',
         'identityAttribute' => 'identity',
-        'method' => 'access'
+        'method' => 'access',
     ];
 
     /**
@@ -69,10 +68,10 @@ class RequestAuthorizationMiddleware
     protected function getServiceFromRequest(ServerRequestInterface $request)
     {
         $serviceAttribute = $this->getConfig('authorizationAttribute');
-        $service = ($request->getAttribute($serviceAttribute));
+        $service = $request->getAttribute($serviceAttribute);
 
         if (!$service instanceof AuthorizationServiceInterface) {
-            $errorMessage = __CLASS__ . ' could not find the authorization service in the request attribute. ' .
+            $errorMessage = self::class . ' could not find the authorization service in the request attribute. ' .
                 'Make sure you added the AuthorizationMiddleware before this middleware or that you ' .
                 'somehow else added the service to the requests `' . $serviceAttribute . '` attribute.';
 
@@ -88,7 +87,7 @@ class RequestAuthorizationMiddleware
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
      * @param \Psr\Http\Message\ResponseInterface $response Response.
      * @param callable $next The next middleware to call.
-     * @return ResponseInterface A response.
+     * @return \Psr\Http\Message\ResponseInterface A response.
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {

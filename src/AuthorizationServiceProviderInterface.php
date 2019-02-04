@@ -23,7 +23,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 interface AuthorizationServiceProviderInterface
 {
-
     /**
      * Returns authorization service instance.
      *

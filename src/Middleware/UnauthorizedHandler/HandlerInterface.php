@@ -24,7 +24,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 interface HandlerInterface
 {
-
     /**
      * Handles the unauthorized request. The modified response should be returned.
      *
@@ -34,5 +33,10 @@ interface HandlerInterface
      * @param array $options Options array.
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function handle(Exception $exception, ServerRequestInterface $request, ResponseInterface $response, array $options = []);
+    public function handle(
+        Exception $exception,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $options = []
+    );
 }

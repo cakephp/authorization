@@ -21,7 +21,6 @@ namespace Authorization\Policy;
  */
 interface BeforePolicyInterface
 {
-
     /**
      * Defines a pre-authorization check.
      *

@@ -25,7 +25,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class RedirectHandler implements HandlerInterface
 {
-
     /**
      * Default config:
      *
@@ -50,8 +49,12 @@ class RedirectHandler implements HandlerInterface
      *
      * {@inheritDoc}
      */
-    public function handle(Exception $exception, ServerRequestInterface $request, ResponseInterface $response, array $options = [])
-    {
+    public function handle(
+        Exception $exception,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $options = []
+    ) {
         $options += $this->defaultOptions;
 
         if (!$this->checkException($exception, $options['exceptions'])) {

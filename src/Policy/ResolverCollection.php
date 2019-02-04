@@ -41,7 +41,6 @@ use Authorization\Policy\Exception\MissingPolicyException;
  */
 class ResolverCollection implements ResolverInterface
 {
-
     /**
      * Policy resolver instances.
      *

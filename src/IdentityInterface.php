@@ -50,7 +50,7 @@ interface IdentityInterface extends ArrayAccess
      * If the decorated identity implements `getOriginalData()`
      * that method should be invoked to expose the original data.
      *
-     * @return array|ArrayAccess
+     * @return array|\ArrayAccess
      */
     public function getOriginalData();
 }

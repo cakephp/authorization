@@ -40,7 +40,11 @@ class HandlerFactory
 
         $instance = new $class();
         if (!$instance instanceof HandlerInterface) {
-            $message = sprintf('Handler should implement `%s`, got `%s`.', HandlerInterface::class, get_class($instance));
+            $message = sprintf(
+                'Handler should implement `%s`, got `%s`.',
+                HandlerInterface::class,
+                get_class($instance)
+            );
             throw new RuntimeException($message);
         }
 
