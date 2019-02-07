@@ -60,7 +60,7 @@ class MapResolver implements ResolverInterface
      * @return $this
      * @throws \InvalidArgumentException When a resource class does not exist or policy is invalid.
      */
-    public function map($resourceClass, $policy)
+    public function map(string $resourceClass, $policy)
     {
         if (!class_exists($resourceClass)) {
             $message = sprintf('Resource class `%s` does not exist.', $resourceClass);

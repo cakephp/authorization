@@ -55,12 +55,12 @@ class AuthorizationComponent extends Component
      * If $action is left undefined, the current controller action will
      * be used.
      *
-     * @param object $resource The resource to check authorization on.
+     * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @return void
      * @throws \Authorization\Exception\ForbiddenException when policy check fails.
      */
-    public function authorize($resource, $action = null)
+    public function authorize($resource, ?string $action = null): void
     {
         if ($action === null) {
             $request = $this->getController()->getRequest();
@@ -91,11 +91,11 @@ class AuthorizationComponent extends Component
      * If $action is left undefined, the current controller action will
      * be used.
      *
-     * @param object $resource The resource to check authorization on.
+     * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @return bool|\Authorization\Policy\ResultInterface
      */
-    public function can($resource, $action = null)
+    public function can($resource, ?string $action = null)
     {
         $request = $this->getController()->getRequest();
         if ($action === null) {
@@ -120,7 +120,7 @@ class AuthorizationComponent extends Component
      * @param string|null $action The action to apply a scope for.
      * @return object
      */
-    public function applyScope($resource, $action = null)
+    public function applyScope(object $resource, ?string $action = null): object
     {
         $request = $this->getController()->getRequest();
         if ($action === null) {
@@ -153,7 +153,7 @@ class AuthorizationComponent extends Component
      * @return \Authorization\AuthorizationServiceInterface
      * @throws \InvalidArgumentException When invalid authorization service encountered.
      */
-    protected function getService(ServerRequestInterface $request)
+    protected function getService(ServerRequestInterface $request): \Authorization\AuthorizationServiceInterface
     {
         $serviceAttribute = $this->getConfig('serviceAttribute');
         $service = $request->getAttribute($serviceAttribute);
@@ -178,7 +178,7 @@ class AuthorizationComponent extends Component
      * @throws \Authorization\Exception\MissingIdentityException When identity is not present in a request.
      * @throws \InvalidArgumentException When invalid identity encountered.
      */
-    protected function getIdentity(ServerRequestInterface $request)
+    protected function getIdentity(ServerRequestInterface $request): ?IdentityInterface
     {
         $identityAttribute = $this->getConfig('identityAttribute');
         $identity = $request->getAttribute($identityAttribute);
@@ -205,7 +205,7 @@ class AuthorizationComponent extends Component
      *
      * @return void
      */
-    public function authorizeAction()
+    public function authorizeAction(): void
     {
         $request = $this->getController()->getRequest();
         $action = $request->getParam('action');
@@ -230,7 +230,7 @@ class AuthorizationComponent extends Component
      * @param string $configKey Configuration key with actions.
      * @return bool
      */
-    protected function checkAction($action, $configKey)
+    protected function checkAction(string $action, string $configKey): bool
     {
         $actions = (array)$this->getConfig($configKey);
 
@@ -244,7 +244,7 @@ class AuthorizationComponent extends Component
      * @return string
      * @throws \UnexpectedValueException When invalid action type encountered.
      */
-    protected function getDefaultAction(ServerRequest $request)
+    protected function getDefaultAction(ServerRequest $request): string
     {
         $action = $request->getParam('action');
         $name = $this->getConfig('actionMap.' . $action);

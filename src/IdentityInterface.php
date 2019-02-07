@@ -33,7 +33,7 @@ interface IdentityInterface extends ArrayAccess
      * @param mixed $resource The resource being operated on.
      * @return bool|\Authorization\Policy\ResultInterface
      */
-    public function can($action, $resource);
+    public function can(string $action, $resource);
 
     /**
      * Apply authorization scope conditions/restrictions.
@@ -42,7 +42,7 @@ interface IdentityInterface extends ArrayAccess
      * @param mixed $resource The resource being operated on.
      * @return mixed The modified resource.
      */
-    public function applyScope($action, $resource);
+    public function applyScope(string $action, $resource);
 
     /**
      * Get the decorated identity

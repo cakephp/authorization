@@ -15,6 +15,7 @@ declare(strict_types=1);
  */
 namespace Authorization\Policy;
 
+use Authorization\IdentityInterface;
 use Cake\Http\ServerRequest;
 
 /**
@@ -27,7 +28,7 @@ interface RequestPolicyInterface
      *
      * @param \Authorization\IdentityInterface|null $identity Identity
      * @param \Cake\Http\ServerRequest $request Server Request
-     * @return bool
+     * @return bool|\Authorization\Policy\ResultInterface
      */
-    public function canAccess($identity, ServerRequest $request);
+    public function canAccess(?IdentityInterface $identity, ServerRequest $request);
 }

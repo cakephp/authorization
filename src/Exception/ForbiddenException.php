@@ -13,7 +13,6 @@ declare(strict_types=1);
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-
 namespace Authorization\Exception;
 
 use Authorization\Policy\ResultInterface;
@@ -46,7 +45,7 @@ class ForbiddenException extends Exception
      * @param int|null $code The code of the error, is also the HTTP status code for the error.
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct($result = null, $message = '', $code = null, $previous = null)
+    public function __construct(?ResultInterface $result = null, $message = '', $code = null, $previous = null)
     {
         if ($result instanceof ResultInterface) {
             $this->result = $result;
@@ -63,7 +62,7 @@ class ForbiddenException extends Exception
      *
      * @return \Authorization\Policy\ResultInterface|null
      */
-    public function getResult()
+    public function getResult(): ?ResultInterface
     {
         return $this->result;
     }

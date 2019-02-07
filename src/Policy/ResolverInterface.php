@@ -27,7 +27,7 @@ interface ResolverInterface
      * exception if a policy cannot be resolved for a given resource.
      *
      * @param mixed $resource A resource that the access is checked against.
-     * @return object
+     * @return mixed
      * @throws \Authorization\Policy\Exception\MissingPolicyException If a policy cannot be resolved.
      */
     public function getPolicy($resource);

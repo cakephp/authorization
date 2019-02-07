@@ -63,7 +63,7 @@ class CakeRedirectHandler extends RedirectHandler
     /**
      * {@inheritDoc}
      */
-    protected function getUrl(ServerRequestInterface $request, array $options)
+    protected function getUrl(ServerRequestInterface $request, array $options): string
     {
         $url = $options['url'];
         if ($options['queryParam'] !== null) {

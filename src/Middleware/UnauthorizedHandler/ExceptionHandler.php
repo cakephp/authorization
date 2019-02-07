@@ -32,7 +32,7 @@ class ExceptionHandler implements HandlerInterface
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $options = []
-    ) {
+    ): ResponseInterface {
         throw $exception;
     }
 }

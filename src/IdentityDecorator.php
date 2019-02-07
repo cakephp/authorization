@@ -100,7 +100,7 @@ class IdentityDecorator implements IdentityInterface
      * @param array $args The arguments for the method.
      * @return mixed
      */
-    public function __call($method, $args)
+    public function __call(string $method, array $args)
     {
         if (!is_object($this->identity)) {
             throw new BadMethodCallException("Cannot call `{$method}`. Identity data is not an object.");
@@ -116,7 +116,7 @@ class IdentityDecorator implements IdentityInterface
      * @param string $property The property to read.
      * @return mixed
      */
-    public function __get($property)
+    public function __get(string $property)
     {
         return $this->identity->{$property};
     }
@@ -127,7 +127,7 @@ class IdentityDecorator implements IdentityInterface
      * @param string $property The property to read.
      * @return mixed
      */
-    public function __isset($property)
+    public function __isset(string $property)
     {
         return isset($this->identity->{$property});
     }
@@ -139,7 +139,7 @@ class IdentityDecorator implements IdentityInterface
      * @param mixed $offset Offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->identity[$offset]);
     }
@@ -180,7 +180,7 @@ class IdentityDecorator implements IdentityInterface
      * @param mixed $offset Offset
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->identity[$offset]);
     }
