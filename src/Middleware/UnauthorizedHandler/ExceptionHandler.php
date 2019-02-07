@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -23,12 +24,15 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ExceptionHandler implements HandlerInterface
 {
-
     /**
      * {@inheritDoc}
      */
-    public function handle(Exception $exception, ServerRequestInterface $request, ResponseInterface $response, array $options = [])
-    {
+    public function handle(
+        Exception $exception,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $options = []
+    ) {
         throw $exception;
     }
 }

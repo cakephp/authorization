@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -122,7 +123,7 @@ class PolicyCommand extends SimpleBakeCommand
                 'help' => 'The object type to bake a policy for. If only one argument is used, type will be object.',
                 'default' => 'entity',
                 'choices' => ['table', 'entity', 'object'],
-                'required' => true
+                'required' => true,
             ]);
     }
 

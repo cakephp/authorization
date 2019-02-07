@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -15,8 +16,6 @@
 namespace Authorization\Test\TestCase\Command;
 
 use Cake\Console\Command;
-use Cake\Core\Configure;
-use Cake\Core\Plugin as CorePlugin;
 use Cake\Routing\Router;
 use Cake\TestSuite\ConsoleIntegrationTestCase;
 

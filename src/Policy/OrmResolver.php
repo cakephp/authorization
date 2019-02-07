@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -85,7 +86,7 @@ class OrmResolver implements ResolverInterface
     {
         $class = get_class($entity);
         $entityNamespace = '\Model\Entity\\';
-        $namespace = str_replace('\\', '/', substr($class, 0, strpos($class, $entityNamespace)));
+        $namespace = str_replace('\\', '/', substr($class, 0, (int)strpos($class, $entityNamespace)));
         $name = substr($class, strpos($class, $entityNamespace) + strlen($entityNamespace));
 
         return $this->findPolicy($class, $name, $namespace);
@@ -101,7 +102,7 @@ class OrmResolver implements ResolverInterface
     {
         $class = get_class($table);
         $tableNamespace = '\Model\Table\\';
-        $namespace = str_replace('\\', '/', substr($class, 0, strpos($class, $tableNamespace)));
+        $namespace = str_replace('\\', '/', substr($class, 0, (int)strpos($class, $tableNamespace)));
         $name = substr($class, strpos($class, $tableNamespace) + strlen($tableNamespace));
 
         return $this->findPolicy($class, $name, $namespace);

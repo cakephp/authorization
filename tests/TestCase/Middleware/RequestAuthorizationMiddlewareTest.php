@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -48,7 +49,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
     public function testInvokeService()
     {
         $request = (new ServerRequest([
-                'uri' => new Uri('/articles/index')
+                'uri' => new Uri('/articles/index'),
             ]))
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
@@ -59,14 +60,14 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         };
 
         $resolver = new MapResolver([
-            ServerRequest::class => new RequestPolicy()
+            ServerRequest::class => new RequestPolicy(),
         ]);
 
         $authService = new AuthorizationService($resolver);
         $request = $request->withAttribute('authorization', $authService);
 
         $middleware = new AuthorizationMiddleware($authService, [
-            'requireAuthorizationCheck' => false
+            'requireAuthorizationCheck' => false,
         ]);
         $middleware($request, $response, $next);
 
@@ -85,7 +86,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
     public function testInvokeServiceWithResult()
     {
         $request = (new ServerRequest([
-                'uri' => new Uri('/articles/index')
+                'uri' => new Uri('/articles/index'),
             ]))
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
@@ -96,14 +97,14 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         };
 
         $resolver = new MapResolver([
-            ServerRequest::class => new RequestPolicy()
+            ServerRequest::class => new RequestPolicy(),
         ]);
 
         $authService = new AuthorizationService($resolver);
         $request = $request->withAttribute('authorization', $authService);
 
         $middleware = new AuthorizationMiddleware($authService, [
-            'requireAuthorizationCheck' => false
+            'requireAuthorizationCheck' => false,
         ]);
         $middleware($request, $response, $next);
 

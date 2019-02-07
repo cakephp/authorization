@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -49,7 +50,7 @@ interface IdentityInterface extends ArrayAccess
      * If the decorated identity implements `getOriginalData()`
      * that method should be invoked to expose the original data.
      *
-     * @return array|ArrayAccess
+     * @return array|\ArrayAccess
      */
     public function getOriginalData();
 }

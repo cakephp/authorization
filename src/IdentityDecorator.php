@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -53,7 +54,10 @@ class IdentityDecorator implements IdentityInterface
     {
         if (!is_array($identity) && !$identity instanceof ArrayAccess) {
             $type = is_object($identity) ? get_class($identity) : gettype($identity);
-            $message = sprintf('Identity data must be an `array` or implement `ArrayAccess` interface, `%s` given.', $type);
+            $message = sprintf(
+                'Identity data must be an `array` or implement `ArrayAccess` interface, `%s` given.',
+                $type
+            );
             throw new InvalidArgumentException($message);
         }
 

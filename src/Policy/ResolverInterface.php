@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -19,7 +20,6 @@ namespace Authorization\Policy;
  */
 interface ResolverInterface
 {
-
     /**
      * Resolves the policy object based on the authorization resource.
      *

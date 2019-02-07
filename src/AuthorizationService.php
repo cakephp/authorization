@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -60,7 +61,10 @@ class AuthorizationService implements AuthorizationServiceInterface
                 return $result;
             }
             if ($result !== null) {
-                $message = sprintf('Pre-authorization check must return `%s`, `bool` or `null`.', ResultInterface::class);
+                $message = sprintf(
+                    'Pre-authorization check must return `%s`, `bool` or `null`.',
+                    ResultInterface::class
+                );
                 throw new RuntimeException($message);
             }
         }

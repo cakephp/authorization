@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -50,7 +51,9 @@ class CakeRedirectHandler extends RedirectHandler
     {
         if (!class_exists(Router::class)) {
             $message = sprintf(
-                'Class `%s` does not exist. Make sure you are using a full CakePHP framework and have autoloading configured properly.',
+                'Class `%s` does not exist. ' .
+                'Make sure you are using a full CakePHP framework ' .
+                'and have autoloading configured properly.',
                 Router::class
             );
             throw new RuntimeException($message);

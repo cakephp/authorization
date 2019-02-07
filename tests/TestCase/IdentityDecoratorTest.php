@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Authorization\Test;
 
 use ArrayObject;
@@ -19,14 +20,14 @@ class IdentityDecoratorTest extends TestCase
     {
         return [
             'array' => [
-                ['id' => 1]
+                ['id' => 1],
             ],
             'ArrayAccess' => [
-                new ArrayObject(['id' => 1])
+                new ArrayObject(['id' => 1]),
             ],
             'Entity' => [
-                new Article(['id' => 1])
-            ]
+                new Article(['id' => 1]),
+            ],
         ];
     }
 

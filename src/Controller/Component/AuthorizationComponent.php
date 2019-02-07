@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -45,7 +46,7 @@ class AuthorizationComponent extends Component
         'authorizationEvent' => 'Controller.startup',
         'skipAuthorization' => [],
         'authorizeModel' => [],
-        'actionMap' => []
+        'actionMap' => [],
     ];
 
     /**
@@ -268,7 +269,7 @@ class AuthorizationComponent extends Component
     public function implementedEvents(): array
     {
         return [
-            $this->getConfig('authorizationEvent') => 'authorizeAction'
+            $this->getConfig('authorizationEvent') => 'authorizeAction',
         ];
     }
 }

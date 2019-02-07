@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -30,7 +31,7 @@ use TestPlugin\Policy\TagPolicy;
 
 class OrmResolverTest extends TestCase
 {
-    public $fixtures = ['core.articles'];
+    public $fixtures = ['core.Articles'];
 
     public function testGetPolicyUnknownObject()
     {
@@ -71,7 +72,7 @@ class OrmResolverTest extends TestCase
     {
         $bookmark = new Tag();
         $resolver = new OrmResolver('TestApp', [
-            'TestPlugin' => 'OverridePlugin'
+            'TestPlugin' => 'OverridePlugin',
         ]);
         $policy = $resolver->getPolicy($bookmark);
         $this->assertInstanceOf(OverrideTagPolicy::class, $policy);

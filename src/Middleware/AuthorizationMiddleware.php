@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -73,10 +74,12 @@ class AuthorizationMiddleware
      */
     public function __construct($subject, array $config = [])
     {
-        if (!$subject instanceof AuthorizationServiceInterface && !$subject instanceof AuthorizationServiceProviderInterface) {
+        if (!$subject instanceof AuthorizationServiceInterface &&
+            !$subject instanceof AuthorizationServiceProviderInterface
+        ) {
             $expected = implode('` or `', [
                 AuthorizationServiceInterface::class,
-                AuthorizationServiceProviderInterface::class
+                AuthorizationServiceProviderInterface::class,
             ]);
             $type = is_object($subject) ? get_class($subject) : gettype($subject);
             $message = sprintf('Subject must be an instance of `%s`, `%s` given.', $expected, $type);
@@ -94,7 +97,7 @@ class AuthorizationMiddleware
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
      * @param \Psr\Http\Message\ResponseInterface $response Response.
      * @param callable $next The next middleware to call.
-     * @return ResponseInterface A response.
+     * @return \Psr\Http\Message\ResponseInterface A response.
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
@@ -116,7 +119,12 @@ class AuthorizationMiddleware
             }
         } catch (Exception $exception) {
             $handler = $this->getHandler();
-            $response = $handler->handle($exception, $request, $response, (array)$this->getConfig('unauthorizedHandler'));
+            $response = $handler->handle(
+                $exception,
+                $request,
+                $response,
+                (array)$this->getConfig('unauthorizedHandler')
+            );
         }
 
         return $response;

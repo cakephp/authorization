@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -30,7 +31,7 @@ class ResolverCollectionTest extends TestCase
 
         $this->expectException(MissingPolicyException::class);
 
-        $collection->getPolicy(new Article);
+        $collection->getPolicy(new Article());
     }
 
     public function testMissingPolicy()
@@ -44,7 +45,7 @@ class ResolverCollectionTest extends TestCase
             ->willThrowException(new MissingPolicyException($resource));
 
         $collection = new ResolverCollection([
-            $resolver
+            $resolver,
         ]);
 
         $this->expectException(MissingPolicyException::class);

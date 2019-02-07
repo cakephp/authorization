@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -39,7 +40,11 @@ class HandlerFactory
 
         $instance = new $class();
         if (!$instance instanceof HandlerInterface) {
-            $message = sprintf('Handler should implement `%s`, got `%s`.', HandlerInterface::class, get_class($instance));
+            $message = sprintf(
+                'Handler should implement `%s`, got `%s`.',
+                HandlerInterface::class,
+                get_class($instance)
+            );
             throw new RuntimeException($message);
         }
 
