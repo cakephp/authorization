@@ -116,11 +116,11 @@ class AuthorizationComponent extends Component
      * If $action is left undefined, the current controller action will
      * be used.
      *
-     * @param object $resource The resource to apply a scope to.
+     * @param mixed $resource The resource to apply a scope to.
      * @param string|null $action The action to apply a scope for.
-     * @return object
+     * @return mixed
      */
-    public function applyScope(object $resource, ?string $action = null): object
+    public function applyScope($resource, ?string $action = null)
     {
         $request = $this->getController()->getRequest();
         if ($action === null) {

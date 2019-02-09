@@ -68,7 +68,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * {@inheritDoc}
      */
-    public function can($action, $resource)
+    public function can(string $action, $resource)
     {
         return $this->authorization->can($this, $action, $resource);
     }
@@ -76,7 +76,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * {@inheritDoc}
      */
-    public function applyScope($action, $resource)
+    public function applyScope(string $action, $resource)
     {
         return $this->authorization->applyScope($this, $action, $resource);
     }

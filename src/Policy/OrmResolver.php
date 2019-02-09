@@ -57,11 +57,11 @@ class OrmResolver implements ResolverInterface
      * Get a policy for an ORM Table, Entity or Query.
      *
      * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\EntityInterface|\Cake\Datasource\QueryInterface $resource The resource.
-     * @return object
+     * @return mixed
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined or cannot be resolved.
      */
-    public function getPolicy($resource): object
+    public function getPolicy($resource)
     {
         if ($resource instanceof EntityInterface) {
             return $this->getEntityPolicy($resource);
@@ -80,9 +80,9 @@ class OrmResolver implements ResolverInterface
      * Get a policy for an entity
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity to get a policy for
-     * @return object
+     * @return mixed
      */
-    protected function getEntityPolicy(EntityInterface $entity): object
+    protected function getEntityPolicy(EntityInterface $entity)
     {
         $class = get_class($entity);
         $entityNamespace = '\Model\Entity\\';
@@ -96,9 +96,9 @@ class OrmResolver implements ResolverInterface
      * Get a policy for a table
      *
      * @param \Cake\Datasource\RepositoryInterface $table The table/repository to get a policy for.
-     * @return object
+     * @return mixed
      */
-    protected function getRepositoryPolicy(RepositoryInterface $table): object
+    protected function getRepositoryPolicy(RepositoryInterface $table)
     {
         $class = get_class($table);
         $tableNamespace = '\Model\Table\\';
@@ -116,9 +116,9 @@ class OrmResolver implements ResolverInterface
      * @param string $namespace The namespace to find the policy in.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined.
-     * @return object
+     * @return mixed
      */
-    protected function findPolicy(string $class, string $name, string $namespace): object
+    protected function findPolicy(string $class, string $name, string $namespace)
     {
         $namespace = $this->getNamespace($namespace);
         $policyClass = null;
