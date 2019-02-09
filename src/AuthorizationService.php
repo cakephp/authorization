@@ -49,7 +49,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function can($user, $action, $resource)
+    public function can(?IdentityInterface $user, $action, $resource)
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
@@ -82,7 +82,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function applyScope($user, $action, $resource)
+    public function applyScope(?IdentityInterface $user, $action, $resource)
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
