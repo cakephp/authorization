@@ -1,8 +1,8 @@
 <?php
 namespace TestApp\Policy;
 
-use Authorization\Policy\Result;
 use Authorization\Policy\RequestPolicyInterface;
+use Authorization\Policy\Result;
 use Cake\Http\ServerRequest;
 
 /**

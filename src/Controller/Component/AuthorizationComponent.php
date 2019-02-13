@@ -178,7 +178,7 @@ class AuthorizationComponent extends Component
     /**
      * Adds an action to automatic model authorization checks.
      *
-     * @param string ...$action Controller action to authorize against table policy.
+     * @param string ...$actions Controller action to authorize against table policy.
      * @return $this
      */
     public function authorizeModel(...$actions)

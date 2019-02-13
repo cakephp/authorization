@@ -474,7 +474,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $this->Auth->mapAction('foo', 'bar');
         $this->assertEquals(['foo' => 'bar'], $this->Auth->getConfig('actionMap'));
-        
+
         $this->Auth->mapAction('bar', 'baz');
         $this->assertEquals(['foo' => 'bar', 'bar' => 'baz'], $this->Auth->getConfig('actionMap'));
     }
