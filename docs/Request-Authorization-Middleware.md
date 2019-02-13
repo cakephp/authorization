@@ -8,15 +8,20 @@ The logic of handling the request authorization will be implemented in the reque
 
 ## Using it
 
-Create a policy for handling the request object.
+Create a policy for handling the request object. The plugin ships with an interface here to implement.
 
 ```php
-class RequestPolicy
+namespace App\Policy;
+
+use Authorization\Policy\RequestPolicyInterface;
+use Cake\Http\ServerRequest;
+
+class RequestPolicy implements RequestPolicyInterface
 {
     /**
      * Method to check if the request can be accessed
      *
-     * @param null|\Authorization\IdentityInterface Identity
+     * @param \Authorization\IdentityInterface|null Identity
      * @param \Cake\Http\ServerRequest $request Server Request
      * @return bool
      */
@@ -31,18 +36,20 @@ class RequestPolicy
         return false;
     }
 }
-
 ```
 
-Map the request class to the policy.
+Map the request class to the policy inside `Application::getAuthorizationService()`:
 
 ```php
 use App\Policy\RequestPolicy;
+use Authorization\AuthorizationService;
 use Authorization\Policy\MapResolver;
 use Cake\Http\ServerRequest;
 
-$map = new MapResolver();
-$map->map(ServerRequest::class, RequestPolicy::class);
+$mapResolver = new MapResolver();
+$mapResolver->map(ServerRequest::class, RequestPolicy::class);
+
+return new AuthorizationService($resolver);
 ```
 
 In your `Application.php` make sure you're loading the RequestAuthorizationMiddleware **after** the AuthorizationMiddleware! 
@@ -50,5 +57,5 @@ In your `Application.php` make sure you're loading the RequestAuthorizationMiddl
 ```php
 // Add authorization (after authentication if you are using that plugin too).
 $middleware->add(new AuthorizationMiddleware($this));
-$middleware->add(new RequestAuthorizationMiddleware())
+$middleware->add(new RequestAuthorizationMiddleware());
 ```

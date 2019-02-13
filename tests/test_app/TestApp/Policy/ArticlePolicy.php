@@ -6,7 +6,6 @@ use TestApp\Model\Entity\Article;
 
 class ArticlePolicy
 {
-
     /**
      * Create articles if you're an admin or author
      *
@@ -18,6 +17,14 @@ class ArticlePolicy
         return in_array($user['role'], ['admin', 'author']);
     }
 
+    /**
+     * Edit articles if you're an admin or author
+     *
+     * @param \Authorization\IdentityInterface $user
+     * @param \TestApp\Model\Entity\Article $article
+     *
+     * @return bool
+     */
     public function canEdit($user, Article $article)
     {
         if (in_array($user['role'], ['admin', 'author'])) {
@@ -27,6 +34,14 @@ class ArticlePolicy
         return $article->get('user_id') === $user['id'];
     }
 
+    /**
+     * Modify articles if you're an admin or author
+     *
+     * @param \Authorization\IdentityInterface $user
+     * @param \TestApp\Model\Entity\Article $article
+     *
+     * @return bool
+     */
     public function canModify($user, Article $article)
     {
         if (in_array($user['role'], ['admin', 'author'])) {
@@ -40,7 +55,7 @@ class ArticlePolicy
      * Delete only own articles or any if you're an admin
      *
      * @param \Authorization\IdentityInterface $user
-     * @param Article $article
+     * @param \TestApp\Model\Entity\Article $article
      * @return bool
      */
     public function canDelete($user, Article $article)
@@ -56,7 +71,7 @@ class ArticlePolicy
      * Scope method for index
      *
      * @param \Authorization\IdentityInterface $user
-     * @param Article $article
+     * @param \TestApp\Model\Entity\Article $article
      * @return bool
      */
     public function scopeIndex($user, Article $article)
@@ -72,7 +87,7 @@ class ArticlePolicy
      * This test "null" user cases
      *
      * @param \Authorization\IdentityInterface|null $user
-     * @param Article $article
+     * @param \TestApp\Model\Entity\Article $article
      * @return bool
      */
     public function canView($user, Article $article)

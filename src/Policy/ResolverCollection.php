@@ -35,7 +35,7 @@ use Authorization\Policy\Exception\MissingPolicyException;
  *     ])
  * ]);
  *
- * $service = new AuthenticationService($collection);
+ * $service = new AuthorizationService($collection);
  * ```
  */
 class ResolverCollection implements ResolverInterface

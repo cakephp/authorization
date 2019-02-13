@@ -73,8 +73,8 @@ method:
 $this->loadComponent('Authorization.Authorization');
 ```
 
-By loading the [authorization component](./Component.php) we'll be able to check
-authorization on a per action basic more easily. For example, we can do:
+By loading the [authorization component](./Component.md) we'll be able to check
+authorization on a per-action basis more easily. For example, we can do:
 
 ```php
 public function edit($id = null)

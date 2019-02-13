@@ -114,7 +114,7 @@ class ArticlesPolicy implements BeforePolicyInterface
 }
 ```
 
-Before hooks are expected to one of 3 return values:
+Before hooks are expected to return one of three values:
 
 - `true` The user is allowed to proceed with the action.
 - `false` The user is not allowed to proceed with the action.

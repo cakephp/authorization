@@ -2,17 +2,18 @@
 namespace TestApp\Policy;
 
 use Authorization\Policy\Result;
+use Authorization\Policy\RequestPolicyInterface;
 use Cake\Http\ServerRequest;
 
 /**
  * For testing request based policies
  */
-class RequestPolicy
+class RequestPolicy implements RequestPolicyInterface
 {
     /**
      * Method to check if the request can be accessed
      *
-     * @param null|\Authorization\IdentityInterface Identity
+     * @param \Authorization\IdentityInterface|null $identity Identity
      * @param \Cake\Http\ServerRequest $request Request
      * @return bool
      */
@@ -23,6 +24,8 @@ class RequestPolicy
         ) {
             return true;
         }
+
+        // More checks here
 
         return false;
     }
