@@ -30,7 +30,7 @@ class HandlerFactory
      * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
      * @throws \RuntimeException When invalid handler encountered.
      */
-    public static function create($name)
+    public static function create(string $name): HandlerInterface
     {
         $class = App::className($name, 'Middleware/UnauthorizedHandler', 'Handler');
         if (!$class) {

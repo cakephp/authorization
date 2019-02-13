@@ -30,5 +30,8 @@ interface AuthorizationServiceProviderInterface
      * @param \Psr\Http\Message\ResponseInterface $response Response
      * @return \Authorization\AuthorizationServiceInterface
      */
-    public function getAuthorizationService(ServerRequestInterface $request, ResponseInterface $response);
+    public function getAuthorizationService(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): AuthorizationServiceInterface;
 }

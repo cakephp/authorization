@@ -40,7 +40,7 @@ class Result implements ResultInterface
      * @param bool $status Check status.
      * @param string|null $reason Failure reason.
      */
-    public function __construct($status, $reason = null)
+    public function __construct(bool $status, ?string $reason = null)
     {
         $this->status = (bool)$status;
         if ($reason !== null) {
@@ -51,7 +51,7 @@ class Result implements ResultInterface
     /**
      * {@inheritDoc}
      */
-    public function getReason()
+    public function getReason(): ?string
     {
         return $this->reason;
     }
@@ -59,7 +59,7 @@ class Result implements ResultInterface
     /**
      * {@inheritDoc}
      */
-    public function getStatus()
+    public function getStatus(): bool
     {
         return $this->status;
     }

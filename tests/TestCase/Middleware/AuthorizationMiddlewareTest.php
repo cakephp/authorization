@@ -32,6 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use stdClass;
 use TestApp\Identity;
+use TypeError;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
@@ -40,17 +41,16 @@ class AuthorizationMiddlewareTest extends TestCase
         $service = $this->createMock(AuthorizationServiceInterface::class);
         $request = new ServerRequest();
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) use ($service) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+            $this->assertSame($service, $request->getAttribute('authorization'));
+            $this->assertNull($request->getAttribute('identity'));
+
+            return $response;
         };
 
         $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => false]);
-
-        $result = $middleware($request, $response, $next);
-
-        $this->assertInstanceOf(RequestInterface::class, $result);
-        $this->assertSame($service, $result->getAttribute('authorization'));
-        $this->assertNull($result->getAttribute('identity'));
+        $middleware($request, $response, $next);
     }
 
     public function testInvokeAuthorizationRequiredError()
@@ -91,17 +91,16 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $request = new ServerRequest();
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) use ($service) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+            $this->assertSame($service, $request->getAttribute('authorization'));
+            $this->assertNull($request->getAttribute('identity'));
+
+            return $response;
         };
 
         $middleware = new AuthorizationMiddleware($provider, ['requireAuthorizationCheck' => false]);
-
-        $result = $middleware($request, $response, $next);
-
-        $this->assertInstanceOf(RequestInterface::class, $result);
-        $this->assertSame($service, $result->getAttribute('authorization'));
-        $this->assertNull($result->getAttribute('identity'));
+        $middleware($request, $response, $next);
     }
 
     public function testInvokeAppInvalid()
@@ -118,19 +117,16 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $request = new ServerRequest();
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) {
+            return $response;
         };
 
         $middleware = new AuthorizationMiddleware($provider, ['requireAuthorizationCheck' => false]);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(
-            'Invalid service returned from the provider. ' .
-            '`stdClass` does not implement `Authorization\AuthorizationServiceInterface`.'
-        );
+        $this->expectException(TypeError::class);
+        $this->expectExceptionMessage('instance of stdClass returned');
 
-        $result = $middleware($request, $response, $next);
+        $middleware($request, $response, $next);
     }
 
     public function testInvokeInvalid()
@@ -139,8 +135,8 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $request = new ServerRequest();
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) {
+            return $response;
         };
 
         $this->expectException(InvalidArgumentException::class);
@@ -161,18 +157,17 @@ class AuthorizationMiddlewareTest extends TestCase
         $service = $this->createMock(AuthorizationServiceInterface::class);
         $request = (new ServerRequest())->withAttribute('identity', $identity);
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) use ($service) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+            $this->assertSame($service, $request->getAttribute('authorization'));
+            $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('identity'));
+            $this->assertEquals(1, $request->getAttribute('identity')['id']);
+
+            return $response;
         };
 
         $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => false]);
-
-        $result = $middleware($request, $response, $next);
-
-        $this->assertInstanceOf(RequestInterface::class, $result);
-        $this->assertSame($service, $result->getAttribute('authorization'));
-        $this->assertInstanceOf(IdentityInterface::class, $result->getAttribute('identity'));
-        $this->assertEquals(1, $result->getAttribute('identity')['id']);
+        $middleware($request, $response, $next);
     }
 
     public function testIdentityInstance()
@@ -184,18 +179,17 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $request = (new ServerRequest())->withAttribute('identity', $identity);
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) use ($service, $identity) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+            $this->assertSame($service, $request->getAttribute('authorization'));
+            $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('identity'));
+            $this->assertSame($identity, $request->getAttribute('identity'));
+
+            return $response;
         };
 
         $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => false]);
-
-        $result = $middleware($request, $response, $next);
-
-        $this->assertInstanceOf(RequestInterface::class, $result);
-        $this->assertSame($service, $result->getAttribute('authorization'));
-        $this->assertInstanceOf(IdentityInterface::class, $result->getAttribute('identity'));
-        $this->assertSame($identity, $result->getAttribute('identity'));
+        $middleware($request, $response, $next);
     }
 
     public function testCustomIdentity()
@@ -207,8 +201,13 @@ class AuthorizationMiddlewareTest extends TestCase
         $service = $this->createMock(AuthorizationServiceInterface::class);
         $request = (new ServerRequest())->withAttribute('user', $identity);
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) use ($service) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+            $this->assertSame($service, $request->getAttribute('authorization'));
+            $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('user'));
+            $this->assertEquals(1, $request->getAttribute('user')['id']);
+
+            return $response;
         };
 
         $middleware = new AuthorizationMiddleware($service, [
@@ -219,12 +218,7 @@ class AuthorizationMiddlewareTest extends TestCase
             'requireAuthorizationCheck' => false,
         ]);
 
-        $result = $middleware($request, $response, $next);
-
-        $this->assertInstanceOf(RequestInterface::class, $result);
-        $this->assertSame($service, $result->getAttribute('authorization'));
-        $this->assertInstanceOf(IdentityInterface::class, $result->getAttribute('user'));
-        $this->assertEquals(1, $result->getAttribute('user')['id']);
+        $middleware($request, $response, $next);
     }
 
     public function testCustomIdentityDecorator()
@@ -236,8 +230,14 @@ class AuthorizationMiddlewareTest extends TestCase
         $service = $this->createMock(AuthorizationServiceInterface::class);
         $request = (new ServerRequest())->withAttribute('identity', $identity);
         $response = new Response();
-        $next = function ($request) {
-            return $request;
+        $next = function ($request, $response) use ($service, $identity) {
+            $this->assertInstanceOf(RequestInterface::class, $request);
+            $this->assertSame($service, $request->getAttribute('authorization'));
+            $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('identity'));
+            $this->assertSame($identity, $request->getAttribute('identity'));
+            $this->assertSame($service, $request->getAttribute('identity')->getService());
+
+            return $response;
         };
 
         $middleware = new AuthorizationMiddleware($service, [
@@ -248,13 +248,7 @@ class AuthorizationMiddlewareTest extends TestCase
             },
             'requireAuthorizationCheck' => false,
         ]);
-        $result = $middleware($request, $response, $next);
-
-        $this->assertInstanceOf(RequestInterface::class, $result);
-        $this->assertSame($service, $result->getAttribute('authorization'));
-        $this->assertInstanceOf(IdentityInterface::class, $result->getAttribute('identity'));
-        $this->assertSame($identity, $result->getAttribute('identity'));
-        $this->assertSame($service, $result->getAttribute('identity')->getService());
+        $middleware($request, $response, $next);
     }
 
     public function testInvalidIdentity()
@@ -278,7 +272,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid identity returned by decorator. `stdClass` does not implement `Authorization\IdentityInterface`.');
 
-        $result = $middleware($request, $response, $next);
+        $middleware($request, $response, $next);
     }
 
     public function testUnauthorizedHandler()

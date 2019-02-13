@@ -22,8 +22,15 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class SuppressHandler implements HandlerInterface
 {
-    public function handle(Exception $exception, ServerRequestInterface $request, ResponseInterface $response, array $options = [])
-    {
+    /**
+     * @inheritDoc
+     */
+    public function handle(
+        Exception $exception,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $options = []
+    ): ResponseInterface {
         return $response;
     }
 }

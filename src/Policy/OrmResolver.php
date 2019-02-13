@@ -47,7 +47,7 @@ class OrmResolver implements ResolverInterface
      * @param string $appNamespace The application namespace
      * @param array<string, string> $overrides A list of plugin name overrides.
      */
-    public function __construct($appNamespace = 'App', array $overrides = [])
+    public function __construct(string $appNamespace = 'App', array $overrides = [])
     {
         $this->appNamespace = $appNamespace;
         $this->overrides = $overrides;
@@ -57,7 +57,7 @@ class OrmResolver implements ResolverInterface
      * Get a policy for an ORM Table, Entity or Query.
      *
      * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\EntityInterface|\Cake\Datasource\QueryInterface $resource The resource.
-     * @return object
+     * @return mixed
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined or cannot be resolved.
      */
@@ -80,7 +80,7 @@ class OrmResolver implements ResolverInterface
      * Get a policy for an entity
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity to get a policy for
-     * @return object
+     * @return mixed
      */
     protected function getEntityPolicy(EntityInterface $entity)
     {
@@ -96,7 +96,7 @@ class OrmResolver implements ResolverInterface
      * Get a policy for a table
      *
      * @param \Cake\Datasource\RepositoryInterface $table The table/repository to get a policy for.
-     * @return object
+     * @return mixed
      */
     protected function getRepositoryPolicy(RepositoryInterface $table)
     {
@@ -116,9 +116,9 @@ class OrmResolver implements ResolverInterface
      * @param string $namespace The namespace to find the policy in.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined.
-     * @return object
+     * @return mixed
      */
-    protected function findPolicy($class, $name, $namespace)
+    protected function findPolicy(string $class, string $name, string $namespace)
     {
         $namespace = $this->getNamespace($namespace);
         $policyClass = null;
@@ -146,7 +146,7 @@ class OrmResolver implements ResolverInterface
      * @param string $namespace The namespace to find the policy in.
      * @return string
      */
-    protected function getNamespace($namespace)
+    protected function getNamespace(string $namespace): string
     {
         if (isset($this->overrides[$namespace])) {
             return $this->overrides[$namespace];

@@ -25,12 +25,12 @@ interface ResultInterface
      *
      * @return bool
      */
-    public function getStatus();
+    public function getStatus(): bool;
 
     /**
      * Optional reason why policy check has failed.
      *
      * @return string|null
      */
-    public function getReason();
+    public function getReason(): ?string;
 }

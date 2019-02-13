@@ -38,5 +38,5 @@ interface HandlerInterface
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $options = []
-    );
+    ): ResponseInterface;
 }

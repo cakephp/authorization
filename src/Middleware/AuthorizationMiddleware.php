@@ -99,8 +99,11 @@ class AuthorizationMiddleware
      * @param callable $next The next middleware to call.
      * @return \Psr\Http\Message\ResponseInterface A response.
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
-    {
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        callable $next
+    ): ResponseInterface {
         $service = $this->getAuthorizationService($request, $response);
         $request = $request->withAttribute('authorization', $service);
 
@@ -135,7 +138,7 @@ class AuthorizationMiddleware
      *
      * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
      */
-    protected function getHandler()
+    protected function getHandler(): \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
     {
         $handler = $this->getConfig('unauthorizedHandler');
         if (!is_array($handler)) {
@@ -158,8 +161,10 @@ class AuthorizationMiddleware
      * @return \Authorization\AuthorizationServiceInterface
      * @throws \RuntimeException When authorization method has not been defined.
      */
-    protected function getAuthorizationService($request, $response)
-    {
+    protected function getAuthorizationService(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): AuthorizationServiceInterface {
         $service = $this->subject;
         if ($this->subject instanceof AuthorizationServiceProviderInterface) {
             $service = $this->subject->getAuthorizationService($request, $response);
@@ -183,7 +188,7 @@ class AuthorizationMiddleware
      * @param \ArrayAccess|array $identity Identity data
      * @return \Authorization\IdentityInterface
      */
-    protected function buildIdentity(AuthorizationServiceInterface $service, $identity)
+    protected function buildIdentity(AuthorizationServiceInterface $service, $identity): IdentityInterface
     {
         $class = $this->getConfig('identityDecorator');
 

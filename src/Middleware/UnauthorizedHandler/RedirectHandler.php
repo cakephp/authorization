@@ -54,7 +54,7 @@ class RedirectHandler implements HandlerInterface
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $options = []
-    ) {
+    ): ResponseInterface {
         $options += $this->defaultOptions;
 
         if (!$this->checkException($exception, $options['exceptions'])) {
@@ -75,7 +75,7 @@ class RedirectHandler implements HandlerInterface
      * @param array $exceptions A list of exception classes.
      * @return bool
      */
-    protected function checkException(Exception $exception, array $exceptions)
+    protected function checkException(Exception $exception, array $exceptions): bool
     {
         foreach ($exceptions as $class) {
             if ($exception instanceof $class) {
@@ -93,7 +93,7 @@ class RedirectHandler implements HandlerInterface
      * @param array $options Options.
      * @return string
      */
-    protected function getUrl(ServerRequestInterface $request, array $options)
+    protected function getUrl(ServerRequestInterface $request, array $options): string
     {
         $url = $options['url'];
         if ($options['queryParam'] !== null && $request->getMethod() === 'GET') {

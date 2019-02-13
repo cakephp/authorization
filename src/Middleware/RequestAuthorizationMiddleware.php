@@ -54,7 +54,7 @@ class RequestAuthorizationMiddleware
      *
      * @param array $config Configuration options
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         $this->setConfig($config);
     }
@@ -65,7 +65,7 @@ class RequestAuthorizationMiddleware
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
      * @return \Authorization\AuthorizationServiceInterface
      */
-    protected function getServiceFromRequest(ServerRequestInterface $request)
+    protected function getServiceFromRequest(ServerRequestInterface $request): AuthorizationServiceInterface
     {
         $serviceAttribute = $this->getConfig('authorizationAttribute');
         $service = $request->getAttribute($serviceAttribute);
@@ -89,8 +89,11 @@ class RequestAuthorizationMiddleware
      * @param callable $next The next middleware to call.
      * @return \Psr\Http\Message\ResponseInterface A response.
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
-    {
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        callable $next
+    ): ResponseInterface {
         $service = $this->getServiceFromRequest($request);
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
