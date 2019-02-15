@@ -465,4 +465,34 @@ class AuthorizationComponentTest extends TestCase
         $result = $this->Auth->can($article, 'publish');
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
+
+    public function testAuthorizeModel()
+    {
+        $this->Auth->authorizeModel('foo', 'bar');
+        $this->assertEquals(['foo', 'bar'], $this->Auth->getConfig('authorizeModel'));
+
+        $this->Auth->authorizeModel('baz');
+        $this->assertEquals(['foo', 'bar', 'baz'], $this->Auth->getConfig('authorizeModel'));
+    }
+
+    public function testMapAction()
+    {
+        $this->Auth->mapAction('foo', 'bar');
+        $this->assertEquals(['foo' => 'bar'], $this->Auth->getConfig('actionMap'));
+
+        $this->Auth->mapAction('bar', 'baz');
+        $this->assertEquals(['foo' => 'bar', 'bar' => 'baz'], $this->Auth->getConfig('actionMap'));
+    }
+
+    public function testMapActions()
+    {
+        $this->Auth->mapActions(['foo' => 'bar']);
+        $this->assertEquals(['foo' => 'bar'], $this->Auth->getConfig('actionMap'));
+
+        $this->Auth->mapActions(['bar' => 'baz']);
+        $this->assertEquals(['foo' => 'bar', 'bar' => 'baz'], $this->Auth->getConfig('actionMap'));
+
+        $this->Auth->mapActions(['foo' => 'baz'], true);
+        $this->assertEquals(['foo' => 'baz'], $this->Auth->getConfig('actionMap'));
+    }
 }
