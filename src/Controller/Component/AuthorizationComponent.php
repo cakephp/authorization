@@ -155,7 +155,7 @@ class AuthorizationComponent extends Component
      * @param string $policyAction Policy action.
      * @return $this
      */
-    public function mapAction($controllerAction, $policyAction)
+    public function mapAction(string $controllerAction, string $policyAction)
     {
         $this->_config['actionMap'][$controllerAction] = $policyAction;
 
@@ -169,7 +169,7 @@ class AuthorizationComponent extends Component
      * @param bool $overwrite Set to true to override configuration. False will merge with current configuration.
      * @return $this
      */
-    public function mapActions(array $actions, $overwrite = false)
+    public function mapActions(array $actions, bool $overwrite = false)
     {
         $this->setConfig('actionMap', $actions, !$overwrite);
 
@@ -182,7 +182,7 @@ class AuthorizationComponent extends Component
      * @param string ...$actions Controller action to authorize against table policy.
      * @return $this
      */
-    public function authorizeModel(...$actions)
+    public function authorizeModel(string ...$actions)
     {
         $this->_config['authorizeModel'] = array_merge($this->_config['authorizeModel'], $actions);
 
