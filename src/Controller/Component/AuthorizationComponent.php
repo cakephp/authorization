@@ -147,6 +147,49 @@ class AuthorizationComponent extends Component
     }
 
     /**
+     * Allows to map controller action to another authorization policy action.
+     *
+     * For instance you may want to authorize `add` action with `create` authorization policy.
+     *
+     * @param string $controllerAction Controller action.
+     * @param string $policyAction Policy action.
+     * @return $this
+     */
+    public function mapAction(string $controllerAction, string $policyAction)
+    {
+        $this->_config['actionMap'][$controllerAction] = $policyAction;
+
+        return $this;
+    }
+
+    /**
+     * Allows to map controller actions to policy actions.
+     *
+     * @param array $actions Map of controller action to policy action.
+     * @param bool $overwrite Set to true to override configuration. False will merge with current configuration.
+     * @return $this
+     */
+    public function mapActions(array $actions, bool $overwrite = false)
+    {
+        $this->setConfig('actionMap', $actions, !$overwrite);
+
+        return $this;
+    }
+
+    /**
+     * Adds an action to automatic model authorization checks.
+     *
+     * @param string ...$actions Controller action to authorize against table policy.
+     * @return $this
+     */
+    public function authorizeModel(string ...$actions)
+    {
+        $this->_config['authorizeModel'] = array_merge($this->_config['authorizeModel'], $actions);
+
+        return $this;
+    }
+
+    /**
      * Get the authorization service from a request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request

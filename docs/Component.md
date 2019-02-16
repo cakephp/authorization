@@ -24,12 +24,7 @@ name. You can configure this for individual actions using the `authorizeModel` o
 In the following example `index` and `add` actions will be authorized:
 
 ```php
-$this->loadComponent('Authorization.Authorization', [
-    'authorizeModel' => [
-        'index',
-        'add',
-    ]
-]);
+$this->Authorization->authorizeModel('index', 'add');
 ```
 
 You can also configure actions to skip authorization. This will make actions *public*,
@@ -99,14 +94,19 @@ $query = $this->Authorization->applyScope($this->Articles->find());
 
 If you want to map actions to different authorization methods use the `actionMap` option:
 
-```php
-$this->loadComponent('Authorization.Authorization', [
-    'actionMap' => [
-        'index' => 'list',
-        'delete' => 'remove',
-        'add' => 'insert',
-    ]
-];
+```php 
+//controller initialize() method:
+$this->Authorization->mapActions([
+    'index' => 'list',
+    'delete' => 'remove',
+    'add' => 'insert',
+]);
+
+//or
+$this->Authorization
+    ->mapAction('index','list')
+    ->mapAction('delete', 'remove')
+    ->mapAction('add', 'insert');
 ```
 
 Example:
