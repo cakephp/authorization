@@ -9,7 +9,7 @@ checks to.
 You can create policies in your `src/Policy` directory. Policy classes don't
 have a common base class or interface they are expected to implement.
 Application classes are then 'resolved' to a matching policy class. See the
-[Policy Resolvers](../Policy-Resolvers.md) section for how policies can be
+[Policy Resolvers](./Policy-Resolvers.md) section for how policies can be
 resolved.
 
 Generally you'll want to put your policies in **src/Policy** and use the
