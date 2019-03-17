@@ -22,6 +22,8 @@ use Authorization\Policy\ResultInterface;
 use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
 
 /**
@@ -34,7 +36,7 @@ use RuntimeException;
  * each controller and action, against a role based access system or any other
  * kind of authorization process that controls access to certain actions.
  */
-class RequestAuthorizationMiddleware
+class RequestAuthorizationMiddleware implements MiddlewareInterface
 {
     use InstanceConfigTrait;
 
@@ -84,16 +86,12 @@ class RequestAuthorizationMiddleware
     /**
      * Callable implementation for the middleware stack.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
-     * @param \Psr\Http\Message\ResponseInterface $response Response.
-     * @param callable $next The next middleware to call.
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
      * @return \Psr\Http\Message\ResponseInterface A response.
      */
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next
-    ): ResponseInterface {
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
         $service = $this->getServiceFromRequest($request);
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
@@ -105,6 +103,6 @@ class RequestAuthorizationMiddleware
             throw new ForbiddenException($result);
         }
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 }

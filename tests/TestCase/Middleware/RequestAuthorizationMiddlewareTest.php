@@ -20,10 +20,10 @@ use Authorization\Exception\ForbiddenException;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Middleware\RequestAuthorizationMiddleware;
 use Authorization\Policy\MapResolver;
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use RuntimeException;
+use TestApp\Http\TestRequestHandler;
 use TestApp\Policy\RequestPolicy;
 use Zend\Diactoros\Uri;
 
@@ -38,12 +38,9 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         $this->expectExceptionMessage('Authorization\Middleware\RequestAuthorizationMiddleware could not find the authorization service in the request attribute. Make sure you added the AuthorizationMiddleware before this middleware or that you somehow else added the service to the requests `authorization` attribute.');
 
         $request = new ServerRequest();
-        $response = new Response();
-        $next = function ($request) {
-            return $request;
-        };
+        $handler = new TestRequestHandler();
         $middleware = new RequestAuthorizationMiddleware();
-        $middleware($request, $response, $next);
+        $middleware->process($request, $handler);
     }
 
     public function testInvokeService()
@@ -54,10 +51,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
 
-        $response = new Response();
-        $next = function ($request, $response) {
-            return $response;
-        };
+        $handler = new TestRequestHandler();
 
         $resolver = new MapResolver([
             ServerRequest::class => new RequestPolicy(),
@@ -69,10 +63,10 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         $middleware = new AuthorizationMiddleware($authService, [
             'requireAuthorizationCheck' => false,
         ]);
-        $middleware($request, $response, $next);
+        $middleware->process($request, $handler);
 
         $middleware = new RequestAuthorizationMiddleware();
-        $middleware($request, $response, $next);
+        $middleware->process($request, $handler);
 
         $request = $request
             ->withParam('action', 'add')
@@ -80,7 +74,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
         $middleware = new RequestAuthorizationMiddleware();
-        $middleware($request, $response, $next);
+        $middleware->process($request, $handler);
     }
 
     public function testInvokeServiceWithResult()
@@ -91,10 +85,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
 
-        $response = new Response();
-        $next = function ($request, $response) {
-            return $response;
-        };
+        $handler = new TestRequestHandler();
 
         $resolver = new MapResolver([
             ServerRequest::class => new RequestPolicy(),
@@ -106,12 +97,12 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         $middleware = new AuthorizationMiddleware($authService, [
             'requireAuthorizationCheck' => false,
         ]);
-        $middleware($request, $response, $next);
+        $middleware->process($request, $handler);
 
         $middleware = new RequestAuthorizationMiddleware([
             'method' => 'enter',
         ]);
-        $middleware($request, $response, $next);
+        $middleware->process($request, $handler);
 
         $request = $request
             ->withParam('action', 'add')
@@ -123,7 +114,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         ]);
 
         try {
-            $middleware($request, $response, $next);
+            $middleware->process($request, $handler);
         } catch (ForbiddenException $e) {
             $this->assertEquals('wrong action', $e->getResult()->getReason());
 

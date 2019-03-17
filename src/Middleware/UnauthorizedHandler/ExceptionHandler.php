@@ -30,7 +30,6 @@ class ExceptionHandler implements HandlerInterface
     public function handle(
         Exception $exception,
         ServerRequestInterface $request,
-        ResponseInterface $response,
         array $options = []
     ): ResponseInterface {
         throw $exception;

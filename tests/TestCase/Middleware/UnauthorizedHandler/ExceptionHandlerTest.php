@@ -17,7 +17,6 @@ namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\ExceptionHandler;
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 
@@ -29,9 +28,8 @@ class ExceptionHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = new ServerRequest();
-        $response = new Response();
 
         $this->expectException(Exception::class);
-        $handler->handle($exception, $request, $response);
+        $handler->handle($exception, $request);
     }
 }

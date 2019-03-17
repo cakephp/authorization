@@ -19,6 +19,7 @@ use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response;
 
 class SuppressHandler implements HandlerInterface
 {
@@ -28,9 +29,8 @@ class SuppressHandler implements HandlerInterface
     public function handle(
         Exception $exception,
         ServerRequestInterface $request,
-        ResponseInterface $response,
         array $options = []
     ): ResponseInterface {
-        return $response;
+        return new Response();
     }
 }

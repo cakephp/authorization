@@ -17,7 +17,6 @@ namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\CakeRedirectHandler;
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
@@ -47,9 +46,8 @@ class CakeRedirectHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = new ServerRequest();
-        $response = new Response();
 
-        $response = $handler->handle($exception, $request, $response, [
+        $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
             ],
@@ -65,9 +63,8 @@ class CakeRedirectHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = new ServerRequest();
-        $response = new Response();
 
-        $response = $handler->handle($exception, $request, $response, [
+        $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
             ],
@@ -86,9 +83,8 @@ class CakeRedirectHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = new ServerRequest();
-        $response = new Response();
 
-        $response = $handler->handle($exception, $request, $response, [
+        $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
             ],
@@ -110,9 +106,8 @@ class CakeRedirectHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = new ServerRequest();
-        $response = new Response();
 
-        $response = $handler->handle($exception, $request, $response, [
+        $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
             ],

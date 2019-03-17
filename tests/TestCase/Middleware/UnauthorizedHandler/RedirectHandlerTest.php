@@ -17,7 +17,6 @@ namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\RedirectHandler;
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 
@@ -31,9 +30,8 @@ class RedirectHandlerTest extends TestCase
         $request = new ServerRequest([
             'environment' => ['REQUEST_METHOD' => 'GET'],
         ]);
-        $response = new Response();
 
-        $response = $handler->handle($exception, $request, $response, [
+        $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
             ],
@@ -55,9 +53,8 @@ class RedirectHandlerTest extends TestCase
                 'QUERY_STRING' => 'key=value',
             ],
         ]);
-        $response = new Response();
 
-        $response = $handler->handle($exception, $request, $response, [
+        $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
             ],
@@ -76,9 +73,8 @@ class RedirectHandlerTest extends TestCase
         $request = new ServerRequest([
             'environment' => ['REQUEST_METHOD' => 'GET'],
         ]);
-        $response = new Response();
 
-        $response = $handler->handle($exception, $request, $response, [
+        $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
             ],
@@ -117,9 +113,8 @@ class RedirectHandlerTest extends TestCase
                 'QUERY_STRING' => 'key=value',
             ],
         ]);
-        $response = new Response();
 
-        $response = $handler->handle($exception, $request, $response, [
+        $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
             ],
@@ -136,9 +131,8 @@ class RedirectHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = new ServerRequest();
-        $response = new Response();
 
         $this->expectException(Exception::class);
-        $handler->handle($exception, $request, $response);
+        $handler->handle($exception, $request);
     }
 }
