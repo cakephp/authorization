@@ -15,11 +15,11 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Middleware;
 
-use Authorization\AuthorizationService;
-use Authorization\Exception\ForbiddenException;
+use Phauthentic\Authorization\AuthorizationService;
+use Phauthentic\Authorization\Exception\ForbiddenException;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Middleware\RequestAuthorizationMiddleware;
-use Authorization\Policy\MapResolver;
+use Phauthentic\Authorization\Policy\MapResolver;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use RuntimeException;

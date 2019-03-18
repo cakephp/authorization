@@ -3,8 +3,8 @@ declare(strict_types=1);
 namespace Authorization\Test;
 
 use ArrayObject;
-use Authorization\AuthorizationServiceInterface;
-use Authorization\IdentityDecorator;
+use Phauthentic\Authorization\AuthorizationServiceInterface;
+use Phauthentic\Authorization\IdentityDecorator;
 use BadMethodCallException;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;

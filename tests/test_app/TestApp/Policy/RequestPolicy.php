@@ -2,10 +2,10 @@
 declare(strict_types=1);
 namespace TestApp\Policy;
 
-use Authorization\IdentityInterface;
-use Authorization\Policy\RequestPolicyInterface;
-use Authorization\Policy\Result;
-use Cake\Http\ServerRequest;
+use Phauthentic\Authorization\IdentityInterface;
+use Phauthentic\Authorization\Policy\RequestPolicyInterface;
+use Phauthentic\Authorization\Policy\Result;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * For testing request based policies
@@ -19,7 +19,7 @@ class RequestPolicy implements RequestPolicyInterface
      * @param \Cake\Http\ServerRequest $request Request
      * @return bool|\Authorization\Policy\ResultInterface
      */
-    public function canAccess(?IdentityInterface $identity, ServerRequest $request)
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $request)
     {
         if ($request->getParam('controller') === 'Articles'
             && $request->getParam('action') === 'index'
@@ -39,7 +39,7 @@ class RequestPolicy implements RequestPolicyInterface
      * @param \Cake\Http\ServerRequest $request Request
      * @return \Authorization\Policy\ResultInterface|bool
      */
-    public function canEnter(?IdentityInterface $identity, ServerRequest $request)
+    public function canEnter(?IdentityInterface $identity, ServerRequestInterface $request)
     {
         if ($request->getParam('controller') === 'Articles'
             && $request->getParam('action') === 'index'

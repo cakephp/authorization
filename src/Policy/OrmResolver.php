@@ -15,11 +15,12 @@ declare(strict_types=1);
  */
 namespace Authorization\Policy;
 
-use Authorization\Policy\Exception\MissingPolicyException;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
 use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\RepositoryInterface;
+use Phauthentic\Authorization\Policy\ResolverInterface;
 
 /**
  * Policy resolver that applies conventions based policy classes
@@ -73,7 +74,8 @@ class OrmResolver implements ResolverInterface
             return $this->getRepositoryPolicy($resource->getRepository());
         }
         $name = is_object($resource) ? get_class($resource) : gettype($resource);
-        throw new MissingPolicyException([$name]);
+        $exception = new MissingPolicyException();
+        throw $exception->setMessageVars([$name]);
     }
 
     /**
@@ -134,7 +136,7 @@ class OrmResolver implements ResolverInterface
         }
 
         if ($policyClass === null) {
-            throw new MissingPolicyException([$class]);
+            throw (new MissingPolicyException())->setMessageVars([$class]);
         }
 
         return new $policyClass();

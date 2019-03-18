@@ -15,8 +15,8 @@ declare(strict_types=1);
  */
 namespace TestApp\Policy;
 
-use Authorization\Policy\Exception\MissingPolicyException;
-use Authorization\Policy\ResolverInterface;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
+use Phauthentic\Authorization\Policy\ResolverInterface;
 use Cake\Core\App;
 
 /**

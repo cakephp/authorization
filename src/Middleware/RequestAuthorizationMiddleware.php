@@ -15,10 +15,10 @@ declare(strict_types=1);
  */
 namespace Authorization\Middleware;
 
-use Authorization\AuthorizationServiceInterface;
-use Authorization\Exception\ForbiddenException;
-use Authorization\Policy\Result;
-use Authorization\Policy\ResultInterface;
+use Phauthentic\Authorization\AuthorizationServiceInterface;
+use Phauthentic\Authorization\Exception\ForbiddenException;
+use Phauthentic\Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\ResultInterface;
 use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -100,7 +100,8 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
             $result = new Result($result);
         }
         if (!$result->getStatus()) {
-            throw new ForbiddenException($result);
+            $exception = new ForbiddenException();
+            throw $exception->setResult($result);
         }
 
         return $handler->handle($request);

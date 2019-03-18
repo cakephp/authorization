@@ -15,7 +15,7 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Policy;
 
-use Authorization\Policy\Exception\MissingPolicyException;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;

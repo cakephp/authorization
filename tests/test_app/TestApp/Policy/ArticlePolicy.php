@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace TestApp\Policy;
 
-use Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\Result;
 use TestApp\Model\Entity\Article;
 
 class ArticlePolicy

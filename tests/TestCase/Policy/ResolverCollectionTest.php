@@ -15,10 +15,10 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Policy;
 
-use Authorization\Policy\Exception\MissingPolicyException;
-use Authorization\Policy\MapResolver;
-use Authorization\Policy\ResolverCollection;
-use Authorization\Policy\ResolverInterface;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
+use Phauthentic\Authorization\Policy\MapResolver;
+use Phauthentic\Authorization\Policy\ResolverCollection;
+use Phauthentic\Authorization\Policy\ResolverInterface;
 use Cake\TestSuite\TestCase;
 use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
@@ -38,11 +38,14 @@ class ResolverCollectionTest extends TestCase
     {
         $resource = new Article();
 
+        $exception = new MissingPolicyException();
+        $exception = $exception->setMessageVars([get_class($resource)]);
+
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver->expects($this->once())
             ->method('getPolicy')
             ->with($resource)
-            ->willThrowException(new MissingPolicyException($resource));
+            ->willThrowException($exception);
 
         $collection = new ResolverCollection([
             $resolver,

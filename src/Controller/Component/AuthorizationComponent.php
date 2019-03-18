@@ -15,11 +15,11 @@ declare(strict_types=1);
  */
 namespace Authorization\Controller\Component;
 
-use Authorization\AuthorizationServiceInterface;
-use Authorization\Exception\ForbiddenException;
-use Authorization\IdentityInterface;
-use Authorization\Policy\Result;
-use Authorization\Policy\ResultInterface;
+use Phauthentic\Authorization\AuthorizationServiceInterface;
+use Phauthentic\Authorization\Exception\ForbiddenException;
+use Phauthentic\Authorization\IdentityInterface;
+use Phauthentic\Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
 use Cake\Http\ServerRequest;
 use InvalidArgumentException;
@@ -82,7 +82,11 @@ class AuthorizationComponent extends Component
         } else {
             $name = gettype($resource);
         }
-        throw new ForbiddenException($result, [$action, $name]);
+
+        $exception = new ForbiddenException();
+        throw $exception
+            ->setMessageVars([$action, $name])
+            ->setResult($result);
     }
 
     /**
@@ -196,7 +200,7 @@ class AuthorizationComponent extends Component
      * @return \Authorization\AuthorizationServiceInterface
      * @throws \InvalidArgumentException When invalid authorization service encountered.
      */
-    protected function getService(ServerRequestInterface $request): \Authorization\AuthorizationServiceInterface
+    protected function getService(ServerRequestInterface $request): AuthorizationServiceInterface
     {
         $serviceAttribute = $this->getConfig('serviceAttribute');
         $service = $request->getAttribute($serviceAttribute);

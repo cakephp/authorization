@@ -15,16 +15,16 @@ declare(strict_types=1);
  */
 namespace Authorization\Middleware;
 
-use Authorization\AuthorizationServiceInterface;
-use Authorization\AuthorizationServiceProviderInterface;
-use Authorization\Exception\AuthorizationRequiredException;
-use Authorization\Exception\Exception;
-use Authorization\IdentityDecorator;
-use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
 use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
 use Cake\Core\InstanceConfigTrait;
 use InvalidArgumentException;
+use Phauthentic\Authorization\AuthorizationServiceInterface;
+use Phauthentic\Authorization\AuthorizationServiceProviderInterface;
+use Phauthentic\Authorization\Exception\AuthorizationRequiredException;
+use Phauthentic\Authorization\Exception\Exception;
+use Phauthentic\Authorization\IdentityDecorator;
+use Phauthentic\Authorization\IdentityInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -118,7 +118,8 @@ class AuthorizationMiddleware implements MiddlewareInterface
             $response = $handler->handle($request);
 
             if ($this->getConfig('requireAuthorizationCheck') && !$service->authorizationChecked()) {
-                throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
+                $exception = new AuthorizationRequiredException();
+                throw $exception->setMessageVars(['url' => $request->getRequestTarget()]);
             }
         } catch (Exception $exception) {
             $unauthorizedHandler = $this->getHandler();

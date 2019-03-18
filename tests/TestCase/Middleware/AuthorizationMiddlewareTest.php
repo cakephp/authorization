@@ -15,12 +15,12 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Middleware;
 
-use Authorization\AuthorizationServiceInterface;
-use Authorization\AuthorizationServiceProviderInterface;
-use Authorization\Exception\AuthorizationRequiredException;
-use Authorization\Exception\Exception;
-use Authorization\IdentityDecorator;
-use Authorization\IdentityInterface;
+use Phauthentic\Authorization\AuthorizationServiceInterface;
+use Phauthentic\Authorization\AuthorizationServiceProviderInterface;
+use Phauthentic\Authorization\Exception\AuthorizationRequiredException;
+use Phauthentic\Authorization\Exception\Exception;
+use Phauthentic\Authorization\IdentityDecorator;
+use Phauthentic\Authorization\IdentityInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
@@ -131,8 +131,8 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Subject must be an instance of `Authorization\AuthorizationServiceInterface` ' .
-            'or `Authorization\AuthorizationServiceProviderInterface`, `stdClass` given.'
+            'Subject must be an instance of `Phauthentic\Authorization\AuthorizationServiceInterface` ' .
+            'or `Phauthentic\Authorization\AuthorizationServiceProviderInterface`, `stdClass` given.'
         );
 
         $middleware = new AuthorizationMiddleware(new stdClass());
@@ -253,7 +253,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ]);
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Invalid identity returned by decorator. `stdClass` does not implement `Authorization\IdentityInterface`.');
+        $this->expectExceptionMessage('Invalid identity returned by decorator. `stdClass` does not implement `Phauthentic\Authorization\IdentityInterface`.');
 
         $middleware->process($request, $handler);
     }

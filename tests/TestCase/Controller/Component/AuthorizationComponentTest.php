@@ -15,14 +15,14 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Controller\Component;
 
-use Authorization\AuthorizationService;
+use Phauthentic\Authorization\AuthorizationService;
 use Authorization\Controller\Component\AuthorizationComponent;
-use Authorization\Exception\ForbiddenException;
-use Authorization\IdentityDecorator;
-use Authorization\Policy\Exception\MissingPolicyException;
-use Authorization\Policy\MapResolver;
+use Phauthentic\Authorization\Exception\ForbiddenException;
+use Phauthentic\Authorization\IdentityDecorator;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
+use Phauthentic\Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
-use Authorization\Policy\ResultInterface;
+use Phauthentic\Authorization\Policy\ResultInterface;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Datasource\QueryInterface;
