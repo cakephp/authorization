@@ -17,6 +17,7 @@ namespace Authorization\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Exception\MissingIdentityException;
+use Cake\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -52,7 +53,6 @@ class RedirectHandler implements HandlerInterface
     public function handle(
         Exception $exception,
         ServerRequestInterface $request,
-        ResponseInterface $response,
         array $options = []
     ): ResponseInterface {
         $options += $this->defaultOptions;
@@ -63,9 +63,11 @@ class RedirectHandler implements HandlerInterface
 
         $url = $this->getUrl($request, $options);
 
+        $response = new Response();
+
         return $response
-                ->withHeader('Location', $url)
-                ->withStatus($options['statusCode']);
+            ->withHeader('Location', $url)
+            ->withStatus($options['statusCode']);
     }
 
     /**

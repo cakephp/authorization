@@ -22,10 +22,13 @@ use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
+use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
 use Cake\Core\InstanceConfigTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
 
 /**
@@ -33,7 +36,7 @@ use RuntimeException;
  *
  * Injects the authorization service and decorated identity objects into the request object as attributes.
  */
-class AuthorizationMiddleware
+class AuthorizationMiddleware implements MiddlewareInterface
 {
     use InstanceConfigTrait;
 
@@ -94,17 +97,13 @@ class AuthorizationMiddleware
     /**
      * Callable implementation for the middleware stack.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
-     * @param \Psr\Http\Message\ResponseInterface $response Response.
-     * @param callable $next The next middleware to call.
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler The request handler.
      * @return \Psr\Http\Message\ResponseInterface A response.
      */
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next
-    ): ResponseInterface {
-        $service = $this->getAuthorizationService($request, $response);
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $service = $this->getAuthorizationService($request);
         $request = $request->withAttribute('authorization', $service);
 
         $attribute = $this->getConfig('identityAttribute');
@@ -116,16 +115,16 @@ class AuthorizationMiddleware
         }
 
         try {
-            $response = $next($request, $response);
+            $response = $handler->handle($request);
+
             if ($this->getConfig('requireAuthorizationCheck') && !$service->authorizationChecked()) {
                 throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
             }
         } catch (Exception $exception) {
-            $handler = $this->getHandler();
-            $response = $handler->handle(
+            $unauthorizedHandler = $this->getHandler();
+            $response = $unauthorizedHandler->handle(
                 $exception,
                 $request,
-                $response,
                 (array)$this->getConfig('unauthorizedHandler')
             );
         }
@@ -138,7 +137,7 @@ class AuthorizationMiddleware
      *
      * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
      */
-    protected function getHandler(): \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
+    protected function getHandler(): HandlerInterface
     {
         $handler = $this->getConfig('unauthorizedHandler');
         if (!is_array($handler)) {
@@ -157,17 +156,15 @@ class AuthorizationMiddleware
      * Returns AuthorizationServiceInterface instance.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
-     * @param \Psr\Http\Message\ResponseInterface $response Response.
      * @return \Authorization\AuthorizationServiceInterface
      * @throws \RuntimeException When authorization method has not been defined.
      */
     protected function getAuthorizationService(
-        ServerRequestInterface $request,
-        ResponseInterface $response
+        ServerRequestInterface $request
     ): AuthorizationServiceInterface {
         $service = $this->subject;
         if ($this->subject instanceof AuthorizationServiceProviderInterface) {
-            $service = $this->subject->getAuthorizationService($request, $response);
+            $service = $this->subject->getAuthorizationService($request);
         }
 
         if (!$service instanceof AuthorizationServiceInterface) {

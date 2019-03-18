@@ -15,7 +15,6 @@ declare(strict_types=1);
  */
 namespace Authorization;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -27,11 +26,7 @@ interface AuthorizationServiceProviderInterface
      * Returns authorization service instance.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Request
-     * @param \Psr\Http\Message\ResponseInterface $response Response
      * @return \Authorization\AuthorizationServiceInterface
      */
-    public function getAuthorizationService(
-        ServerRequestInterface $request,
-        ResponseInterface $response
-    ): AuthorizationServiceInterface;
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface;
 }
