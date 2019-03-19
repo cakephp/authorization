@@ -8,12 +8,6 @@
         "cakephp"
     ],
     "type": "cakephp-plugin",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ADmad/authorization"
-        }
-    ],
     "require": {
         "cakephp/cakephp": "4.x-dev as 4.0.0",
         "phauthentic/authorization": "dev-develop",
@@ -26,9 +20,6 @@
         "cakephp/cakephp-codesniffer": "dev-next",
         "cakephp/bake": "4.x-dev as 2.0.0",
         "phpunit/phpunit": "^7.0"
-    },
-    "suggest": {
-        "cakephp/orm": "To use \"OrmResolver\" (Not needed separately if using full CakePHP framework)."
     },
     "license": "MIT",
     "minimum-stability": "dev",

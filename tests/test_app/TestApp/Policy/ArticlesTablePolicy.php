@@ -2,24 +2,25 @@
 declare(strict_types=1);
 namespace TestApp\Policy;
 
-use Phauthentic\Authorization\IdentityInterface;
 use Cake\Datasource\QueryInterface;
+use Phauthentic\Authorization\IdentityInterface;
+use Phauthentic\Authorization\Policy\Result;
 
 class ArticlesTablePolicy
 {
     public function canIndex(IdentityInterface $identity)
     {
-        return $identity['can_index'];
+        return new Result($identity['can_index']);
     }
 
     public function canEdit(IdentityInterface $identity)
     {
-        return $identity['can_edit'];
+        return new Result($identity['can_edit']);
     }
 
     public function canModify(IdentityInterface $identity)
     {
-        return $identity['can_edit'];
+        return new Result($identity['can_edit']);
     }
 
     public function scopeEdit(IdentityInterface $user, QueryInterface $query)

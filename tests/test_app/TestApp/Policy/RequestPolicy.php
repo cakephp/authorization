@@ -5,6 +5,7 @@ namespace TestApp\Policy;
 use Phauthentic\Authorization\IdentityInterface;
 use Phauthentic\Authorization\Policy\RequestPolicyInterface;
 use Phauthentic\Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\ResultInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -17,19 +18,19 @@ class RequestPolicy implements RequestPolicyInterface
      *
      * @param \Authorization\IdentityInterface|null $identity Identity
      * @param \Cake\Http\ServerRequest $request Request
-     * @return bool|\Authorization\Policy\ResultInterface
+     * @return \Authorization\Policy\ResultInterface
      */
-    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $request)
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $request): ResultInterface
     {
         if ($request->getParam('controller') === 'Articles'
             && $request->getParam('action') === 'index'
         ) {
-            return true;
+            return new Result(true);
         }
 
         // More checks here
 
-        return false;
+        return new Result(false);
     }
 
     /**
@@ -37,9 +38,9 @@ class RequestPolicy implements RequestPolicyInterface
      *
      * @param null|\Authorization\IdentityInterface|null $idenity Identity
      * @param \Cake\Http\ServerRequest $request Request
-     * @return \Authorization\Policy\ResultInterface|bool
+     * @return \Authorization\Policy\ResultInterface
      */
-    public function canEnter(?IdentityInterface $identity, ServerRequestInterface $request)
+    public function canEnter(?IdentityInterface $identity, ServerRequestInterface $request): ResultInterface
     {
         if ($request->getParam('controller') === 'Articles'
             && $request->getParam('action') === 'index'

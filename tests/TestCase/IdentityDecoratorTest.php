@@ -3,11 +3,12 @@ declare(strict_types=1);
 namespace Authorization\Test;
 
 use ArrayObject;
-use Phauthentic\Authorization\AuthorizationServiceInterface;
-use Phauthentic\Authorization\IdentityDecorator;
 use BadMethodCallException;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
+use Phauthentic\Authorization\AuthorizationServiceInterface;
+use Phauthentic\Authorization\IdentityDecorator;
+use Phauthentic\Authorization\Policy\Result;
 use stdClass;
 use TestApp\Model\Entity\Article;
 
@@ -57,8 +58,8 @@ class IdentityDecoratorTest extends TestCase
         $auth->expects($this->once())
             ->method('can')
             ->with($identity, 'update', $resource)
-            ->will($this->returnValue(true));
-        $this->assertTrue($identity->can('update', $resource));
+            ->will($this->returnValue(new Result(true)));
+        $this->assertTrue($identity->can('update', $resource)->getStatus());
     }
 
     public function testApplyScopeDelegation()
@@ -70,8 +71,8 @@ class IdentityDecoratorTest extends TestCase
         $auth->expects($this->once())
             ->method('applyScope')
             ->with($identity, 'update', $resource)
-            ->will($this->returnValue(true));
-        $this->assertTrue($identity->applyScope('update', $resource));
+            ->will($this->returnValue(new Result(true)));
+        $this->assertTrue($identity->applyScope('update', $resource)->getStatus());
     }
 
     public function testCall()

@@ -41,10 +41,10 @@ class AuthorizationServiceTest extends TestCase
         $user = null;
 
         $result = $service->can($user, 'view', new Article());
-        $this->assertFalse($result);
+        $this->assertFalse($result->getStatus());
 
         $result = $service->can($user, 'view', new Article(['visibility' => 'public']));
-        $this->assertTrue($result);
+        $this->assertTrue($result->getStatus());
     }
 
     public function testCan()
@@ -60,7 +60,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', new Article());
-        $this->assertTrue($result);
+        $this->assertTrue($result->getStatus());
     }
 
     public function testCanWithResult()
@@ -108,8 +108,8 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $article = new Article();
-        $this->assertTrue($service->can($user, 'doThat', $article));
-        $this->assertFalse($service->can($user, 'cantDoThis', $article));
+        $this->assertTrue($service->can($user, 'doThat', $article)->getStatus());
+        $this->assertFalse($service->can($user, 'cantDoThis', $article)->getStatus());
     }
 
     public function testAuthorizationCheckedWithApplyScope()
@@ -184,7 +184,7 @@ class AuthorizationServiceTest extends TestCase
         $policy->expects($this->once())
             ->method('before')
             ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn(false);
+            ->willReturn(new Result(false));
 
         $resolver = new MapResolver([
             Article::class => $policy,
@@ -200,7 +200,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertFalse($result);
+        $this->assertFalse($result->getStatus());
     }
 
     public function testBeforeTrue()
@@ -214,7 +214,7 @@ class AuthorizationServiceTest extends TestCase
         $policy->expects($this->once())
             ->method('before')
             ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn(true);
+            ->willReturn(new Result(true));
 
         $policy->expects($this->never())
             ->method('canAdd');
@@ -230,7 +230,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertTrue($result);
+        $this->assertTrue($result->getStatus());
     }
 
     public function testBeforeNull()
@@ -249,7 +249,7 @@ class AuthorizationServiceTest extends TestCase
         $policy->expects($this->once())
             ->method('canAdd')
             ->with($this->isInstanceOf(IdentityDecorator::class), $entity)
-            ->willReturn(true);
+            ->willReturn(new Result(true));
 
         $resolver = new MapResolver([
             Article::class => $policy,
@@ -262,7 +262,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertTrue($result);
+        $this->assertTrue($result->getStatus());
     }
 
     public function testBeforeResultTrue()
@@ -325,40 +325,6 @@ class AuthorizationServiceTest extends TestCase
         $result = $service->can($user, 'add', $entity);
         $this->assertInstanceOf(ResultInterface::class, $result);
         $this->assertFalse($result->getStatus());
-    }
-
-    public function testBeforeOther()
-    {
-        $entity = new Article();
-
-        $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->setMethods(['before', 'canAdd'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('before')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn('foo');
-
-        $policy->expects($this->never())
-            ->method('canAdd');
-
-        $resolver = new MapResolver([
-            Article::class => $policy,
-        ]);
-
-        $service = new AuthorizationService($resolver);
-
-        $user = new IdentityDecorator($service, [
-            'role' => 'admin',
-        ]);
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(
-            'Pre-authorization check must return `Phauthentic\Authorization\Policy\ResultInterface`, `bool` or `null`.'
-        );
-
-        $service->can($user, 'add', $entity);
     }
 
     public function testMissingMethod()

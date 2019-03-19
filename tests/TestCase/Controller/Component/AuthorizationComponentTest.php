@@ -15,20 +15,21 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Controller\Component;
 
-use Phauthentic\Authorization\AuthorizationService;
 use Authorization\Controller\Component\AuthorizationComponent;
-use Phauthentic\Authorization\Exception\ForbiddenException;
-use Phauthentic\Authorization\IdentityDecorator;
-use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
-use Phauthentic\Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
-use Phauthentic\Authorization\Policy\ResultInterface;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Datasource\QueryInterface;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
+use Phauthentic\Authorization\AuthorizationService;
+use Phauthentic\Authorization\Exception\ForbiddenException;
+use Phauthentic\Authorization\IdentityDecorator;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
+use Phauthentic\Authorization\Policy\MapResolver;
+use Phauthentic\Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\ResultInterface;
 use stdClass;
 use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
@@ -188,7 +189,7 @@ class AuthorizationComponentTest extends TestCase
 
         $policy->expects($this->once())
             ->method('canModify')
-            ->willReturn(true);
+            ->willReturn(new Result(true));
 
         $article = new Article(['user_id' => 1]);
 
@@ -372,7 +373,7 @@ class AuthorizationComponentTest extends TestCase
 
         $policy->expects($this->once())
             ->method('canModify')
-            ->willReturn(true);
+            ->willReturn(new Result(true));
 
         $this->Auth->setConfig('authorizeModel', ['edit']);
         $this->Auth->setConfig('actionMap', ['edit' => 'modify']);
@@ -451,12 +452,12 @@ class AuthorizationComponentTest extends TestCase
     public function testCan()
     {
         $article = new Article(['user_id' => 1]);
-        $this->assertTrue($this->Auth->can($article));
-        $this->assertTrue($this->Auth->can($article, 'delete'));
+        $this->assertTrue($this->Auth->can($article)->getStatus());
+        $this->assertTrue($this->Auth->can($article, 'delete')->getStatus());
 
         $article = new Article(['user_id' => 2]);
-        $this->assertFalse($this->Auth->can($article));
-        $this->assertFalse($this->Auth->can($article, 'delete'));
+        $this->assertFalse($this->Auth->can($article)->getStatus());
+        $this->assertFalse($this->Auth->can($article, 'delete')->getStatus());
     }
 
     public function testCanWithResult()

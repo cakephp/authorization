@@ -68,9 +68,6 @@ class AuthorizationComponent extends Component
         }
 
         $result = $this->can($resource, $action);
-        if (!$result instanceof ResultInterface) {
-            $result = new Result($result);
-        }
         if ($result->getStatus()) {
             return;
         }
