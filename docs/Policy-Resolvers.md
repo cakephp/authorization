@@ -71,7 +71,7 @@ use Authorization\Policy\OrmResolver;
 $appNamespace = 'App';
 
 // Map policies in one namespace to another.
-// Here we have mapped policies for classes in the `Blog` namespace to be 
+// Here we have mapped policies for classes in the `Blog` namespace to be
 // found in the `Cms` namespace.
 $overrides = [
     'Blog' => 'Cms',
@@ -84,8 +84,8 @@ $resolver = new OrmResolver($appNamespace, $overrides)
 `ResolverCollection` allows you to aggregate multiple resolvers together:
 
 ```php
-use Authorization\Policy\ResolverCollection;
-use Authorization\Policy\MapResolver;
+use Phauthentic\Authorization\Policy\ResolverCollection;
+use Phauthentic\Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
 
 $ormResolver = new OrmResolver();
@@ -99,5 +99,5 @@ $resolver = new ResolverCollection([$mapResolver, $ormResolver]);
 ## Creating a Resolver
 
 You can implement your own resolver by implementing the
-`Authorization\Policy\ResolverInterface` which requires defining the
+`Phauthentic\Authorization\Policy\ResolverInterface` which requires defining the
 `getPolicy($resource)` method.

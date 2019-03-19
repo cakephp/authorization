@@ -7,20 +7,20 @@ Authorization is applied to your application as a middleware. The
   `applyScope` if necessary.
 * Ensuring that authorization has been checked/bypassed in the request.
 
-To use the middleware implement `AuthorizationServiceProviderInterface` in your 
-application class. Then pass your app instance into the middlware and add the 
-middleware to the queue. 
+To use the middleware implement `AuthorizationServiceProviderInterface` in your
+application class. Then pass your app instance into the middlware and add the
+middleware to the queue.
 
 A very simple example would be:
 
 ```php
 namespace App;
 
-use Authorization\AuthorizationService;
-use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
 use Cake\Http\BaseApplication;
+use Phauthentic\Authorization\AuthorizationService;
+use Phauthentic\Authorization\AuthorizationServiceProviderInterface;
 
 class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 {
@@ -41,7 +41,7 @@ class Application extends BaseApplication implements AuthorizationServiceProvide
 }
 ```
 
-The authorization service requires a policy resolver. See the 
+The authorization service requires a policy resolver. See the
 [Policies](./Policies.md) documentation on what resolvers are available and how
 to use them.
 
@@ -57,10 +57,9 @@ option. First lets update our `User` class:
 ```php
 namespace App\Model\Entity;
 
-use Authorization\AuthorizationServiceInterface;
-use Authorization\IdentityInterface;
 use Cake\ORM\Entity;
-
+use Phauthentic\Authorization\AuthorizationServiceInterface;
+use Phauthentic\Authorization\IdentityInterface;
 
 class User extends Entity implements IdentityInterface
 {
@@ -172,9 +171,9 @@ $middlewareQueue->add(new AuthorizationMiddleware($this, [
 ```
 
 You can also add your own handler. Handlers should implement `Authorization\Middleware\UnauthorizedHandler\HandlerInterface`,
-be suffixed with `Handler` suffix and reside under your app's or plugin's 
+be suffixed with `Handler` suffix and reside under your app's or plugin's
 `Middleware\UnauthorizedHandler` namespace.
 
 Configuration options are passed to the handler's `handle()` method as the last parameter.
 
-Handlers catch only those exceptions which extend the `Authorization\Exception\Exception` class.
+Handlers catch only those exceptions which extend the `Phaunthentic\Authorization\Exception\Exception` class.

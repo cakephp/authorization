@@ -9,17 +9,6 @@ authorization. The middleware will wrap your request `identity` with an
 // Get the identity from the request
 $user = $this->request->getAttribute('identity');
 
-// Check authorization on $article
-if ($user->can('delete', $article)) {
-    // Do delete operation
-}
-```
-
-If your policies return [Result objects](../Policies.md#policy-result-objects) 
-be sure to check their status as  `can()` returns the result instance:
-
-```php
-// Assuming our policy returns a result.
 $result = $user->can('delete', $article);
 if ($result->getStatus()) {
     // Do deletion

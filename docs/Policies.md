@@ -39,9 +39,12 @@ The policy class we just created doesn't do much right now. Lets define a method
 that allows us to check if a user can update an article.
 
 ```php
-public function canUpdate(IdentityInterface $user, Article $article)
+use Phauthentic\Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\ResultInterface;
+
+public function canUpdate(IdentityInterface $user, Article $article): ResultInterface
 {
-    return $user->id == $article->user_id;
+    return new Result($user->id == $article->user_id);
 }
 ```
 
@@ -49,26 +52,23 @@ Policy methods will receive ``null`` for the ``$user`` parameter when handling
 unauthencticated users. If you want to automatically fail policy methods for
 anonymous users you can use the `IdentityInterface` typehint.
 
-### Policy Result Objects
-
-In addition to booleans, policy methods can return ``Result`` objects which
-allow more context to be provided on why the policy passed/failed.
+Policy methods must return ``ResultInterface`` instance which allows more
+context to be provided on why the policy passed/failed.
 
 ```php
-use Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\ResultInterface;
 
-public function canUpdate(IdentityInterface $user, Article $article)
+public function canUpdate(IdentityInterface $user, Article $article): ResultInterface
 {
     if ($user->id == $article->user_id) {
         return new Result(true);
     }
+
     // Results let you define a 'reason' for the failure.
     return new Result(false, 'not-owner');
 }
 ```
-
-Any return value that is not `true` or a `ResultInterface` object will be
-considered a failure.
 
 ### Policy Scopes
 
@@ -100,14 +100,15 @@ in your policy:
 ```php
 namespace App\Policy;
 
-use Authorization\Policy\BeforePolicyInterface;
+use Phauthentic\Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\BeforePolicyInterface;
 
 class ArticlesPolicy implements BeforePolicyInterface
 {
     public function before($user, $resource, $action)
     {
         if ($user->getOriginalData()->is_admin) {
-            return true;
+            return new Result(true);
         }
         // fall through
     }
@@ -116,7 +117,7 @@ class ArticlesPolicy implements BeforePolicyInterface
 
 Before hooks are expected to return one of three values:
 
-- `true` The user is allowed to proceed with the action.
-- `false` The user is not allowed to proceed with the action.
+- `Phauthentic\Authorization\Policy\ResultInterface` instance to denote whether
+  action is allowed or denied.
 - `null` The before hook did not make a decision, and the authorization method
   will be invoked.

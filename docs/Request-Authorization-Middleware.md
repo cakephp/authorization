@@ -13,27 +13,30 @@ Create a policy for handling the request object. The plugin ships with an interf
 ```php
 namespace App\Policy;
 
-use Authorization\Policy\RequestPolicyInterface;
-use Cake\Http\ServerRequest;
+use Phauthentic\Authorization\IdentityInterface;
+use Phauthentic\Authorization\Policy\RequestPolicyInterface;
+use Phauthentic\Authorization\Policy\Result;
+use Phauthentic\Authorization\Policy\ResultInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class RequestPolicy implements RequestPolicyInterface
 {
     /**
      * Method to check if the request can be accessed
      *
-     * @param \Authorization\IdentityInterface|null Identity
+     * @param \Phauthentic\Authorization\IdentityInterface|null Identity
      * @param \Cake\Http\ServerRequest $request Server Request
-     * @return bool
+     * @return \Phauthentic\Authorization\Policy\ResultInterface
      */
-    public function canAccess($identity, ServerRequest $request)
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $request): ResultInterface
     {
         if ($request->getParam('controller') === 'Articles'
             && $request->getParam('action') === 'index'
         ) {
-            return true;
+            return new Result(true);
         }
 
-        return false;
+        return new Result(false);
     }
 }
 ```
@@ -42,9 +45,9 @@ Map the request class to the policy inside `Application::getAuthorizationService
 
 ```php
 use App\Policy\RequestPolicy;
-use Authorization\AuthorizationService;
-use Authorization\Policy\MapResolver;
-use Cake\Http\ServerRequest;
+use Phauthentic\Authorization\AuthorizationService;
+use Phauthentic\Authorization\Policy\MapResolver;
+use Psr\Http\Message\ServerRequestInterface;
 
 $mapResolver = new MapResolver();
 $mapResolver->map(ServerRequest::class, RequestPolicy::class);
@@ -52,7 +55,7 @@ $mapResolver->map(ServerRequest::class, RequestPolicy::class);
 return new AuthorizationService($resolver);
 ```
 
-In your `Application.php` make sure you're loading the RequestAuthorizationMiddleware **after** the AuthorizationMiddleware! 
+In your `Application.php` make sure you're loading the RequestAuthorizationMiddleware **after** the AuthorizationMiddleware!
 
 ```php
 // Add authorization (after authentication if you are using that plugin too).

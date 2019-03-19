@@ -56,7 +56,7 @@ public function edit($id)
 }
 ```
 
-Above we see an article being authorized for the current user. Since we haven't 
+Above we see an article being authorized for the current user. Since we haven't
 specified the action to check the request's `action` is used. You can specify
 a policy action with the second parameter:
 
@@ -70,7 +70,7 @@ when permission is denied. If you want to check authorization and get a boolean
 result you can use the `can()` method:
 
 ```php
-if ($this->Authorization->can($article, 'update')) {
+if ($this->Authorization->can($article, 'update')->getStatus()) {
     // Do something to the article.
 }
 ```
@@ -94,7 +94,7 @@ $query = $this->Authorization->applyScope($this->Articles->find());
 
 If you want to map actions to different authorization methods use the `actionMap` option:
 
-```php 
+```php
 //controller initialize() method:
 $this->Authorization->mapActions([
     'index' => 'list',
@@ -119,7 +119,7 @@ public function index()
     $query = $this->Articles->find();
 
     //this will apply `list` scope while being called in `index` controller action.
-    $this->Authorization->applyScope($query); 
+    $this->Authorization->applyScope($query);
     ...
 }
 
@@ -128,14 +128,14 @@ public function delete($id)
     $article = $this->Articles->get($id);
 
     //this will authorize against `remove` entity action while being called in `delete` controller action.
-    $this->Authorization->authorize($article); 
+    $this->Authorization->authorize($article);
     ...
 }
 
 public function add()
 {
     //this will authorize against `insert` model action while being called in `add` controller action.
-    $this->Authorization->authorizeModel(); 
+    $this->Authorization->authorizeModel();
     ...
 }
 ```

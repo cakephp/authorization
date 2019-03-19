@@ -14,10 +14,6 @@ Load the plugin by adding the following statement in your project's `src/Applica
 ```php
 $this->addPlugin('Authorization');
 ```
-Prior to 3.6.0
-```php
-Plugin::load('Authorization');
-```
 
 ## Getting Started
 
@@ -27,10 +23,10 @@ apply the middleware. In **src/Application.php** add the following to the class
 imports:
 
 ```php
-use Authorization\AuthorizationService;
-use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
+use Phauthentic\Authorization\AuthorizationService;
+use Phauthentic\Authorization\AuthorizationServiceProviderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 ```
