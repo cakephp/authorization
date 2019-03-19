@@ -15,14 +15,12 @@ declare(strict_types=1);
  */
 namespace Authorization\Controller\Component;
 
-use Phauthentic\Authorization\AuthorizationServiceInterface;
-use Phauthentic\Authorization\Exception\ForbiddenException;
-use Phauthentic\Authorization\IdentityInterface;
-use Phauthentic\Authorization\Policy\Result;
-use Phauthentic\Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
 use Cake\Http\ServerRequest;
 use InvalidArgumentException;
+use Phauthentic\Authorization\AuthorizationServiceInterface;
+use Phauthentic\Authorization\Exception\ForbiddenException;
+use Phauthentic\Authorization\IdentityInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use UnexpectedValueException;
 

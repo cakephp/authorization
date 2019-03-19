@@ -15,12 +15,12 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Policy;
 
-use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use OverridePlugin\Policy\TagPolicy as OverrideTagPolicy;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
 use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\ArticlesTablePolicy;

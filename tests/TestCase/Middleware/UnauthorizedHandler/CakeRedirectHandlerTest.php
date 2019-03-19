@@ -15,11 +15,11 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
-use Phauthentic\Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\CakeRedirectHandler;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use Phauthentic\Authorization\Exception\Exception;
 
 /**
  * Description of CakeRedirectHandlerTest

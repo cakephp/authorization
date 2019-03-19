@@ -15,11 +15,11 @@ declare(strict_types=1);
  */
 namespace Authorization\Policy;
 
-use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
 use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\RepositoryInterface;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
 use Phauthentic\Authorization\Policy\ResolverInterface;
 
 /**

@@ -15,9 +15,9 @@ declare(strict_types=1);
  */
 namespace TestApp\Policy;
 
+use Cake\Core\App;
 use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
 use Phauthentic\Authorization\Policy\ResolverInterface;
-use Cake\Core\App;
 
 /**
  * Very simple policy resolver that accepts string policy names.

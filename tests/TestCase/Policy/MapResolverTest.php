@@ -15,10 +15,10 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Policy;
 
-use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
-use Phauthentic\Authorization\Policy\MapResolver;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
+use Phauthentic\Authorization\Policy\Exception\MissingPolicyException;
+use Phauthentic\Authorization\Policy\MapResolver;
 use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
 

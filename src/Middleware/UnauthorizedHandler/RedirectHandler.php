@@ -15,9 +15,9 @@ declare(strict_types=1);
  */
 namespace Authorization\Middleware\UnauthorizedHandler;
 
-use Phauthentic\Authorization\Exception\Exception;
 use Authorization\Exception\MissingIdentityException;
 use Cake\Http\Response;
+use Phauthentic\Authorization\Exception\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

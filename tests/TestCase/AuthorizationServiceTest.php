@@ -15,6 +15,7 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase;
 
+use Cake\TestSuite\TestCase;
 use Phauthentic\Authorization\AuthorizationService;
 use Phauthentic\Authorization\IdentityDecorator;
 use Phauthentic\Authorization\Policy\BeforePolicyInterface;
@@ -22,8 +23,6 @@ use Phauthentic\Authorization\Policy\Exception\MissingMethodException;
 use Phauthentic\Authorization\Policy\MapResolver;
 use Phauthentic\Authorization\Policy\Result;
 use Phauthentic\Authorization\Policy\ResultInterface;
-use Cake\TestSuite\TestCase;
-use RuntimeException;
 use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\MagicCallPolicy;

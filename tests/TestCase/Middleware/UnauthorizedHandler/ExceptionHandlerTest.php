@@ -15,10 +15,10 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
-use Phauthentic\Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\ExceptionHandler;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
+use Phauthentic\Authorization\Exception\Exception;
 
 class ExceptionHandlerTest extends TestCase
 {

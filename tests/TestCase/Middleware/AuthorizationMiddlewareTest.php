@@ -15,17 +15,17 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Middleware;
 
+use Authorization\Middleware\AuthorizationMiddleware;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
+use Cake\TestSuite\TestCase;
+use InvalidArgumentException;
 use Phauthentic\Authorization\AuthorizationServiceInterface;
 use Phauthentic\Authorization\AuthorizationServiceProviderInterface;
 use Phauthentic\Authorization\Exception\AuthorizationRequiredException;
 use Phauthentic\Authorization\Exception\Exception;
 use Phauthentic\Authorization\IdentityDecorator;
 use Phauthentic\Authorization\IdentityInterface;
-use Authorization\Middleware\AuthorizationMiddleware;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
-use Cake\TestSuite\TestCase;
-use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

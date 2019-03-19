@@ -15,8 +15,8 @@ declare(strict_types=1);
  */
 namespace TestApp\Middleware\UnauthorizedHandler;
 
-use Phauthentic\Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
+use Phauthentic\Authorization\Exception\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;

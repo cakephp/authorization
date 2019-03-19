@@ -15,11 +15,11 @@ declare(strict_types=1);
  */
 namespace Authorization\Middleware;
 
+use Cake\Core\InstanceConfigTrait;
 use Phauthentic\Authorization\AuthorizationServiceInterface;
 use Phauthentic\Authorization\Exception\ForbiddenException;
 use Phauthentic\Authorization\Policy\Result;
 use Phauthentic\Authorization\Policy\ResultInterface;
-use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
