@@ -10,11 +10,7 @@
     "type": "cakephp-plugin",
     "require": {
         "cakephp/cakephp": "4.x-dev as 4.0.0",
-        "phauthentic/authorization": "dev-develop",
-        "psr/http-client": "^1.0",
-        "psr/http-message": "^1.0",
-        "psr/http-server-handler": "^1.0",
-        "psr/http-server-middleware": "^1.0"
+        "phauthentic/authorization": "dev-develop"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "dev-next",
