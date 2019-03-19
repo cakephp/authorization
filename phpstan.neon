@@ -1,3 +1,12 @@
 parameters:
+    level: 4
     ignoreErrors:
-        - '#Casting to [a-z]+ something that.s already [a-z]+.#'
+        -
+            message: '#Result of && is always false#'
+            path: 'src/Middleware/AuthorizationMiddleware.php'
+        -
+            message: '#Else branch is unreachable because ternary operator condition is always true#'
+            path: 'src/Middleware/AuthorizationMiddleware.php'
+        -
+            message: '#Else branch is unreachable because ternary operator condition is always true#'
+            path: 'src/Policy/OrmResolver.php'

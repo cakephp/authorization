@@ -15,9 +15,9 @@ declare(strict_types=1);
  */
 namespace Authorization\Middleware\UnauthorizedHandler;
 
-use Authorization\Exception\MissingIdentityException;
 use Cake\Http\Response;
 use Phauthentic\Authorization\Exception\Exception;
+use Phauthentic\Authorization\Exception\MissingIdentityException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -73,7 +73,7 @@ class RedirectHandler implements HandlerInterface
     /**
      * Checks if an exception matches one of the classes.
      *
-     * @param \Authorization\Exception\Exception $exception Exception instance.
+     * @param \Phauthentic\Authorization\Exception\Exception $exception Exception instance.
      * @param array $exceptions A list of exception classes.
      * @return bool
      */

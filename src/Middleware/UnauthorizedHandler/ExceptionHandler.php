@@ -25,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class ExceptionHandler implements HandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(
         Exception $exception,

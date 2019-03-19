@@ -56,7 +56,7 @@ class AuthorizationComponent extends Component
      * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @return void
-     * @throws \Authorization\Exception\ForbiddenException when policy check fails.
+     * @throws \Phauthentic\Authorization\Exception\ForbiddenException when policy check fails.
      */
     public function authorize($resource, ?string $action = null): void
     {
@@ -92,7 +92,7 @@ class AuthorizationComponent extends Component
      *
      * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
-     * @return bool|\Authorization\Policy\ResultInterface
+     * @return bool|\Phauthentic\Authorization\Policy\ResultInterface
      */
     public function can($resource, ?string $action = null)
     {
@@ -192,7 +192,7 @@ class AuthorizationComponent extends Component
      * Get the authorization service from a request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request
-     * @return \Authorization\AuthorizationServiceInterface
+     * @return \Phauthentic\Authorization\AuthorizationServiceInterface
      * @throws \InvalidArgumentException When invalid authorization service encountered.
      */
     protected function getService(ServerRequestInterface $request): AuthorizationServiceInterface
@@ -216,8 +216,8 @@ class AuthorizationComponent extends Component
      * Get the identity from a request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request
-     * @return \Authorization\IdentityInterface|null
-     * @throws \Authorization\Exception\MissingIdentityException When identity is not present in a request.
+     * @return \Phauthentic\Authorization\IdentityInterface|null
+     * @throws \Phauthentic\Authorization\Exception\MissingIdentityException When identity is not present in a request.
      * @throws \InvalidArgumentException When invalid identity encountered.
      */
     protected function getIdentity(ServerRequestInterface $request): ?IdentityInterface

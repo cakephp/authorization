@@ -64,14 +64,14 @@ class AuthorizationMiddleware implements MiddlewareInterface
     /**
      * Authorization service or application instance.
      *
-     * @var \Authorization\AuthorizationServiceInterface|\Authorization\AuthorizationServiceProviderInterface
+     * @var \Phauthentic\Authorization\AuthorizationServiceInterface|\Phauthentic\Authorization\AuthorizationServiceProviderInterface
      */
     protected $subject;
 
     /**
      * Constructor.
      *
-     * @param \Authorization\AuthorizationServiceInterface|\Authorization\AuthorizationServiceProviderInterface $subject Authorization service or provider instance.
+     * @param \Phauthentic\Authorization\AuthorizationServiceInterface|\Phauthentic\Authorization\AuthorizationServiceProviderInterface $subject Authorization service or provider instance.
      * @param array $config Config array.
      * @throws \InvalidArgumentException
      */
@@ -157,7 +157,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
      * Returns AuthorizationServiceInterface instance.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
-     * @return \Authorization\AuthorizationServiceInterface
+     * @return \Phauthentic\Authorization\AuthorizationServiceInterface
      * @throws \RuntimeException When authorization method has not been defined.
      */
     protected function getAuthorizationService(
@@ -182,9 +182,9 @@ class AuthorizationMiddleware implements MiddlewareInterface
     /**
      * Builds the identity object.
      *
-     * @param \Authorization\AuthorizationServiceInterface $service Authorization service.
+     * @param \Phauthentic\Authorization\AuthorizationServiceInterface $service Authorization service.
      * @param \ArrayAccess|array $identity Identity data
-     * @return \Authorization\IdentityInterface
+     * @return \Phauthentic\Authorization\IdentityInterface
      */
     protected function buildIdentity(AuthorizationServiceInterface $service, $identity): IdentityInterface
     {

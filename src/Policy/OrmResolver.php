@@ -59,7 +59,7 @@ class OrmResolver implements ResolverInterface
      *
      * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\EntityInterface|\Cake\Datasource\QueryInterface $resource The resource.
      * @return mixed
-     * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
+     * @throws \Phauthentic\Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined or cannot be resolved.
      */
     public function getPolicy($resource)
@@ -116,7 +116,7 @@ class OrmResolver implements ResolverInterface
      * @param string $class The full class name.
      * @param string $name The name suffix of the resource.
      * @param string $namespace The namespace to find the policy in.
-     * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
+     * @throws \Phauthentic\Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined.
      * @return mixed
      */

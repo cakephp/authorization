@@ -65,7 +65,7 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
      * Gets the authorization service from the request attribute
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
-     * @return \Authorization\AuthorizationServiceInterface
+     * @return \Phauthentic\Authorization\AuthorizationServiceInterface
      */
     protected function getServiceFromRequest(ServerRequestInterface $request): AuthorizationServiceInterface
     {

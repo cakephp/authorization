@@ -15,8 +15,8 @@ declare(strict_types=1);
  */
 namespace Authorization\Middleware\UnauthorizedHandler;
 
-use Authorization\Exception\MissingIdentityException;
 use Cake\Routing\Router;
+use Phauthentic\Authorization\Exception\MissingIdentityException;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
@@ -28,7 +28,7 @@ use RuntimeException;
 class CakeRedirectHandler extends RedirectHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $defaultOptions = [
         'exceptions' => [
@@ -61,7 +61,7 @@ class CakeRedirectHandler extends RedirectHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getUrl(ServerRequestInterface $request, array $options): string
     {
