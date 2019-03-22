@@ -89,7 +89,8 @@ You can also apply policy scopes using the component::
 
 $query = $this->Authorization->applyScope($this->Articles->find());
 
-If you want to map actions to different authorization methods use the ``actionMap`` option:
+If you want to map actions to different authorization methods use the 
+``actionMap`` option::
 
     $this->loadComponent('Authorization.Authorization', [
         'actionMap' => [

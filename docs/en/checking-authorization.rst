@@ -30,7 +30,7 @@ underlying identity directly use ``getOriginalData()``::
 
 You can pass the ``$user`` into your models, services or templates allowing you
 to check authorization anywhere in your application easily. See the
-:ref:`identity decorator` section for how to customize or replace the default
+:ref:`identity-decorator` section for how to customize or replace the default
 decorator.
 
 The :doc:`/component` can be used in controller actions

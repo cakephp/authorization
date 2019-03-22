@@ -41,7 +41,7 @@ A very simple example would be::
     }
 
 The authorization service requires a policy resolver. See the 
-:doc:`Policies` documentation on what resolvers are available and how
+:doc:`/policies` documentation on what resolvers are available and how
 to use them.
 
 .. _identity-decorator:
