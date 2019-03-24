@@ -14,6 +14,15 @@ authorization. The middleware will wrap your request ``identity`` with an
         // Do delete operation
     }
 
+If your policies return :ref:`policy-result-objects`
+be sure to check their status as ``can()`` returns the result instance::
+
+   // Assuming our policy returns a result.
+   $result = $user->can('delete', $article);
+   if ($result->getStatus()) {
+       // Do deletion
+   }
+
 You can also use the ``identity`` to apply scopes::
 
     // Get the identity from the request
