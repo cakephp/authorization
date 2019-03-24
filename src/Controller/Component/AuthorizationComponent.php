@@ -16,8 +16,9 @@ namespace Authorization\Controller\Component;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
-use Authorization\Exception\MissingIdentityException;
 use Authorization\IdentityInterface;
+use Authorization\Policy\Result;
+use Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
 use Cake\Http\ServerRequest;
 use InvalidArgumentException;
@@ -65,7 +66,11 @@ class AuthorizationComponent extends Component
             $action = $this->getDefaultAction($request);
         }
 
-        if ($this->can($resource, $action)) {
+        $result = $this->can($resource, $action);
+        if (!$result instanceof ResultInterface) {
+            $result = new Result($result);
+        }
+        if ($result->getStatus()) {
             return;
         }
 
@@ -76,7 +81,7 @@ class AuthorizationComponent extends Component
         } else {
             $name = gettype($resource);
         }
-        throw new ForbiddenException([$action, $name]);
+        throw new ForbiddenException($result, [$action, $name]);
     }
 
     /**
@@ -87,7 +92,7 @@ class AuthorizationComponent extends Component
      *
      * @param object $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
-     * @return bool
+     * @return bool|\Authorization\Policy\ResultInterface
      */
     public function can($resource, $action = null)
     {
@@ -97,15 +102,11 @@ class AuthorizationComponent extends Component
         }
 
         $identity = $this->getIdentity($request);
-        if (empty($identity) && $this->getService($this->request)->can(null, $action, $resource)) {
-            return true;
+        if (empty($identity)) {
+            return $this->getService($this->request)->can(null, $action, $resource);
         }
 
-        if (!empty($identity) && $identity->can($action, $resource)) {
-            return true;
-        }
-
-        return false;
+        return $identity->can($action, $resource);
     }
 
     /**
@@ -140,6 +141,49 @@ class AuthorizationComponent extends Component
         $service = $this->getService($request);
 
         $service->skipAuthorization();
+
+        return $this;
+    }
+
+    /**
+     * Allows to map controller action to another authorization policy action.
+     *
+     * For instance you may want to authorize `add` action with `create` authorization policy.
+     *
+     * @param string $controllerAction Controller action.
+     * @param string $policyAction Policy action.
+     * @return $this
+     */
+    public function mapAction($controllerAction, $policyAction)
+    {
+        $this->_config['actionMap'][$controllerAction] = $policyAction;
+
+        return $this;
+    }
+
+    /**
+     * Allows to map controller actions to policy actions.
+     *
+     * @param array $actions Map of controller action to policy action.
+     * @param bool $overwrite Set to true to override configuration. False will merge with current configuration.
+     * @return $this
+     */
+    public function mapActions(array $actions, $overwrite = false)
+    {
+        $this->setConfig('actionMap', $actions, !$overwrite);
+
+        return $this;
+    }
+
+    /**
+     * Adds an action to automatic model authorization checks.
+     *
+     * @param string ...$actions Controller action to authorize against table policy.
+     * @return $this
+     */
+    public function authorizeModel(...$actions)
+    {
+        $this->_config['authorizeModel'] = array_merge($this->_config['authorizeModel'], $actions);
 
         return $this;
     }
