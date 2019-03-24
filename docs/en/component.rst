@@ -19,17 +19,9 @@ Automatic authorization checks
 
 ``AuthorizationComponent`` can be configured to automatically apply
 authorization based on the controller's default model class and current action
-name. You can configure this for individual actions using the ``authorizeModel``
-option.
+name. In the following example ``index`` and ``add`` actions will be authorized::
 
-In the following example ``index`` and ``add`` actions will be authorized::
-
-    $this->loadComponent('Authorization.Authorization', [
-        'authorizeModel' => [
-            'index',
-            'add',
-        ]
-    ]);
+    $this->Authorization->authorizeModel('index', 'add');
 
 You can also configure actions to skip authorization. This will make actions **public**,
 accessible to all users. By default all actions require authorization and
@@ -92,13 +84,18 @@ $query = $this->Authorization->applyScope($this->Articles->find());
 If you want to map actions to different authorization methods use the 
 ``actionMap`` option::
 
-    $this->loadComponent('Authorization.Authorization', [
-        'actionMap' => [
-            'index' => 'list',
-            'delete' => 'remove',
-            'add' => 'insert',
-        ]
-    ];
+   // In you controller initialize() method:
+   $this->Authorization->mapActions([
+       'index' => 'list',
+       'delete' => 'remove',
+       'add' => 'insert',
+   ]);
+
+   // or map actions individually.
+   $this->Authorization
+       ->mapAction('index','list')
+       ->mapAction('delete', 'remove')
+       ->mapAction('add', 'insert');
 
 Example::
 
