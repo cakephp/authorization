@@ -38,3 +38,5 @@ version = '1.1'
 
 # Language in use for this directory.
 language = 'en'
+
+show_root_link = True
