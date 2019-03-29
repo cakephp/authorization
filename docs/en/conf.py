@@ -40,3 +40,7 @@ version = '1.1'
 language = 'en'
 
 show_root_link = True
+
+repository = 'cakephp/authorization'
+
+source_path = 'docs/'
