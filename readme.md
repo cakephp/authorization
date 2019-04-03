@@ -36,9 +36,5 @@ Plugin::load('Authorization');
 
 ## Documentation
 
- * [Quick Start and Introduction to the basics](docs/Quick-start-and-introduction.md)
- * [Policies](docs/Policies.md)
- * [Policy Resolver](docs/Policy-Resolvers.md)
- * [Middleware](docs/Middleware.md)
- * [Component](docs/Component.md)
- * [Checking Authorization](docs/Checking-Authorization.md)
+Documentation for this plugin can be found in the [CakePHP
+Cookbook](https://book.cakephp.org/authorization/1.1/en/)
