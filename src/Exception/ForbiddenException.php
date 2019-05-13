@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization\Exception;
 
 use Authorization\Policy\ResultInterface;
+use Throwable;
 
 class ForbiddenException extends Exception
 {
@@ -44,9 +45,9 @@ class ForbiddenException extends Exception
      * @param string|array $message Either the string of the error message, or an array of attributes
      *   that are made available in the view, and sprintf()'d into Exception::$_messageTemplate
      * @param int|null $code The code of the error, is also the HTTP status code for the error.
-     * @param \Exception|null $previous the previous exception.
+     * @param \Throwable|null $previous the previous exception.
      */
-    public function __construct(?ResultInterface $result = null, $message = '', $code = null, $previous = null)
+    public function __construct(?ResultInterface $result = null, $message = '', ?int $code = null, ?Throwable $previous = null)
     {
         $this->result = $result;
 
