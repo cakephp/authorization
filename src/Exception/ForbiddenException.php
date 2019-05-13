@@ -48,14 +48,9 @@ class ForbiddenException extends Exception
      */
     public function __construct(?ResultInterface $result = null, $message = '', $code = null, $previous = null)
     {
-        if ($result instanceof ResultInterface) {
-            $this->result = $result;
+        $this->result = $result;
 
-            parent::__construct($message, $code, $previous);
-        } else {
-            //shift off first argument for BC
-            parent::__construct($result, $message, $code);
-        }
+        parent::__construct($message, $code, $previous);
     }
 
     /**

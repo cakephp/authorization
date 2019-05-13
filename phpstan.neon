@@ -1,5 +1,5 @@
 parameters:
-    level: 4
+    level: 5
     ignoreErrors:
         - '#Else branch is unreachable because ternary operator condition is always true#'
         - '#Result of && is always false#'
