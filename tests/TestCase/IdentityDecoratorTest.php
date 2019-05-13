@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Authorization\Test;
+namespace Authorization\Test\TestCase;
 
 use ArrayObject;
 use Authorization\AuthorizationServiceInterface;

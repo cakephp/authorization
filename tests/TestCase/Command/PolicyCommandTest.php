@@ -9,10 +9,10 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link http://cakephp.org CakePHP(tm) Project
+ * @since 1.0.0
+ * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
 namespace Authorization\Test\TestCase\Command;
 
@@ -35,7 +35,7 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Router::reload();
@@ -45,7 +45,7 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
         $this->loadPlugins(['TestPlugin']);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 

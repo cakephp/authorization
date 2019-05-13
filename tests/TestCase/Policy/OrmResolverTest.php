@@ -9,10 +9,10 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- * @link          https://cakephp.org CakePHP(tm) Project
- * @since         1.0.0
- * @license       https://opensource.org/licenses/mit-license.php MIT License
+ * @copyright Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link https://cakephp.org CakePHP(tm) Project
+ * @since 1.0.0
+ * @license https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Authorization\Test\TestCase\Policy;
 
@@ -66,7 +66,7 @@ class OrmResolverTest extends TestCase
         $resolver = new OrmResolver('TestApp');
         $policy = $resolver->getPolicy($bookmark);
         $this->assertInstanceOf(BookmarkPolicy::class, $policy);
-        $this->assertContains('TestApp\Policy\TestPlugin', BookmarkPolicy::class, 'class has moved');
+        $this->assertStringContainsString('TestApp\Policy\TestPlugin', BookmarkPolicy::class, 'class has moved');
     }
 
     public function testGetPolicyDefinedPluginEntityPluginOveride()
@@ -77,9 +77,9 @@ class OrmResolverTest extends TestCase
         ]);
         $policy = $resolver->getPolicy($bookmark);
         $this->assertInstanceOf(OverrideTagPolicy::class, $policy);
-        $this->assertContains('OverridePlugin\Policy', OverrideTagPolicy::class, 'class has moved');
-        $this->assertNotContains('TestApp', OverrideTagPolicy::class, 'class has moved');
-        $this->assertNotContains('TestPlugin', OverrideTagPolicy::class, 'class has moved');
+        $this->assertStringContainsString('OverridePlugin\Policy', OverrideTagPolicy::class, 'class has moved');
+        $this->assertStringNotContainsString('TestApp', OverrideTagPolicy::class, 'class has moved');
+        $this->assertStringNotContainsString('TestPlugin', OverrideTagPolicy::class, 'class has moved');
     }
 
     public function testGetPolicyDefinedPluginEntity()
@@ -88,8 +88,8 @@ class OrmResolverTest extends TestCase
         $resolver = new OrmResolver('TestApp');
         $policy = $resolver->getPolicy($bookmark);
         $this->assertInstanceOf(TagPolicy::class, $policy);
-        $this->assertContains('TestPlugin\Policy', TagPolicy::class, 'class has moved');
-        $this->assertNotContains('TestApp', TagPolicy::class, 'class has moved');
+        $this->assertStringContainsString('TestPlugin\Policy', TagPolicy::class, 'class has moved');
+        $this->assertStringNotContainsString('TestApp', TagPolicy::class, 'class has moved');
     }
 
     public function testGetPolicyDefinedTable()

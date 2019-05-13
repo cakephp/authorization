@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TestApp\Authorization\Controller;
+namespace TestApp\Controller;
 
 use Cake\Controller\Controller;
 
