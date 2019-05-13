@@ -48,7 +48,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function can(?IdentityInterface $user, string $action, $resource)
     {
@@ -81,7 +81,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function applyScope(?IdentityInterface $user, string $action, $resource)
     {
@@ -131,7 +131,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function authorizationChecked(): bool
     {
@@ -139,7 +139,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function skipAuthorization()
     {
