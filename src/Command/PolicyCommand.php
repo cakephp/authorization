@@ -40,7 +40,7 @@ class PolicyCommand extends SimpleBakeCommand
     protected $type;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function name(): string
     {
@@ -48,7 +48,7 @@ class PolicyCommand extends SimpleBakeCommand
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function fileName(string $name): string
     {
@@ -60,7 +60,7 @@ class PolicyCommand extends SimpleBakeCommand
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function template(): string
     {
@@ -68,7 +68,7 @@ class PolicyCommand extends SimpleBakeCommand
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function templateData(Arguments $arguments): array
     {

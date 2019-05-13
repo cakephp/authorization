@@ -75,7 +75,7 @@ class ResolverCollection implements ResolverInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getPolicy($resource)
     {

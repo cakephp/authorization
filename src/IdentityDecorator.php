@@ -67,7 +67,7 @@ class IdentityDecorator implements IdentityInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function can(string $action, $resource)
     {
@@ -75,7 +75,7 @@ class IdentityDecorator implements IdentityInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function applyScope(string $action, $resource)
     {

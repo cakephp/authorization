@@ -50,7 +50,7 @@ class Result implements ResultInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getReason(): ?string
     {
@@ -58,7 +58,7 @@ class Result implements ResultInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getStatus(): bool
     {

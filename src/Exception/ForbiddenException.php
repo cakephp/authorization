@@ -21,12 +21,12 @@ use Authorization\Policy\ResultInterface;
 class ForbiddenException extends Exception
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_defaultCode = 403;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_messageTemplate = 'Identity is not authorized to perform `%s` on `%s`.';
 

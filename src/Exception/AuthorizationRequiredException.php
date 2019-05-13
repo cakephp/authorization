@@ -24,7 +24,7 @@ use Authorization\Exception\Exception as BaseException;
 class AuthorizationRequiredException extends BaseException
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_messageTemplate = 'The request to `%s` did not apply any authorization checks.';
 }

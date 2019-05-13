@@ -29,7 +29,7 @@ use RuntimeException;
 class CakeRedirectHandler extends RedirectHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $defaultOptions = [
         'exceptions' => [
@@ -62,7 +62,7 @@ class CakeRedirectHandler extends RedirectHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getUrl(ServerRequestInterface $request, array $options): string
     {

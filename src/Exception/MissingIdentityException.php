@@ -20,12 +20,12 @@ namespace Authorization\Exception;
 class MissingIdentityException extends Exception
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_defaultCode = 403;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_messageTemplate = 'Identity is not present in `%s` request attribute.';
 }
