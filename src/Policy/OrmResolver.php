@@ -69,7 +69,7 @@ class OrmResolver implements ResolverInterface
             return $this->getRepositoryPolicy($resource);
         }
         if ($resource instanceof QueryInterface) {
-            return $this->getRepositoryPolicy($resource->repository());
+            return $this->getRepositoryPolicy($resource->getRepository());
         }
         $name = is_object($resource) ? get_class($resource) : gettype($resource);
         throw new MissingPolicyException([$name]);
