@@ -6,6 +6,7 @@ namespace Authorization\Test\TestCase;
 use ArrayObject;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\IdentityDecorator;
+use Authorization\Policy\Result;
 use BadMethodCallException;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
@@ -58,8 +59,8 @@ class IdentityDecoratorTest extends TestCase
         $auth->expects($this->once())
             ->method('can')
             ->with($identity, 'update', $resource)
-            ->will($this->returnValue(true));
-        $this->assertTrue($identity->can('update', $resource));
+            ->will($this->returnValue(new Result(true)));
+        $this->assertTrue($identity->can('update', $resource)->getStatus());
     }
 
     public function testApplyScopeDelegation()

@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Authorization;
 
+use Authorization\Policy\ResultInterface;
+
 /**
  * Interface for Authorization service
  */
@@ -30,9 +32,9 @@ interface AuthorizationServiceInterface
      * @param \Authorization\IdentityInterface|null $user The user to check permissions for.
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
-     * @return bool|\Authorization\Policy\ResultInterface
+     * @return \Authorization\Policy\ResultInterface
      */
-    public function can(?IdentityInterface $user, string $action, $resource);
+    public function can(?IdentityInterface $user, string $action, $resource): ResultInterface;
 
     /**
      * Apply authorization scope conditions/restrictions.

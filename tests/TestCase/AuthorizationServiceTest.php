@@ -42,10 +42,10 @@ class AuthorizationServiceTest extends TestCase
         $user = null;
 
         $result = $service->can($user, 'view', new Article());
-        $this->assertFalse($result);
+        $this->assertFalse($result->getStatus());
 
         $result = $service->can($user, 'view', new Article(['visibility' => 'public']));
-        $this->assertTrue($result);
+        $this->assertTrue($result->getStatus());
     }
 
     public function testCan()
@@ -61,7 +61,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', new Article());
-        $this->assertTrue($result);
+        $this->assertTrue($result->getStatus());
     }
 
     public function testCanWithResult()
@@ -109,8 +109,8 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $article = new Article();
-        $this->assertTrue($service->can($user, 'doThat', $article));
-        $this->assertFalse($service->can($user, 'cantDoThis', $article));
+        $this->assertTrue($service->can($user, 'doThat', $article)->getStatus());
+        $this->assertFalse($service->can($user, 'cantDoThis', $article)->getStatus());
     }
 
     public function testAuthorizationCheckedWithApplyScope()
@@ -201,7 +201,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertFalse($result);
+        $this->assertFalse($result->getStatus());
     }
 
     public function testBeforeTrue()
@@ -231,7 +231,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertTrue($result);
+        $this->assertTrue($result->getStatus());
     }
 
     public function testBeforeNull()
@@ -263,7 +263,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertTrue($result);
+        $this->assertTrue($result->getStatus());
     }
 
     public function testBeforeResultTrue()

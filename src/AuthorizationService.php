@@ -16,11 +16,12 @@ declare(strict_types=1);
  */
 namespace Authorization;
 
+use Authorization\Exception\Exception;
 use Authorization\Policy\BeforePolicyInterface;
 use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\ResolverInterface;
+use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
-use RuntimeException;
 
 class AuthorizationService implements AuthorizationServiceInterface
 {
@@ -50,34 +51,48 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @inheritDoc
      */
-    public function can(?IdentityInterface $user, string $action, $resource)
+    public function can(?IdentityInterface $user, string $action, $resource): ResultInterface
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
 
         if ($policy instanceof BeforePolicyInterface) {
             $result = $policy->before($user, $resource, $action);
+            $result = $this->createResultInstance($result);
 
-            if ($result instanceof ResultInterface || is_bool($result)) {
-                return $result;
-            }
             if ($result !== null) {
-                $message = sprintf(
-                    'Pre-authorization check must return `%s`, `bool` or `null`.',
-                    ResultInterface::class
-                );
-                throw new RuntimeException($message);
+                return $result;
             }
         }
 
         $handler = $this->getCanHandler($policy, $action);
         $result = $handler($user, $resource);
 
-        if ($result instanceof ResultInterface) {
+        return $this->createResultInstance($result);
+    }
+
+    /**
+     * Converts boolean result from policy class to Result instance.
+     *
+     * @param mixed $result Result from policy class instance.
+     * @return \Authorization\Policy\ResultInterface|null
+     * @throws \Authorization\Exception\Exception If $result argument is not a boolean or ResultInterface instance.
+     */
+    protected function createResultInstance($result): ?ResultInterface
+    {
+        if (is_bool($result)) {
+            return new Result($result);
+        }
+
+        if ($result === null || $result instanceof ResultInterface) {
             return $result;
         }
 
-        return $result === true;
+        $message = sprintf(
+            'Pre-authorization check must return `%s`, `bool` or `null`.',
+            ResultInterface::class
+        );
+        throw new Exception($message);
     }
 
     /**
