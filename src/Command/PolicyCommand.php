@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -39,7 +40,7 @@ class PolicyCommand extends SimpleBakeCommand
     protected $type;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function name(): string
     {
@@ -47,7 +48,7 @@ class PolicyCommand extends SimpleBakeCommand
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function fileName(string $name): string
     {
@@ -59,7 +60,7 @@ class PolicyCommand extends SimpleBakeCommand
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function template(): string
     {
@@ -67,7 +68,7 @@ class PolicyCommand extends SimpleBakeCommand
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function templateData(Arguments $arguments): array
     {

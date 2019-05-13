@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -16,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization\Policy\Exception;
 
 use Authorization\Exception\Exception;
+use Throwable;
 
 class MissingPolicyException extends Exception
 {
@@ -27,14 +29,14 @@ class MissingPolicyException extends Exception
     protected $_messageTemplate = 'Policy for `%s` has not been defined.';
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @param object|string|array $resource Either the resource instance, a string of the error message, or an array of attributes
      *   that are made available in the view, and sprintf()'d into Exception::$_messageTemplate
      * @param int|null $code The code of the error, is also the HTTP status code for the error.
-     * @param \Exception|null $previous the previous exception.
+     * @param \Throwable|null $previous the previous exception.
      */
-    public function __construct($resource, $code = null, $previous = null)
+    public function __construct($resource, ?int $code = null, ?Throwable $previous = null)
     {
         if (is_object($resource)) {
             $resource = [get_class($resource)];

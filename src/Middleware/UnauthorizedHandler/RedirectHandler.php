@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -48,7 +49,7 @@ class RedirectHandler implements HandlerInterface
     /**
      * Return a response with a location header set if an exception matches.
      *
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(
         Exception $exception,

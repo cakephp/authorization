@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -19,12 +20,12 @@ namespace Authorization\Exception;
 class MissingIdentityException extends Exception
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_defaultCode = 403;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_messageTemplate = 'Identity is not present in `%s` request attribute.';
 }

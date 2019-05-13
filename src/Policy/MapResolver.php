@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -85,7 +86,7 @@ class MapResolver implements ResolverInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @throws \InvalidArgumentException When a resource is not an object.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for a resource has not been defined.

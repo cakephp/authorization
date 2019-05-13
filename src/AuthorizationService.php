@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -47,7 +48,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function can(?IdentityInterface $user, string $action, $resource)
     {
@@ -80,7 +81,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function applyScope(?IdentityInterface $user, string $action, $resource)
     {
@@ -130,7 +131,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function authorizationChecked(): bool
     {
@@ -138,7 +139,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function skipAuthorization()
     {

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -23,7 +24,7 @@ use Authorization\Exception\Exception as BaseException;
 class AuthorizationRequiredException extends BaseException
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected $_messageTemplate = 'The request to `%s` did not apply any authorization checks.';
 }

@@ -1,3 +1,6 @@
 parameters:
+    level: 5
     ignoreErrors:
-        - '#Casting to [a-z]+ something that.s already [a-z]+.#'
+        - '#Else branch is unreachable because ternary operator condition is always true#'
+        - '#Result of && is always false#'
+        - '#Strict comparison using !== between null and null will always evaluate to false#'
