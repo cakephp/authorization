@@ -1,55 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-	colors="true"
-	processIsolation="false"
-	stopOnFailure="false"
-	bootstrap="./tests/bootstrap.php"
-	>
+    colors="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    bootstrap="./tests/bootstrap.php"
+    >
 
-	<!-- Add any additional test suites you want to run here -->
-	<testsuites>
-		<testsuite name="authorization">
-			<directory>tests/TestCase/</directory>
-		</testsuite>
-		<!-- Add plugin test suites here. -->
-	</testsuites>
+    <!-- Add any additional test suites you want to run here -->
+    <testsuites>
+        <testsuite name="authorization">
+            <directory>tests/TestCase/</directory>
+        </testsuite>
+        <!-- Add plugin test suites here. -->
+    </testsuites>
 
-	<!-- Setup a listener for fixtures -->
-	<listeners>
-		<listener
-			class="\Cake\TestSuite\Fixture\FixtureInjector"
-			file="./vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php">
-			<arguments>
-				<object class="\Cake\TestSuite\Fixture\FixtureManager"/>
-			</arguments>
-		</listener>
-	</listeners>
+    <!-- Setup a listener for fixtures -->
+    <listeners>
+        <listener
+            class="\Cake\TestSuite\Fixture\FixtureInjector"
+            file="./vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php">
+            <arguments>
+                <object class="\Cake\TestSuite\Fixture\FixtureManager"/>
+            </arguments>
+        </listener>
+    </listeners>
 
-	<logging>
-		<log type="coverage-html" target="./tmp/tests/report" lowUpperBound="35" highLowerBound="70"/>
-		<!--<log type="coverage-clover" target="./tmp/tests/coverage.xml"/>-->
-		<!--<log type="coverage-php" target="/tmp/coverage.serialized"/>-->
-		<!--<log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>-->
-		<!--<log type="json" target="/tmp/logfile.json"/>-->
-		<!--<log type="tap" target="/tmp/logfile.tap"/>-->
-		<!--<log type="junit" target="/tmp/logfile.xml" logIncompleteSkipped="false"/>-->
-		<!--<log type="testdox-html" target=".//tmp/tests/testdox.html"/>-->
-		<!--<log type="testdox-text" target=".//tmp/tests/testdox.txt"/>-->
-	</logging>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src/</directory>
+        </whitelist>
+    </filter>
 
-	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">src/</directory>
-		</whitelist>
-	</filter>
-
-	<php>
-		<ini name="memory_limit" value="-1"/>
-		<!-- Postgres
-		<env name="db_dsn" value="postgres://root@localhost/cake_test_db"/>
-		-->
-		<!-- Mysql
-		<env name="db_dsn" value="mysql://root@localhost/cake_test_db"/>
-		-->
-	</php>
+    <php>
+        <ini name="memory_limit" value="-1"/>
+        <!-- Postgres
+        <env name="db_dsn" value="postgres://root@localhost/cake_test_db"/>
+        -->
+        <!-- Mysql
+        <env name="db_dsn" value="mysql://root@localhost/cake_test_db"/>
+        -->
+    </php>
 </phpunit>
