@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization;
 
 use ArrayAccess;
+use Authorization\Policy\ResultInterface;
 
 /**
  * Interface for describing identities that can have authorization checked.
@@ -32,9 +33,9 @@ interface IdentityInterface extends ArrayAccess
      *
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
-     * @return bool|\Authorization\Policy\ResultInterface
+     * @return \Authorization\Policy\ResultInterface
      */
-    public function can(string $action, $resource);
+    public function can(string $action, $resource): ResultInterface;
 
     /**
      * Apply authorization scope conditions/restrictions.
