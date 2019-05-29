@@ -17,7 +17,7 @@
 		"cakephp/cakephp-codesniffer": "^3.0",
 		"cakephp/bake": "^1.5",
         "wyrihaximus/twig-view": "^4.3.3",
-		"phpunit/phpunit": "^5.7.22|^6.0"
+		"phpunit/phpunit": "^8.1.6"
 	},
 	"suggest": {
 		"cakephp/orm": "To use \"OrmResolver\" (Not needed separately if using full CakePHP framework)."
