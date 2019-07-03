@@ -70,9 +70,17 @@ class IdentityDecorator implements IdentityInterface
     /**
      * @inheritDoc
      */
-    public function can(string $action, $resource): ResultInterface
+    public function can(string $action, $resource): bool
     {
         return $this->authorization->can($this, $action, $resource);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function canResult(string $action, $resource): ResultInterface
+    {
+        return $this->authorization->canResult($this, $action, $resource);
     }
 
     /**

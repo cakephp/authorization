@@ -33,9 +33,18 @@ interface IdentityInterface extends ArrayAccess
      *
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
+     * @return bool
+     */
+    public function can(string $action, $resource): bool;
+
+    /**
+     * Check whether the current identity can perform an action.
+     *
+     * @param string $action The action/operation being performed.
+     * @param mixed $resource The resource being operated on.
      * @return \Authorization\Policy\ResultInterface
      */
-    public function can(string $action, $resource): ResultInterface;
+    public function canResult(string $action, $resource): ResultInterface;
 
     /**
      * Apply authorization scope conditions/restrictions.

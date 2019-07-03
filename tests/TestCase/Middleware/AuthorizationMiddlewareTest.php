@@ -34,7 +34,6 @@ use RuntimeException;
 use stdClass;
 use TestApp\Http\TestRequestHandler;
 use TestApp\Identity;
-use TypeError;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
@@ -95,28 +94,6 @@ class AuthorizationMiddlewareTest extends TestCase
         });
 
         $middleware = new AuthorizationMiddleware($provider, ['requireAuthorizationCheck' => false]);
-        $middleware->process($request, $handler);
-    }
-
-    public function testInvokeAppInvalid()
-    {
-        $provider = $this->createMock(AuthorizationServiceProviderInterface::class);
-        $provider
-            ->expects($this->once())
-            ->method('getAuthorizationService')
-            ->with(
-                $this->isInstanceOf(ServerRequestInterface::class)
-            )
-            ->willReturn(new stdClass());
-
-        $request = new ServerRequest();
-        $handler = new TestRequestHandler();
-
-        $middleware = new AuthorizationMiddleware($provider, ['requireAuthorizationCheck' => false]);
-
-        $this->expectException(TypeError::class);
-        $this->expectExceptionMessage('instance of stdClass returned');
-
         $middleware->process($request, $handler);
     }
 

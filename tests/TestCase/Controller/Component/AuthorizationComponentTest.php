@@ -452,18 +452,18 @@ class AuthorizationComponentTest extends TestCase
     public function testCan()
     {
         $article = new Article(['user_id' => 1]);
-        $this->assertTrue($this->Auth->can($article)->getStatus());
-        $this->assertTrue($this->Auth->can($article, 'delete')->getStatus());
+        $this->assertTrue($this->Auth->can($article));
+        $this->assertTrue($this->Auth->can($article, 'delete'));
 
         $article = new Article(['user_id' => 2]);
-        $this->assertFalse($this->Auth->can($article)->getStatus());
-        $this->assertFalse($this->Auth->can($article, 'delete')->getStatus());
+        $this->assertFalse($this->Auth->can($article));
+        $this->assertFalse($this->Auth->can($article, 'delete'));
     }
 
     public function testCanWithResult()
     {
         $article = new Article(['user_id' => 1]);
-        $result = $this->Auth->can($article, 'publish');
+        $result = $this->Auth->canResult($article, 'publish');
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 

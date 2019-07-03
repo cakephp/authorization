@@ -42,10 +42,10 @@ class AuthorizationServiceTest extends TestCase
         $user = null;
 
         $result = $service->can($user, 'view', new Article());
-        $this->assertFalse($result->getStatus());
+        $this->assertFalse($result);
 
         $result = $service->can($user, 'view', new Article(['visibility' => 'public']));
-        $this->assertTrue($result->getStatus());
+        $this->assertTrue($result);
     }
 
     public function testCan()
@@ -61,7 +61,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', new Article());
-        $this->assertTrue($result->getStatus());
+        $this->assertTrue($result);
     }
 
     public function testCanWithResult()
@@ -76,7 +76,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $result = $service->can($user, 'publish', new Article());
+        $result = $service->canResult($user, 'publish', new Article());
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
@@ -109,8 +109,8 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $article = new Article();
-        $this->assertTrue($service->can($user, 'doThat', $article)->getStatus());
-        $this->assertFalse($service->can($user, 'cantDoThis', $article)->getStatus());
+        $this->assertTrue($service->can($user, 'doThat', $article));
+        $this->assertFalse($service->can($user, 'cantDoThis', $article));
     }
 
     public function testAuthorizationCheckedWithApplyScope()
@@ -201,7 +201,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertFalse($result->getStatus());
+        $this->assertFalse($result);
     }
 
     public function testBeforeTrue()
@@ -231,7 +231,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertTrue($result->getStatus());
+        $this->assertTrue($result);
     }
 
     public function testBeforeNull()
@@ -263,7 +263,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertTrue($result->getStatus());
+        $this->assertTrue($result);
     }
 
     public function testBeforeResultTrue()
@@ -293,8 +293,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertInstanceOf(ResultInterface::class, $result);
-        $this->assertTrue($result->getStatus());
+        $this->assertTrue($result);
     }
 
     public function testBeforeResultFalse()
@@ -324,8 +323,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertInstanceOf(ResultInterface::class, $result);
-        $this->assertFalse($result->getStatus());
+        $this->assertFalse($result);
     }
 
     public function testBeforeOther()
