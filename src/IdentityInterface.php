@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization;
 
 use ArrayAccess;
+use Authentication\IdentityInterface as AI;
 
 /**
  * Interface for describing identities that can have authorization checked.
@@ -25,7 +26,7 @@ use ArrayAccess;
  * and uses ArrayAccess to expose public properties of the wrapped identity
  * implementation.
  */
-interface IdentityInterface extends ArrayAccess
+interface IdentityInterface extends ArrayAccess, AI
 {
     /**
      * Check whether the current identity can perform an action.
