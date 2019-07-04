@@ -103,7 +103,7 @@ class IdentityDecorator implements IdentityInterface
             return $this->identity->getIdentifier();
         }
 
-        return $this->identity;
+        return null;
     }
 
     /**
