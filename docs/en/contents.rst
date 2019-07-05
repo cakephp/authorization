@@ -12,3 +12,4 @@ Contents
     /component
     /checking-authorization
     /request-authorization-middleware
+    /2-0-migration-guide
