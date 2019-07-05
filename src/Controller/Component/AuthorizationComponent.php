@@ -19,7 +19,6 @@ namespace Authorization\Controller\Component;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
 use Authorization\IdentityInterface;
-use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
 use Cake\Http\ServerRequest;
@@ -68,10 +67,7 @@ class AuthorizationComponent extends Component
             $action = $this->getDefaultAction($request);
         }
 
-        $result = $this->can($resource, $action);
-        if (!$result instanceof ResultInterface) {
-            $result = new Result($result);
-        }
+        $result = $this->canResult($resource, $action);
         if ($result->getStatus()) {
             return;
         }
@@ -94,9 +90,37 @@ class AuthorizationComponent extends Component
      *
      * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
+     * @return bool
+     */
+    public function can($resource, ?string $action = null): bool
+    {
+        return $this->performCheck($resource, $action);
+    }
+
+    /**
+     * Check the policy for $resource, returns true if the action is allowed
+     *
+     * If $action is left undefined, the current controller action will
+     * be used.
+     *
+     * @param mixed $resource The resource to check authorization on.
+     * @param string|null $action The action to check authorization for.
+     * @return \Authorization\Policy\ResultInterface
+     */
+    public function canResult($resource, ?string $action = null): ResultInterface
+    {
+        return $this->performCheck($resource, $action, 'canResult');
+    }
+
+    /**
+     * Check the policy for $resource.
+     *
+     * @param mixed $resource The resource to check authorization on.
+     * @param string|null $action The action to check authorization for.
+     * @param string $method The method to use, either "can" or "canResult".
      * @return bool|\Authorization\Policy\ResultInterface
      */
-    public function can($resource, ?string $action = null)
+    protected function performCheck($resource, ?string $action = null, string $method = 'can')
     {
         $request = $this->getController()->getRequest();
         if ($action === null) {
@@ -105,10 +129,10 @@ class AuthorizationComponent extends Component
 
         $identity = $this->getIdentity($request);
         if (empty($identity)) {
-            return $this->getService($request)->can(null, $action, $resource);
+            return $this->getService($request)->{$method}(null, $action, $resource);
         }
 
-        return $identity->can($action, $resource);
+        return $identity->{$method}($action, $resource);
     }
 
     /**

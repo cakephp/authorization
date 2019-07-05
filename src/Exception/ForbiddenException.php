@@ -47,8 +47,12 @@ class ForbiddenException extends Exception
      * @param int|null $code The code of the error, is also the HTTP status code for the error.
      * @param \Throwable|null $previous the previous exception.
      */
-    public function __construct(?ResultInterface $result = null, $message = '', ?int $code = null, ?Throwable $previous = null)
-    {
+    public function __construct(
+        ?ResultInterface $result = null,
+        $message = '',
+        ?int $code = null,
+        ?Throwable $previous = null
+    ) {
         $this->result = $result;
 
         parent::__construct($message, $code, $previous);

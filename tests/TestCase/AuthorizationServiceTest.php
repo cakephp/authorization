@@ -76,7 +76,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $result = $service->can($user, 'publish', new Article());
+        $result = $service->canResult($user, 'publish', new Article());
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
@@ -293,8 +293,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertInstanceOf(ResultInterface::class, $result);
-        $this->assertTrue($result->getStatus());
+        $this->assertTrue($result);
     }
 
     public function testBeforeResultFalse()
@@ -324,8 +323,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->can($user, 'add', $entity);
-        $this->assertInstanceOf(ResultInterface::class, $result);
-        $this->assertFalse($result->getStatus());
+        $this->assertFalse($result);
     }
 
     public function testBeforeOther()

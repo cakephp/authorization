@@ -18,8 +18,6 @@ namespace Authorization\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
-use Authorization\Policy\Result;
-use Authorization\Policy\ResultInterface;
 use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -96,10 +94,7 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
         $service = $this->getServiceFromRequest($request);
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
-        $result = $service->can($identity, $this->getConfig('method'), $request);
-        if (!$result instanceof ResultInterface) {
-            $result = new Result($result);
-        }
+        $result = $service->canResult($identity, $this->getConfig('method'), $request);
         if (!$result->getStatus()) {
             throw new ForbiddenException($result);
         }

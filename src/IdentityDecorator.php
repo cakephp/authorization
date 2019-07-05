@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization;
 
 use ArrayAccess;
+use Authorization\Policy\ResultInterface;
 use BadMethodCallException;
 use InvalidArgumentException;
 
@@ -69,9 +70,17 @@ class IdentityDecorator implements IdentityInterface
     /**
      * @inheritDoc
      */
-    public function can(string $action, $resource)
+    public function can(string $action, $resource): bool
     {
         return $this->authorization->can($this, $action, $resource);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function canResult(string $action, $resource): ResultInterface
+    {
+        return $this->authorization->canResult($this, $action, $resource);
     }
 
     /**

@@ -16,11 +16,12 @@ declare(strict_types=1);
  */
 namespace Authorization;
 
+use Authorization\Exception\Exception;
 use Authorization\Policy\BeforePolicyInterface;
 use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\ResolverInterface;
+use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
-use RuntimeException;
 
 class AuthorizationService implements AuthorizationServiceInterface
 {
@@ -50,7 +51,32 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @inheritDoc
      */
-    public function can(?IdentityInterface $user, string $action, $resource)
+    public function can(?IdentityInterface $user, string $action, $resource): bool
+    {
+        $result = $this->performCheck($user, $action, $resource);
+
+        return is_bool($result) ? $result : $result->getStatus();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function canResult(?IdentityInterface $user, string $action, $resource): ResultInterface
+    {
+        $result = $this->performCheck($user, $action, $resource);
+
+        return is_bool($result) ? new Result($result) : $result;
+    }
+
+    /**
+     * Check whether the provided user can perform an action on a resource.
+     *
+     * @param \Authorization\IdentityInterface|null $user The user to check permissions for.
+     * @param string $action The action/operation being performed.
+     * @param mixed $resource The resource being operated on.
+     * @return bool|\Authorization\Policy\ResultInterface
+     */
+    protected function performCheck(?IdentityInterface $user, string $action, $resource)
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
@@ -58,26 +84,34 @@ class AuthorizationService implements AuthorizationServiceInterface
         if ($policy instanceof BeforePolicyInterface) {
             $result = $policy->before($user, $resource, $action);
 
-            if ($result instanceof ResultInterface || is_bool($result)) {
-                return $result;
-            }
             if ($result !== null) {
-                $message = sprintf(
-                    'Pre-authorization check must return `%s`, `bool` or `null`.',
-                    ResultInterface::class
-                );
-                throw new RuntimeException($message);
+                return $this->resultTypeCheck($result);
             }
         }
 
         $handler = $this->getCanHandler($policy, $action);
         $result = $handler($user, $resource);
 
-        if ($result instanceof ResultInterface) {
+        return $this->resultTypeCheck($result);
+    }
+
+    /**
+     * Check result type.
+     *
+     * @param mixed $result Result from policy class instance.
+     * @return bool|\Authorization\Policy\ResultInterface
+     * @throws \Authorization\Exception\Exception If $result argument is not a boolean or ResultInterface instance.
+     */
+    protected function resultTypeCheck($result)
+    {
+        if (is_bool($result) || $result instanceof ResultInterface) {
             return $result;
         }
 
-        return $result === true;
+        throw new Exception(sprintf(
+            'Pre-authorization check must return `%s`, `bool` or `null`.',
+            ResultInterface::class
+        ));
     }
 
     /**

@@ -463,7 +463,7 @@ class AuthorizationComponentTest extends TestCase
     public function testCanWithResult()
     {
         $article = new Article(['user_id' => 1]);
-        $result = $this->Auth->can($article, 'publish');
+        $result = $this->Auth->canResult($article, 'publish');
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
