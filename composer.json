@@ -17,6 +17,7 @@
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
+        "cakephp/authentication": "2.x-dev",
         "cakephp/cakephp-codesniffer": "dev-next",
         "cakephp/bake": "4.x-dev as 2.0.0",
         "phpunit/phpunit": "^8.0"

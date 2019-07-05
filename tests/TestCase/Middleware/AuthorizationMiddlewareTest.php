@@ -112,17 +112,19 @@ class AuthorizationMiddlewareTest extends TestCase
 
     public function testInvokeServiceWithIdentity()
     {
-        $identity = [
+        $identity = new \Authentication\Identity([
             'id' => 1,
-        ];
+        ]);
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
         $request = (new ServerRequest())->withAttribute('identity', $identity);
         $handler = new TestRequestHandler(function ($request) use ($service) {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
-            $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('identity'));
-            $this->assertEquals(1, $request->getAttribute('identity')['id']);
+            $identity = $request->getAttribute('identity');
+            $this->assertInstanceOf(IdentityInterface::class, $identity);
+            $this->assertInstanceOf(\Authentication\IdentityInterface::class, $identity);
+            $this->assertEquals(1, $identity->getIdentifier());
 
             return new Response();
         });
