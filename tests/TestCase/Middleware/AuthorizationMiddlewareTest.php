@@ -101,12 +101,6 @@ class AuthorizationMiddlewareTest extends TestCase
     {
         $service = $this->createMock(AuthorizationServiceInterface::class);
 
-        $request = new ServerRequest();
-        $response = new Response();
-        $next = function ($request, $response) {
-            return new Response();
-        };
-
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
             'Subject must be an instance of `Authorization\AuthorizationServiceInterface` ' .
