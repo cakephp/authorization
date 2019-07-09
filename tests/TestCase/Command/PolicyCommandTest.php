@@ -19,12 +19,15 @@ namespace Authorization\Test\TestCase\Command;
 use Cake\Console\Command;
 use Cake\Routing\Router;
 use Cake\TestSuite\ConsoleIntegrationTestCase;
+use Cake\TestSuite\StringCompareTrait;
 
 /**
  * PolicyCommand test class
  */
 class PolicyCommandTest extends ConsoleIntegrationTestCase
 {
+    use StringCompareTrait;
+
     /**
      * @var string
      */
@@ -73,9 +76,9 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
         $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
-        $this->assertFileEquals(
+        $this->assertSameAsFile(
             $this->comparisonDir . 'BookmarkEntityPolicy.php',
-            $this->generatedFile
+            file_get_contents($this->generatedFile)
         );
     }
 
@@ -87,9 +90,9 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
         $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
-        $this->assertFileEquals(
+        $this->assertSameAsFile(
             $this->comparisonDir . 'ThingPolicy.php',
-            $this->generatedFile
+            file_get_contents($this->generatedFile)
         );
     }
 
@@ -101,9 +104,9 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
         $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
-        $this->assertFileEquals(
+        $this->assertSameAsFile(
             $this->comparisonDir . 'BookmarksTablePolicy.php',
-            $this->generatedFile
+            file_get_contents($this->generatedFile)
         );
     }
 
@@ -115,9 +118,9 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
         $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
-        $this->assertFileEquals(
+        $this->assertSameAsFile(
             $this->comparisonDir . 'TestPluginUserEntityPolicy.php',
-            $this->generatedFile
+            file_get_contents($this->generatedFile)
         );
     }
 
@@ -129,9 +132,9 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
         $this->assertExitCode(Command::CODE_SUCCESS);
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
         $this->assertFileExists($this->generatedFile);
-        $this->assertFileEquals(
+        $this->assertSameAsFile(
             $this->comparisonDir . 'TestPluginUsersTablePolicy.php',
-            $this->generatedFile
+            file_get_contents($this->generatedFile)
         );
     }
 }
