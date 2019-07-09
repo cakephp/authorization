@@ -8,9 +8,9 @@ Authorization is applied to your application as a middleware. The
   ``applyScope`` if necessary.
 * Ensuring that authorization has been checked/bypassed in the request.
 
-To use the middleware implement ``AuthorizationServiceProviderInterface`` in your 
-application class. Then pass your app instance into the middlware and add the 
-middleware to the queue. 
+To use the middleware implement ``AuthorizationServiceProviderInterface`` in your
+application class. Then pass your app instance into the middlware and add the
+middleware to the queue.
 
 A very simple example would be::
 
@@ -40,7 +40,7 @@ A very simple example would be::
         }
     }
 
-The authorization service requires a policy resolver. See the 
+The authorization service requires a policy resolver. See the
 :doc:`/policies` documentation on what resolvers are available and how
 to use them.
 
@@ -51,7 +51,14 @@ Identity Decorator
 
 By default the ``identity`` in the request will be decorated (wrapped) with
 ``Authorization\IdentityDecorator``. The decorator class proxies most read
-operations and method calls to the wrapped identity. If you have an existing
+operations and method calls to the wrapped identity.
+
+If your application uses the `cakephp/authentication <https://github.com/cakephp/authentication>`_ plugin too
+then by default the ``Authorization\Identity`` class is used which also implements
+the ``Authentication\IdentityInterface``. This allows you to use the ``Authentication``
+lib's component and helper to get the decorated identity.
+
+If you have an existing
 ``User`` or identity class you can skip the decorator by implementing the
 ``Authorization\IdentityInterface`` and using the ``identityDecorator``
 middleware option. First lets update our ``User`` class::
@@ -168,7 +175,7 @@ For example::
     ]));
 
 You can also add your own handler. Handlers should implement ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface``,
-be suffixed with ``Handler`` suffix and reside under your app's or plugin's 
+be suffixed with ``Handler`` suffix and reside under your app's or plugin's
 ``Middleware\UnauthorizedHandler`` namespace.
 
 Configuration options are passed to the handler's ``handle()`` method as the last parameter.
