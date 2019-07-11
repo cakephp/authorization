@@ -25,16 +25,40 @@ use Authentication\IdentityInterface as AuthenIdentityInterface;
 class Identity extends IdentityDecorator implements AuthenIdentityInterface
 {
     /**
+     * Identity data
+     *
+     * @var \Authentication\IdentityInterface
+     */
+    protected $identity;
+
+    /**
+     * Constructor
+     *
+     * @param \Authorization\AuthorizationServiceInterface $service The authorization service.
+     * @param \Authentication\IdentityInterface $identity Identity data
+     * @throws \InvalidArgumentException When invalid identity data is passed.
+     */
+    public function __construct(AuthorizationServiceInterface $service, AuthenIdentityInterface $identity)
+    {
+        $this->authorization = $service;
+        $this->identity = $identity;
+    }
+
+    /**
      * Get the primary key/id field for the identity.
      *
      * @return string|int|null
      */
     public function getIdentifier()
     {
-        if ($this->identity instanceof AuthenIdentityInterface) {
-            return $this->identity->getIdentifier();
-        }
+        return $this->identity->getIdentifier();
+    }
 
-        return $this->identity['id'];
+    /**
+     * @inheritdoc
+     */
+    public function getOriginalData()
+    {
+        return $this->identity->getOriginalData();
     }
 }

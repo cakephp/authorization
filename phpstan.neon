@@ -3,3 +3,4 @@ parameters:
     ignoreErrors:
         - '#Else branch is unreachable because ternary operator condition is always true#'
         - '#Result of && is always false#'
+        - '#Authorization\\Identity::__construct\(\) does not call parent constructor from Authorization\\IdentityDecorator#'

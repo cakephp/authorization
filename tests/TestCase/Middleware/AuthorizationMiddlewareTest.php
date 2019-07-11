@@ -65,7 +65,10 @@ class AuthorizationMiddlewareTest extends TestCase
         $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
         $handler = new TestRequestHandler();
 
-        $middleware = new AuthorizationMiddleware($service, ['requireAuthorizationCheck' => true]);
+        $middleware = new AuthorizationMiddleware($service, [
+            'requireAuthorizationCheck' => true,
+            'identityDecorator' => IdentityDecorator::class,
+        ]);
         $result = $middleware->process($request, $handler);
 
         $this->assertInstanceOf(ResponseInterface::class, $result);
