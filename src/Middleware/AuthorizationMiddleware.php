@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace Authorization\Middleware;
 
+use Authentication\IdentityInterface as AuthenIdentityInterface;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Exception\AuthorizationRequiredException;
 use Authorization\Exception\Exception;
+use Authorization\Identity;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
@@ -56,7 +58,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
      * @var array
      */
     protected $_defaultConfig = [
-        'identityDecorator' => IdentityDecorator::class,
+        'identityDecorator' => null,
         'identityAttribute' => 'identity',
         'requireAuthorizationCheck' => true,
         'unauthorizedHandler' => 'Authorization.Exception',
@@ -89,6 +91,12 @@ class AuthorizationMiddleware implements MiddlewareInterface
             $message = sprintf('Subject must be an instance of `%s`, `%s` given.', $expected, $type);
 
             throw new InvalidArgumentException($message);
+        }
+
+        if ($this->_defaultConfig['identityDecorator'] === null) {
+            $this->_defaultConfig['identityDecorator'] = interface_exists(AuthenIdentityInterface::class)
+                ? Identity::class
+                : IdentityDecorator::class;
         }
 
         $this->subject = $subject;
