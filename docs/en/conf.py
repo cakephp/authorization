@@ -10,10 +10,10 @@ from cakephpsphinx.config.all import *
 #
 
 # The full version, including alpha/beta/rc tags.
-release = '1.1'
+release = '2.x'
 
 # The search index version.
-search_version = 'authorization-11'
+search_version = 'authorization-2'
 
 # The marketing display name for the book.
 version_name = ''
@@ -23,7 +23,8 @@ project = 'CakePHP Authorization'
 
 # Other versions that display in the version picker menu.
 version_list = [
-    {'name': '1.1', 'number': '/authorization/1.1', 'title': '1.1.x', 'current': True},
+    {'name': '1.x', 'number': '/authorization/1.1', 'title': '1.x'},
+    {'name': '2.x', 'number': '/authorization/2.x', 'title': '2.x', 'current': True},
 ]
 
 # Languages available.
@@ -34,7 +35,7 @@ languages = ['en']
 branch = 'master'
 
 # Current version being built
-version = '1.1'
+version = '2.x'
 
 # Language in use for this directory.
 language = 'en'
@@ -44,3 +45,5 @@ show_root_link = True
 repository = 'cakephp/authorization'
 
 source_path = 'docs/'
+
+is_prerelease = True
