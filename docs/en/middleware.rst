@@ -93,7 +93,7 @@ middleware option. First lets update our ``User`` class::
         /**
          * Setter to be used by the middleware.
          */
-        public function setAuthorization($service)
+        public function setAuthorization(AuthorizationServiceInterface $service)
         {
             $this->authorization = $service;
 
