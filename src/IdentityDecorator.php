@@ -131,7 +131,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * Whether a offset exists
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * @link https://secure.php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $offset Offset
      * @return bool
      */
@@ -143,7 +143,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * Offset to retrieve
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @link https://secure.php.net/manual/en/arrayaccess.offsetget.php
      * @param mixed $offset Offset
      * @return mixed
      */
@@ -159,7 +159,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * Offset to set
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @link https://secure.php.net/manual/en/arrayaccess.offsetset.php
      * @param mixed $offset The offset to assign the value to.
      * @param mixed $value Value
      * @return mixed
@@ -172,7 +172,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * Offset to unset
      *
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * @link https://secure.php.net/manual/en/arrayaccess.offsetunset.php
      * @param mixed $offset Offset
      * @return void
      */
