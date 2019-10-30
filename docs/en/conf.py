@@ -46,4 +46,6 @@ repository = 'cakephp/authorization'
 
 source_path = 'docs/'
 
+hide_page_contents = ('search', '404', 'contents')
+
 is_prerelease = True

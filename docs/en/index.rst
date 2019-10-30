@@ -54,16 +54,16 @@ define the ``AuthorizationService`` it wants to use. Add the following method yo
         return new AuthorizationService($resolver);
     }
 
-This configures a very basic :doc:`/policy-resolvers` that will match
+This configures basic :doc:`/policy-resolvers` that will match
 ORM entities with their policy classes.
 
-Next lets add the ``AuthorizationComponent`` to ``AppController``. In
+Next, lets add the ``AuthorizationComponent`` to ``AppController``. In
 **src/Controller/AppController.php** add the following to the ``initialize()``
 method::
 
     $this->loadComponent('Authorization.Authorization');
 
-By loading the [authorization component](./Component.md) we'll be able to check
+By loading the :doc:`/component` we'll be able to check
 authorization on a per-action basis more easily. For example, we can do::
 
     public function edit($id = null)

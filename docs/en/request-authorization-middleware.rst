@@ -54,7 +54,7 @@ Map the request class to the policy inside ``Application::getAuthorizationServic
     $mapResolver = new MapResolver();
     $mapResolver->map(ServerRequest::class, RequestPolicy::class);
 
-    return new AuthorizationService($resolver);
+    return new AuthorizationService($mapResolver);
 
 In your ``Application.php`` make sure you're loading the
 RequestAuthorizationMiddleware **after** the AuthorizationMiddleware::

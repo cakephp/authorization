@@ -29,8 +29,9 @@ following content::
     }
 
 In addition to entities, table objects and queries can have policies resolved.
-These objects use the following conventions:
-
+Query objects will have their ``repository()`` method called, and a policy class
+will be generated based on the table name. A table class of
+``App\Model\Table\ArticlesTable`` will map to ``App\Policy\ArticlesTablePolicy``.
 
 Writing Policy Methods
 ======================
@@ -43,8 +44,8 @@ that allows us to check if a user can update an article::
         return $user->id == $article->user_id;
     }
 
-Policy methods must return ``true`` to indicate success. All other values will be
-interpreted as failure.
+Policy methods must return ``true`` or a ``Result`` objects to indicate success.
+All other values will be interpreted as failure.
 
 Policy methods will receive ``null`` for the ``$user`` parameter when handling
 unauthencticated users. If you want to automatically fail policy methods for
@@ -55,8 +56,9 @@ anonymous users you can use the ``IdentityInterface`` typehint.
 Policy Result Objects
 =====================
 
-In addition to booleans, policy methods can return ``Result`` objects which
-allow more context to be provided on why the policy passed/failed::
+In addition to booleans, policy methods can return a ``Result`` object.
+``Result`` objects allow more context to be provided on why the policy
+passed/failed::
 
    use Authorization\Policy\Result;
 
@@ -89,7 +91,6 @@ a list view to the current user::
             return $query->where(['Articles.user_id' => $user->getIdentifier()]);
         }
     }
-
 
 Policy Pre-conditions
 ---------------------
