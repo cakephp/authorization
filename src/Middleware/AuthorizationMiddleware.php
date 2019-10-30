@@ -80,7 +80,8 @@ class AuthorizationMiddleware implements MiddlewareInterface
      */
     public function __construct($subject, array $config = [])
     {
-        if (!$subject instanceof AuthorizationServiceInterface &&
+        if (
+            !$subject instanceof AuthorizationServiceInterface &&
             !$subject instanceof AuthorizationServiceProviderInterface
         ) {
             $expected = implode('` or `', [
