@@ -3,8 +3,7 @@ language: php
 php:
   - 7.2
   - 7.3
-
-sudo: false
+  - '7.4snapshot'
 
 env:
   matrix:
@@ -29,7 +28,6 @@ matrix:
       env: PREFER_LOWEST=1
 
 install:
-  - phpenv config-rm xdebug.ini;
   - if [[ $PREFER_LOWEST != 1 ]]; then composer install --prefer-source --no-interaction ; fi
   - if [[ $PREFER_LOWEST == 1 ]]; then composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable ; fi
 
