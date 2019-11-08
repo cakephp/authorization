@@ -9,11 +9,10 @@
     ],
     "type": "cakephp-plugin",
     "require": {
-        "cakephp/core": "^3.6",
+        "cakephp/core": "^3.6.0",
         "psr/http-message": "^1.0"
     },
     "require-dev": {
-        "cakephp/cakephp": "^3.5.11",
         "cakephp/cakephp-codesniffer": "^3.0",
         "cakephp/bake": "^1.5",
         "wyrihaximus/twig-view": "^4.3.3",
