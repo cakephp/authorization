@@ -123,5 +123,6 @@ class PolicyTask extends SimpleBakeTask
     public function bakeTest($className)
     {
         // Do nothing as TestTask is not aware of policies for now.
+        return null;
     }
 }
