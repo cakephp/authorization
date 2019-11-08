@@ -118,7 +118,7 @@ class PolicyTask extends SimpleBakeTask
      * Do nothing (for now)
      *
      * @param string $className The class to bake a test for.
-     * @return void
+     * @return string|bool|null
      */
     public function bakeTest($className)
     {
