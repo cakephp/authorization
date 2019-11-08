@@ -3,6 +3,5 @@ parameters:
     ignoreErrors:
         - '#Else branch is unreachable because ternary operator condition is always true.#'
         - '#Result of && is always false.#'
-        - '#Call to an undefined method Psr\\Http\\Message\\MessageInterface::withStatus\(\).#'
         - '#Strict comparison using !== between null and null will always evaluate to false.#'
         - '#Parameter .+ \$.+ of method Cake\\Core\\Exception\\Exception::__construct\(\) expects .+, .+ given.#'
