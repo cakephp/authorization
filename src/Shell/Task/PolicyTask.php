@@ -23,7 +23,7 @@ use Cake\Utility\Inflector;
 class PolicyTask extends SimpleBakeTask
 {
     /**
-     * path to Policy directory
+     * Path to Policy directory
      *
      * @var string
      */
