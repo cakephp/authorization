@@ -71,6 +71,7 @@ class OrmResolver implements ResolverInterface
         }
         if ($resource instanceof QueryInterface) {
             $table = $resource instanceof Query ? $resource->getRepository() : $resource->repository();
+
             return $this->getRepositoryPolicy($table);
         }
 
