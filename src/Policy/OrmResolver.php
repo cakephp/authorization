@@ -70,6 +70,7 @@ class OrmResolver implements ResolverInterface
             return $this->getRepositoryPolicy($resource);
         }
         if ($resource instanceof QueryInterface) {
+            /** @var \Cake\Datasource\RepositoryInterface $table */
             $table = $resource instanceof Query ? $resource->getRepository() : $resource->repository();
 
             return $this->getRepositoryPolicy($table);

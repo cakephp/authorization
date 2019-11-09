@@ -54,7 +54,7 @@ class AuthorizationComponent extends Component
      * If $action is left undefined, the current controller action will
      * be used.
      *
-     * @param object|string $resource The resource to check authorization on.
+     * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @return void
      * @throws \Authorization\Exception\ForbiddenException when policy check fails.
@@ -90,7 +90,7 @@ class AuthorizationComponent extends Component
      * If $action is left undefined, the current controller action will
      * be used.
      *
-     * @param object $resource The resource to check authorization on.
+     * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @return bool|\Authorization\Policy\ResultInterface
      */
@@ -115,9 +115,9 @@ class AuthorizationComponent extends Component
      * If $action is left undefined, the current controller action will
      * be used.
      *
-     * @param object $resource The resource to apply a scope to.
+     * @param mixed $resource The resource to apply a scope to.
      * @param string|null $action The action to apply a scope for.
-     * @return object
+     * @return mixed
      */
     public function applyScope($resource, $action = null)
     {
