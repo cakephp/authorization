@@ -23,7 +23,7 @@ use Cake\Utility\Inflector;
 class PolicyTask extends SimpleBakeTask
 {
     /**
-     * path to Policy directory
+     * Path to Policy directory
      *
      * @var string
      */
@@ -118,10 +118,11 @@ class PolicyTask extends SimpleBakeTask
      * Do nothing (for now)
      *
      * @param string $className The class to bake a test for.
-     * @return void
+     * @return string|bool|null
      */
     public function bakeTest($className)
     {
         // Do nothing as TestTask is not aware of policies for now.
+        return null;
     }
 }

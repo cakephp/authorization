@@ -54,7 +54,7 @@ class AuthorizationComponent extends Component
      * If $action is left undefined, the current controller action will
      * be used.
      *
-     * @param object $resource The resource to check authorization on.
+     * @param object|string $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @return void
      * @throws \Authorization\Exception\ForbiddenException when policy check fails.

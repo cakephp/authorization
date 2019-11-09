@@ -68,7 +68,7 @@ class RequestAuthorizationMiddleware
     protected function getServiceFromRequest(ServerRequestInterface $request)
     {
         $serviceAttribute = $this->getConfig('authorizationAttribute');
-        $service = ($request->getAttribute($serviceAttribute));
+        $service = $request->getAttribute($serviceAttribute);
 
         if (!$service instanceof AuthorizationServiceInterface) {
             $errorMessage = __CLASS__ . ' could not find the authorization service in the request attribute. ' .
