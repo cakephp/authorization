@@ -19,6 +19,7 @@ use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\RepositoryInterface;
+use Cake\ORM\Query;
 
 /**
  * Policy resolver that applies conventions based policy classes
@@ -69,8 +70,12 @@ class OrmResolver implements ResolverInterface
             return $this->getRepositoryPolicy($resource);
         }
         if ($resource instanceof QueryInterface) {
-            return $this->getRepositoryPolicy($resource->repository());
+            /** @var \Cake\Datasource\RepositoryInterface $table */
+            $table = $resource instanceof Query ? $resource->getRepository() : $resource->repository();
+
+            return $this->getRepositoryPolicy($table);
         }
+
         $name = is_object($resource) ? get_class($resource) : gettype($resource);
         throw new MissingPolicyException([$name]);
     }
@@ -122,7 +127,7 @@ class OrmResolver implements ResolverInterface
         $namespace = $this->getNamespace($namespace);
         $policyClass = false;
 
-        // plugin entities can have application overides defined.
+        // plugin entities can have application overrides defined.
         if ($namespace !== $this->appNamespace) {
             $policyClass = App::className($name, 'Policy\\' . $namespace, 'Policy');
         }
