@@ -95,6 +95,7 @@ class AuthorizationComponent extends Component
      */
     public function can($resource, ?string $action = null): bool
     {
+        /** @var bool */
         return $this->performCheck($resource, $action);
     }
 
@@ -110,6 +111,7 @@ class AuthorizationComponent extends Component
      */
     public function canResult($resource, ?string $action = null): ResultInterface
     {
+        /** @var \Authorization\Policy\ResultInterface */
         return $this->performCheck($resource, $action, 'canResult');
     }
 

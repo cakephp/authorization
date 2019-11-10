@@ -21,6 +21,7 @@ use Cake\Core\App;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\RepositoryInterface;
+use RuntimeException;
 
 /**
  * Policy resolver that applies conventions based policy classes
@@ -61,6 +62,7 @@ class OrmResolver implements ResolverInterface
      * @return mixed
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined or cannot be resolved.
+     * @psalm-suppress MoreSpecificImplementedParamType
      */
     public function getPolicy($resource)
     {
@@ -71,7 +73,12 @@ class OrmResolver implements ResolverInterface
             return $this->getRepositoryPolicy($resource);
         }
         if ($resource instanceof QueryInterface) {
-            return $this->getRepositoryPolicy($resource->getRepository());
+            $repo = $resource->getRepository();
+            if ($repo === null) {
+                throw new RuntimeException('No repository set for the query.');
+            }
+
+            return $this->getRepositoryPolicy($repo);
         }
 
         $name = is_object($resource) ? get_class($resource) : gettype($resource);
@@ -89,6 +96,7 @@ class OrmResolver implements ResolverInterface
         $class = get_class($entity);
         $entityNamespace = '\Model\Entity\\';
         $namespace = str_replace('\\', '/', substr($class, 0, (int)strpos($class, $entityNamespace)));
+        /** @psalm-suppress PossiblyFalseOperand */
         $name = substr($class, strpos($class, $entityNamespace) + strlen($entityNamespace));
 
         return $this->findPolicy($class, $name, $namespace);
@@ -105,6 +113,7 @@ class OrmResolver implements ResolverInterface
         $class = get_class($table);
         $tableNamespace = '\Model\Table\\';
         $namespace = str_replace('\\', '/', substr($class, 0, (int)strpos($class, $tableNamespace)));
+        /** @psalm-suppress PossiblyFalseOperand */
         $name = substr($class, strpos($class, $tableNamespace) + strlen($tableNamespace));
 
         return $this->findPolicy($class, $name, $namespace);

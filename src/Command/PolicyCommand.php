@@ -21,6 +21,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Utility\Inflector;
+use RuntimeException;
 
 /**
  * Bake task for building policy classes
@@ -74,7 +75,12 @@ class PolicyCommand extends SimpleBakeCommand
     {
         $data = parent::templateData($arguments);
 
-        $name = $this->_getName($arguments->getArgument('name'));
+        $name = $arguments->getArgument('name');
+        if (empty($name)) {
+            throw new RuntimeException('You must specify name of policy to create.');
+        }
+
+        $name = $this->_getName($name);
         $type = $this->type = (string)$arguments->getOption('type');
 
         $suffix = '';

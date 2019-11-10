@@ -3,6 +3,9 @@ linters:
     standard: CakePHP
     fixer: true
 
+branches:
+  ignore: ['2.x']
+
 files:
   ignore:
     - 'vendor/*'
