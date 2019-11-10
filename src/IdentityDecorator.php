@@ -97,8 +97,7 @@ class IdentityDecorator implements IdentityInterface
      */
     public function getOriginalData()
     {
-        if (
-            $this->identity
+        if ($this->identity
             && !is_array($this->identity)
             && method_exists($this->identity, 'getOriginalData')
         ) {
