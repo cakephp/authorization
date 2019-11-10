@@ -28,7 +28,7 @@ use Cake\Utility\Inflector;
 class PolicyCommand extends SimpleBakeCommand
 {
     /**
-     * path to Policy directory
+     * Path to Policy directory
      *
      * @var string
      */
@@ -138,6 +138,5 @@ class PolicyCommand extends SimpleBakeCommand
      */
     public function bakeTest(string $className, Arguments $args, ConsoleIo $io): void
     {
-        // Do nothing as TestTask is not aware of policies for now.
     }
 }

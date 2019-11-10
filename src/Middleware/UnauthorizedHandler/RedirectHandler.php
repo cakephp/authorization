@@ -75,7 +75,7 @@ class RedirectHandler implements HandlerInterface
      * Checks if an exception matches one of the classes.
      *
      * @param \Authorization\Exception\Exception $exception Exception instance.
-     * @param array $exceptions A list of exception classes.
+     * @param \Exception[] $exceptions A list of exception classes.
      * @return bool
      */
     protected function checkException(Exception $exception, array $exceptions): bool

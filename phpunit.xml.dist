@@ -3,7 +3,7 @@
     colors="true"
     processIsolation="false"
     stopOnFailure="false"
-    bootstrap="./tests/bootstrap.php"
+    bootstrap="tests/bootstrap.php"
     >
 
     <!-- Add any additional test suites you want to run here -->
@@ -17,10 +17,9 @@
     <!-- Setup a listener for fixtures -->
     <listeners>
         <listener
-            class="\Cake\TestSuite\Fixture\FixtureInjector"
-            file="./vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php">
+            class="Cake\TestSuite\Fixture\FixtureInjector">
             <arguments>
-                <object class="\Cake\TestSuite\Fixture\FixtureManager"/>
+                <object class="Cake\TestSuite\Fixture\FixtureManager"/>
             </arguments>
         </listener>
     </listeners>

@@ -73,6 +73,7 @@ class OrmResolver implements ResolverInterface
         if ($resource instanceof QueryInterface) {
             return $this->getRepositoryPolicy($resource->getRepository());
         }
+
         $name = is_object($resource) ? get_class($resource) : gettype($resource);
         throw new MissingPolicyException([$name]);
     }
@@ -124,7 +125,7 @@ class OrmResolver implements ResolverInterface
         $namespace = $this->getNamespace($namespace);
         $policyClass = null;
 
-        // plugin entities can have application overides defined.
+        // plugin entities can have application overrides defined.
         if ($namespace !== $this->appNamespace) {
             $policyClass = App::className($name, 'Policy\\' . $namespace, 'Policy');
         }

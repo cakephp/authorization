@@ -18,6 +18,7 @@ namespace Authorization\Controller\Component;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
+use Authorization\Exception\MissingIdentityException;
 use Authorization\IdentityInterface;
 use Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
@@ -152,6 +153,9 @@ class AuthorizationComponent extends Component
             $action = $this->getDefaultAction($request);
         }
         $identity = $this->getIdentity($request);
+        if ($identity === null) {
+            throw new MissingIdentityException('Identity must exist for applyScope() call.');
+        }
 
         return $identity->applyScope($action, $resource);
     }
