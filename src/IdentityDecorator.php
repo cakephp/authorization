@@ -54,6 +54,7 @@ class IdentityDecorator implements IdentityInterface
      */
     public function __construct(AuthorizationServiceInterface $service, $identity)
     {
+        /** @psalm-suppress DocblockTypeContradiction */
         if (!is_array($identity) && !$identity instanceof ArrayAccess) {
             $type = is_object($identity) ? get_class($identity) : gettype($identity);
             $message = sprintf(
@@ -96,7 +97,11 @@ class IdentityDecorator implements IdentityInterface
      */
     public function getOriginalData()
     {
-        if ($this->identity && method_exists($this->identity, 'getOriginalData')) {
+        if (
+            $this->identity
+            && !is_array($this->identity)
+            && method_exists($this->identity, 'getOriginalData')
+        ) {
             return $this->identity->getOriginalData();
         }
 
@@ -177,6 +182,7 @@ class IdentityDecorator implements IdentityInterface
      * @param mixed $offset The offset to assign the value to.
      * @param mixed $value Value
      * @return mixed
+     * @psalm-suppress LessSpecificImplementedReturnType
      */
     public function offsetSet($offset, $value)
     {

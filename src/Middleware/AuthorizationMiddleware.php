@@ -80,6 +80,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
      */
     public function __construct($subject, array $config = [])
     {
+        /** @psalm-suppress DocblockTypeContradiction */
         if (
             !$subject instanceof AuthorizationServiceInterface &&
             !$subject instanceof AuthorizationServiceProviderInterface
@@ -180,7 +181,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
         if (!$service instanceof AuthorizationServiceInterface) {
             throw new RuntimeException(sprintf(
                 'Invalid service returned from the provider. `%s` does not implement `%s`.',
-                is_object($service) ? get_class($service) : gettype($service),
+                getTypeName($service),
                 AuthorizationServiceInterface::class
             ));
         }
