@@ -15,8 +15,6 @@ Load the plugin by adding the following statement in your project's
 ``src/Application.php``::
 
     $this->addPlugin('Authorization');
-    // Prior to 3.6.0
-    Plugin::load('Authorization');
 
 Getting Started
 ===============
