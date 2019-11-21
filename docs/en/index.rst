@@ -25,6 +25,7 @@ apply the middleware. In **src/Application.php** add the following to the class
 imports::
 
     use Authorization\AuthorizationService;
+    use Authorization\AuthorizationServiceInterface;
     use Authorization\AuthorizationServiceProviderInterface;
     use Authorization\Middleware\AuthorizationMiddleware;
     use Authorization\Policy\OrmResolver;
