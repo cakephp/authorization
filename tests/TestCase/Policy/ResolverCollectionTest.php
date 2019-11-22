@@ -30,7 +30,7 @@ class ResolverCollectionTest extends TestCase
 
         $this->expectException(MissingPolicyException::class);
 
-        $collection->getPolicy(new Article);
+        $collection->getPolicy(new Article());
     }
 
     public function testMissingPolicy()

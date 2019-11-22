@@ -112,7 +112,7 @@ class AuthorizationComponentTest extends TestCase
     {
         $this->expectException(MissingPolicyException::class);
 
-        $this->Auth->authorize(new stdClass);
+        $this->Auth->authorize(new stdClass());
     }
 
     public function testAuthorizeFailedCheck()
@@ -383,7 +383,7 @@ class AuthorizationComponentTest extends TestCase
             ->withAttribute('identity', $identity);
 
         $this->Auth->setConfig('authorizeModel', ['edit']);
-        $this->Auth->setConfig('actionMap', ['edit' => new stdClass]);
+        $this->Auth->setConfig('actionMap', ['edit' => new stdClass()]);
 
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Invalid action type for `edit`. Expected `string` or `null`, got `stdClass`.');

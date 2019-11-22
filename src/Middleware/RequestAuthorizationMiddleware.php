@@ -35,7 +35,6 @@ use RuntimeException;
  */
 class RequestAuthorizationMiddleware
 {
-
     use InstanceConfigTrait;
 
     /**

@@ -19,7 +19,8 @@ class RequestPolicy implements RequestPolicyInterface
      */
     public function canAccess($identity, ServerRequest $request)
     {
-        if ($request->getParam('controller') === 'Articles'
+        if (
+            $request->getParam('controller') === 'Articles'
             && $request->getParam('action') === 'index'
         ) {
             return true;
@@ -39,7 +40,8 @@ class RequestPolicy implements RequestPolicyInterface
      */
     public function canEnter($identity, ServerRequest $request)
     {
-        if ($request->getParam('controller') === 'Articles'
+        if (
+            $request->getParam('controller') === 'Articles'
             && $request->getParam('action') === 'index'
         ) {
             return new Result(true);

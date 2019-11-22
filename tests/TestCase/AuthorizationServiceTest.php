@@ -39,7 +39,7 @@ class AuthorizationServiceTest extends TestCase
 
         $user = null;
 
-        $result = $service->can($user, 'view', new Article);
+        $result = $service->can($user, 'view', new Article());
         $this->assertFalse($result);
 
         $result = $service->can($user, 'view', new Article(['visibility' => 'public']));
@@ -58,7 +58,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin'
         ]);
 
-        $result = $service->can($user, 'add', new Article);
+        $result = $service->can($user, 'add', new Article());
         $this->assertTrue($result);
     }
 
@@ -74,7 +74,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin'
         ]);
 
-        $result = $service->can($user, 'publish', new Article);
+        $result = $service->can($user, 'publish', new Article());
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
@@ -90,7 +90,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin'
         ]);
 
-        $service->can($user, 'add', new Article);
+        $service->can($user, 'add', new Article());
         $this->assertTrue($service->authorizationChecked());
     }
 
@@ -124,7 +124,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin'
         ]);
 
-        $service->applyScope($user, 'index', new Article);
+        $service->applyScope($user, 'index', new Article());
         $this->assertTrue($service->authorizationChecked());
     }
 

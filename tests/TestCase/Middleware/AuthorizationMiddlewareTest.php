@@ -158,7 +158,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ];
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
-        $request = (new ServerRequest)->withAttribute('identity', $identity);
+        $request = (new ServerRequest())->withAttribute('identity', $identity);
         $response = new Response();
         $next = function ($request) {
             return $request;
@@ -181,7 +181,7 @@ class AuthorizationMiddlewareTest extends TestCase
             'id' => 1
         ]);
 
-        $request = (new ServerRequest)->withAttribute('identity', $identity);
+        $request = (new ServerRequest())->withAttribute('identity', $identity);
         $response = new Response();
         $next = function ($request) {
             return $request;
@@ -204,7 +204,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ];
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
-        $request = (new ServerRequest)->withAttribute('user', $identity);
+        $request = (new ServerRequest())->withAttribute('user', $identity);
         $response = new Response();
         $next = function ($request) {
             return $request;
@@ -233,7 +233,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ]);
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
-        $request = (new ServerRequest)->withAttribute('identity', $identity);
+        $request = (new ServerRequest())->withAttribute('identity', $identity);
         $response = new Response();
         $next = function ($request) {
             return $request;
@@ -263,7 +263,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ];
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
-        $request = (new ServerRequest)->withAttribute('identity', $identity);
+        $request = (new ServerRequest())->withAttribute('identity', $identity);
         $response = new Response();
         $next = function ($request) {
             return $request;
