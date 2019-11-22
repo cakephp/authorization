@@ -154,7 +154,7 @@ class AuthorizationMiddlewareTest extends TestCase
     public function testInvokeServiceWithIdentity()
     {
         $identity = [
-            'id' => 1
+            'id' => 1,
         ];
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
@@ -178,7 +178,7 @@ class AuthorizationMiddlewareTest extends TestCase
     {
         $service = $this->createMock(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($service, [
-            'id' => 1
+            'id' => 1,
         ]);
 
         $request = (new ServerRequest())->withAttribute('identity', $identity);
@@ -200,7 +200,7 @@ class AuthorizationMiddlewareTest extends TestCase
     public function testCustomIdentity()
     {
         $identity = [
-            'id' => 1
+            'id' => 1,
         ];
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
@@ -229,7 +229,7 @@ class AuthorizationMiddlewareTest extends TestCase
     public function testCustomIdentityDecorator()
     {
         $identity = new Identity([
-            'id' => 1
+            'id' => 1,
         ]);
 
         $service = $this->createMock(AuthorizationServiceInterface::class);
@@ -259,7 +259,7 @@ class AuthorizationMiddlewareTest extends TestCase
     public function testInvalidIdentity()
     {
         $identity = [
-            'id' => 1
+            'id' => 1,
         ];
 
         $service = $this->createMock(AuthorizationServiceInterface::class);

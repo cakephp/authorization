@@ -45,7 +45,7 @@ class RequestAuthorizationMiddleware
     protected $_defaultConfig = [
         'authorizationAttribute' => 'authorization',
         'identityAttribute' => 'identity',
-        'method' => 'access'
+        'method' => 'access',
     ];
 
     /**

@@ -24,14 +24,14 @@ class ArticlesTablePolicy
     public function scopeEdit(IdentityInterface $user, QueryInterface $query)
     {
         return $query->where([
-            'user_id' => $user['id']
+            'user_id' => $user['id'],
         ]);
     }
 
     public function scopeModify(IdentityInterface $user, QueryInterface $query)
     {
         return $query->where([
-            'identity_id' => $user['id']
+            'identity_id' => $user['id'],
         ]);
     }
 }

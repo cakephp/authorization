@@ -76,7 +76,7 @@ class AuthorizationMiddleware
         if (!$subject instanceof AuthorizationServiceInterface && !$subject instanceof AuthorizationServiceProviderInterface) {
             $expected = implode('` or `', [
                 AuthorizationServiceInterface::class,
-                AuthorizationServiceProviderInterface::class
+                AuthorizationServiceProviderInterface::class,
             ]);
             $type = is_object($subject) ? get_class($subject) : gettype($subject);
             $message = sprintf('Subject must be an instance of `%s`, `%s` given.', $expected, $type);
