@@ -32,7 +32,7 @@ class AuthorizationServiceTest extends TestCase
     public function testNullUserCan()
     {
         $resolver = new MapResolver([
-            Article::class => ArticlePolicy::class
+            Article::class => ArticlePolicy::class,
         ]);
 
         $service = new AuthorizationService($resolver);
@@ -49,13 +49,13 @@ class AuthorizationServiceTest extends TestCase
     public function testCan()
     {
         $resolver = new MapResolver([
-            Article::class => ArticlePolicy::class
+            Article::class => ArticlePolicy::class,
         ]);
 
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $result = $service->can($user, 'add', new Article());
@@ -65,13 +65,13 @@ class AuthorizationServiceTest extends TestCase
     public function testCanWithResult()
     {
         $resolver = new MapResolver([
-            Article::class => ArticlePolicy::class
+            Article::class => ArticlePolicy::class,
         ]);
 
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $result = $service->can($user, 'publish', new Article());
@@ -81,13 +81,13 @@ class AuthorizationServiceTest extends TestCase
     public function testAuthorizationCheckedWithCan()
     {
         $resolver = new MapResolver([
-            Article::class => ArticlePolicy::class
+            Article::class => ArticlePolicy::class,
         ]);
         $service = new AuthorizationService($resolver);
         $this->assertFalse($service->authorizationChecked());
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $service->can($user, 'add', new Article());
@@ -97,13 +97,13 @@ class AuthorizationServiceTest extends TestCase
     public function testCallingMagicCallPolicy()
     {
         $resolver = new MapResolver([
-            Article::class => MagicCallPolicy::class
+            Article::class => MagicCallPolicy::class,
         ]);
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
             'id' => 9,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $article = new Article();
@@ -114,14 +114,14 @@ class AuthorizationServiceTest extends TestCase
     public function testAuthorizationCheckedWithApplyScope()
     {
         $resolver = new MapResolver([
-            Article::class => ArticlePolicy::class
+            Article::class => ArticlePolicy::class,
         ]);
         $service = new AuthorizationService($resolver);
         $this->assertFalse($service->authorizationChecked());
 
         $user = new IdentityDecorator($service, [
             'id' => 9,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $service->applyScope($user, 'index', new Article());
@@ -141,12 +141,12 @@ class AuthorizationServiceTest extends TestCase
     public function testApplyScope()
     {
         $resolver = new MapResolver([
-            Article::class => ArticlePolicy::class
+            Article::class => ArticlePolicy::class,
         ]);
         $service = new AuthorizationService($resolver);
         $user = new IdentityDecorator($service, [
             'id' => 9,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $article = new Article();
@@ -160,12 +160,12 @@ class AuthorizationServiceTest extends TestCase
         $this->expectException(MissingMethodException::class);
 
         $resolver = new MapResolver([
-            Article::class => ArticlePolicy::class
+            Article::class => ArticlePolicy::class,
         ]);
         $service = new AuthorizationService($resolver);
         $user = new IdentityDecorator($service, [
             'id' => 9,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $article = new Article();
@@ -186,7 +186,7 @@ class AuthorizationServiceTest extends TestCase
             ->willReturn(false);
 
         $resolver = new MapResolver([
-            Article::class => $policy
+            Article::class => $policy,
         ]);
 
         $policy->expects($this->never())
@@ -195,7 +195,7 @@ class AuthorizationServiceTest extends TestCase
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $result = $service->can($user, 'add', $entity);
@@ -219,13 +219,13 @@ class AuthorizationServiceTest extends TestCase
             ->method('canAdd');
 
         $resolver = new MapResolver([
-            Article::class => $policy
+            Article::class => $policy,
         ]);
 
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $result = $service->can($user, 'add', $entity);
@@ -251,13 +251,13 @@ class AuthorizationServiceTest extends TestCase
             ->willReturn(true);
 
         $resolver = new MapResolver([
-            Article::class => $policy
+            Article::class => $policy,
         ]);
 
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $result = $service->can($user, 'add', $entity);
@@ -281,13 +281,13 @@ class AuthorizationServiceTest extends TestCase
             ->method('canAdd');
 
         $resolver = new MapResolver([
-            Article::class => $policy
+            Article::class => $policy,
         ]);
 
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $result = $service->can($user, 'add', $entity);
@@ -312,13 +312,13 @@ class AuthorizationServiceTest extends TestCase
             ->method('canAdd');
 
         $resolver = new MapResolver([
-            Article::class => $policy
+            Article::class => $policy,
         ]);
 
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $result = $service->can($user, 'add', $entity);
@@ -343,13 +343,13 @@ class AuthorizationServiceTest extends TestCase
             ->method('canAdd');
 
         $resolver = new MapResolver([
-            Article::class => $policy
+            Article::class => $policy,
         ]);
 
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $this->expectException(RuntimeException::class);
@@ -363,13 +363,13 @@ class AuthorizationServiceTest extends TestCase
         $entity = new Article();
 
         $resolver = new MapResolver([
-            Article::class => ArticlePolicy::class
+            Article::class => ArticlePolicy::class,
         ]);
 
         $service = new AuthorizationService($resolver);
 
         $user = new IdentityDecorator($service, [
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $this->expectException(MissingMethodException::class);

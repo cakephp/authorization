@@ -71,7 +71,7 @@ class OrmResolverTest extends TestCase
     {
         $bookmark = new Tag();
         $resolver = new OrmResolver('TestApp', [
-            'TestPlugin' => 'OverridePlugin'
+            'TestPlugin' => 'OverridePlugin',
         ]);
         $policy = $resolver->getPolicy($bookmark);
         $this->assertInstanceOf(OverrideTagPolicy::class, $policy);

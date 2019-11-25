@@ -110,7 +110,7 @@ class PolicyTask extends SimpleBakeTask
                 'help' => 'The object type to bake a policy for. If only one argument is used, type will be object.',
                 'default' => 'entity',
                 'choices' => ['table', 'entity', 'object'],
-                'required' => true
+                'required' => true,
             ]);
     }
 

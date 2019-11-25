@@ -44,7 +44,7 @@ class ResolverCollectionTest extends TestCase
             ->willThrowException(new MissingPolicyException($resource));
 
         $collection = new ResolverCollection([
-            $resolver
+            $resolver,
         ]);
 
         $this->expectException(MissingPolicyException::class);
