@@ -23,8 +23,8 @@ project = 'CakePHP Authorization'
 
 # Other versions that display in the version picker menu.
 version_list = [
-    {'name': '2.x', 'number': '/authorization/2', 'title': '2.x', 'current': True},
-    {'name': '1.x', 'number': '/authorization/1', 'title': '1.x'},
+    {'name': '2.x', 'number': '/authorization/2', 'title': '2.x'},
+    {'name': '1.x', 'number': '/authorization/1', 'title': '1.x', 'current': True},
 ]
 
 # Languages available.
