@@ -1,10 +1,22 @@
 Checking Authorization
 ######################
 
-Once you have applied the :doc:`/middleware` to your
-application and added an ``identity`` to the request, you can start checking
-authorization. The middleware will wrap your request ``identity`` with an
-``IdentityDecorator`` that adds authorization related methods::
+Once you have applied the :doc:`/middleware` to your application and added an
+``identity`` to the request, you can start checking authorization. The
+middleware will wrap the ``identity`` in each request with an
+``IdentityDecorator`` that adds authorization related methods.
+
+You can pass the ``identity`` into your models, services or templates allowing
+you to check authorization anywhere in your application easily. See the
+:ref:`identity-decorator` section for how to customize or replace the default
+decorator.
+
+Checking Authorization for a Single Resource
+============================================
+
+The ``can`` method enables you to check authorization on a single resource.
+Typically this is an ORM entity, or application domain object. Your
+:doc:`/policies` provide logic to make the authorization decision::
 
     // Get the identity from the request
     $user = $this->request->getAttribute('identity');
@@ -23,24 +35,21 @@ be sure to check their status as ``can()`` returns the result instance::
        // Do deletion
    }
 
-You can also use the ``identity`` to apply scopes::
+Applying Scope Conditions
+=========================
+
+When you need to apply authorization checks to a collection of objects like
+a paginated query you will often want to only fetch records that the current
+user has access to. This plugin implements this concept as 'scopes'. Scope
+policies allow you to 'scope' a query or result set and return the updated list
+or query object::
 
     // Get the identity from the request
     $user = $this->request->getAttribute('identity');
 
-    // Apply permission conditions to a query
+    // Apply permission conditions to a query so only
+    // the records the current user has access to are returned.
     $query = $user->applyScope('index', $query);
-
-The ``IdentityDecorator`` will forward all method calls, array access, and
-property access to the decorated identity object. If you need to access the
-underlying identity directly use ``getOriginalData()``::
-
-    $originalUser = $user->getOriginalData();
-
-You can pass the ``$user`` into your models, services or templates allowing you
-to check authorization anywhere in your application easily. See the
-:ref:`identity-decorator` section for how to customize or replace the default
-decorator.
 
 The :doc:`/component` can be used in controller actions
 to streamline authorization checks that raise exceptions on failure.
