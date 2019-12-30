@@ -81,6 +81,9 @@ You can also apply policy scopes using the component::
 
 $query = $this->Authorization->applyScope($this->Articles->find());
 
+If the current action has no logged in user a ``MissingIdentityException`` will
+be raised.
+
 If you want to map actions to different authorization methods use the 
 ``actionMap`` option::
 

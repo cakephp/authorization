@@ -50,25 +50,31 @@ Identity Decorator
 ==================
 
 By default the ``identity`` in the request will be decorated (wrapped) with
-``Authorization\IdentityDecorator``. The decorator class proxies most read
-operations and method calls to the wrapped identity.
+``Authorization\IdentityDecorator``. The decorator class proxies method calls,
+array access and property access to the decorated identity object. To access the
+underlying identity directly use ``getOriginalData()``::
 
-If your application uses the `cakephp/authentication <https://github.com/cakephp/authentication>`_ plugin too
-then by default the ``Authorization\Identity`` class is used which also implements
-the ``Authentication\IdentityInterface``. This allows you to use the ``Authentication``
-lib's component and helper to get the decorated identity.
+    $originalUser = $user->getOriginalData();
 
-If you have an existing
-``User`` or identity class you can skip the decorator by implementing the
-``Authorization\IdentityInterface`` and using the ``identityDecorator``
-middleware option. First lets update our ``User`` class::
+If your application uses the `cakephp/authentication
+<https://github.com/cakephp/authentication>`_ plugin then the
+``Authorization\Identity`` class will be used. This class implements the
+``Authentication\IdentityInterface`` in addition to the
+``Authorization\IdentityInterface``. This allows you to use the
+``Authentication`` lib's component and helper to get the decorated identity.
+
+Using your User class as the Identity
+-------------------------------------
+
+If you have an existing ``User`` or identity class you can skip the decorator by
+implementing the ``Authorization\IdentityInterface`` and using the
+``identityDecorator`` middleware option. First lets update our ``User`` class::
 
     namespace App\Model\Entity;
 
     use Authorization\AuthorizationServiceInterface;
     use Authorization\IdentityInterface;
     use Cake\ORM\Entity;
-
 
     class User extends Entity implements IdentityInterface
     {
@@ -149,15 +155,18 @@ redirect the user to the login page.
 
 The built-in handlers are:
 
-* ``Exception`` - this handler will rethrow the exception, this is a default behavior of the middleware.
+* ``Exception`` - this handler will rethrow the exception, this is a default
+  behavior of the middleware.
 * ``Redirect`` - this handler will redirect the request to the provided URL.
 * ``CakeRedirect`` - redirect handler with support for CakePHP Router.
 
 Both redirect handlers share the same configuration options:
 
 * ``url`` - URL to redirect to (``CakeRedirect`` supports CakePHP Router syntax).
-* ``exceptions`` - a list of exception classes that should be redirected. By default only ``MissingIdentityException`` is redirected.
-* ``queryParam`` - the accessed request URL will be attached to the redirect URL query parameter (``redirect`` by default).
+* ``exceptions`` - a list of exception classes that should be redirected. By
+  default only ``MissingIdentityException`` is redirected.
+* ``queryParam`` - the accessed request URL will be attached to the redirect URL
+  query parameter (``redirect`` by default).
 * ``statusCode`` - HTTP status code of a redirect, ``302`` by default.
 
 For example::
@@ -174,10 +183,13 @@ For example::
         ],
     ]));
 
-You can also add your own handler. Handlers should implement ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface``,
-be suffixed with ``Handler`` suffix and reside under your app's or plugin's
+You can also add your own handler. Handlers should implement
+``Authorization\Middleware\UnauthorizedHandler\HandlerInterface``, be suffixed
+with ``Handler`` suffix and reside under your app's or plugin's
 ``Middleware\UnauthorizedHandler`` namespace.
 
-Configuration options are passed to the handler's ``handle()`` method as the last parameter.
+Configuration options are passed to the handler's ``handle()`` method as the
+last parameter.
 
-Handlers catch only those exceptions which extend the ``Authorization\Exception\Exception`` class.
+Handlers catch only those exceptions which extend the
+``Authorization\Exception\Exception`` class.
