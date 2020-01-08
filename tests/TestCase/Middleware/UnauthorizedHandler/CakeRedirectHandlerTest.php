@@ -20,7 +20,6 @@ use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\CakeRedirectHandler;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
-use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 
