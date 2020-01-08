@@ -73,7 +73,7 @@ class RedirectHandlerTest extends TestCase
 
         $exception = new Exception();
         $request = ServerRequestFactory::fromGlobals(
-            ['REQUEST_METHOD' => 'GET'],
+            ['REQUEST_METHOD' => 'GET']
         );
 
         $response = $handler->handle($exception, $request, [
