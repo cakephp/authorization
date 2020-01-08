@@ -16,8 +16,9 @@ namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\RedirectHandler;
+use Cake\Core\Configure;
 use Cake\Http\Response;
-use Cake\Http\ServerRequest;
+use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
 
 class RedirectHandlerTest extends TestCase
@@ -27,9 +28,9 @@ class RedirectHandlerTest extends TestCase
         $handler = new RedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest([
-            'environment' => ['REQUEST_METHOD' => 'GET'],
-        ]);
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_METHOD' => 'GET']
+        );
         $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
@@ -47,13 +48,13 @@ class RedirectHandlerTest extends TestCase
         $handler = new RedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest([
-            'environment' => [
+        $request = ServerRequestFactory::fromGlobals(
+            [
                 'REQUEST_METHOD' => 'GET',
                 'PATH_INFO' => '/path',
                 'QUERY_STRING' => 'key=value',
-            ],
-        ]);
+            ]
+        );
         $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
@@ -72,9 +73,9 @@ class RedirectHandlerTest extends TestCase
         $handler = new RedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest([
-            'environment' => ['REQUEST_METHOD' => 'GET'],
-        ]);
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_METHOD' => 'GET']
+        );
         $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
@@ -109,13 +110,13 @@ class RedirectHandlerTest extends TestCase
         $handler = new RedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest([
-            'environment' => [
+        $request = ServerRequestFactory::fromGlobals(
+            [
                 'REQUEST_METHOD' => $method,
                 'PATH_INFO' => '/path',
                 'QUERY_STRING' => 'key=value',
-            ],
-        ]);
+            ]
+        );
         $response = new Response();
 
         $response = $handler->handle($exception, $request, $response, [
@@ -129,12 +130,37 @@ class RedirectHandlerTest extends TestCase
         $this->assertEquals('/login?foo=bar', $response->getHeaderLine('Location'));
     }
 
+    public function testHandleRedirectWithBasePath()
+    {
+        $handler = new RedirectHandler();
+        $exception = new Exception();
+
+        Configure::write('App.base', '/basedir');
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/path', 'REQUEST_METHOD' => 'GET']
+        );
+        $response = new Response();
+
+        $response = $handler->handle($exception, $request, $response, [
+            'exceptions' => [
+                Exception::class,
+            ],
+            'url' => '/basedir/login',
+        ]);
+
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals(
+            '/basedir/login?redirect=%2Fbasedir%2Fpath',
+            $response->getHeaderLine('Location')
+        );
+    }
+
     public function testHandleException()
     {
         $handler = new RedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest();
+        $request = ServerRequestFactory::fromGlobals(['REQUEST_URI' => '/']);
         $response = new Response();
 
         $this->expectException(Exception::class);
