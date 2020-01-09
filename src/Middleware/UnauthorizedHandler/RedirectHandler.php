@@ -101,6 +101,7 @@ class RedirectHandler implements HandlerInterface
         $url = $options['url'];
         if ($options['queryParam'] !== null && $request->getMethod() === 'GET') {
             $uri = $request->getUri();
+            /** @psalm-suppress NoInterfaceProperties */
             if (property_exists($uri, 'base')) {
                 $uri = $uri->withPath($uri->base . $uri->getPath());
             }
