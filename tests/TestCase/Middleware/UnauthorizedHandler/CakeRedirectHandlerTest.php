@@ -18,13 +18,11 @@ namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\CakeRedirectHandler;
-use Cake\Http\ServerRequest;
+use Cake\Core\Configure;
+use Cake\Http\ServerRequestFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 
-/**
- * Description of CakeRedirectHandlerTest
- */
 class CakeRedirectHandlerTest extends TestCase
 {
     public function setUp(): void
@@ -46,8 +44,9 @@ class CakeRedirectHandlerTest extends TestCase
         $handler = new CakeRedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest();
-
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/admin/dashboard']
+        );
         $response = $handler->handle($exception, $request, [
             'exceptions' => [
                 Exception::class,
@@ -55,7 +54,7 @@ class CakeRedirectHandlerTest extends TestCase
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?redirect=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
+        $this->assertEquals('/login?redirect=%2Fadmin%2Fdashboard', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionNamed()
@@ -63,7 +62,9 @@ class CakeRedirectHandlerTest extends TestCase
         $handler = new CakeRedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest();
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/admin/dashboard']
+        );
 
         $response = $handler->handle($exception, $request, [
             'exceptions' => [
@@ -75,7 +76,7 @@ class CakeRedirectHandlerTest extends TestCase
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?redirect=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
+        $this->assertEquals('/login?redirect=%2Fadmin%2Fdashboard', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionWithQuery()
@@ -83,7 +84,9 @@ class CakeRedirectHandlerTest extends TestCase
         $handler = new CakeRedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest();
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/']
+        );
 
         $response = $handler->handle($exception, $request, [
             'exceptions' => [
@@ -98,7 +101,7 @@ class CakeRedirectHandlerTest extends TestCase
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?foo=bar&redirect=http%3A%2F%2Flocalhost%2F', $response->getHeaderLine('Location'));
+        $this->assertEquals('/login?foo=bar&redirect=%2F', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionNoQuery()
@@ -106,7 +109,9 @@ class CakeRedirectHandlerTest extends TestCase
         $handler = new CakeRedirectHandler();
 
         $exception = new Exception();
-        $request = new ServerRequest();
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/']
+        );
 
         $response = $handler->handle($exception, $request, [
             'exceptions' => [
@@ -117,5 +122,31 @@ class CakeRedirectHandlerTest extends TestCase
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function testHandleRedirectWithBasePath()
+    {
+        $handler = new CakeRedirectHandler();
+        $exception = new Exception();
+
+        Configure::write('App.base', '/basedir');
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/admin/dashboard']
+        );
+
+        $response = $handler->handle($exception, $request, [
+            'exceptions' => [
+                Exception::class,
+            ],
+            'url' => [
+                '_name' => 'login',
+            ],
+        ]);
+
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals(
+            '/basedir/login?redirect=%2Fbasedir%2Fadmin%2Fdashboard',
+            $response->getHeaderLine('Location')
+        );
     }
 }

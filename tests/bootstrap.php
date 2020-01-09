@@ -45,6 +45,7 @@ define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS
 
 Configure::write('debug', true);
 Configure::write('App', [
+    'base' => '',
     'namespace' => 'TestApp',
     'encoding' => 'UTF-8',
     'paths' => [

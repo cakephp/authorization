@@ -100,7 +100,16 @@ class RedirectHandler implements HandlerInterface
     {
         $url = $options['url'];
         if ($options['queryParam'] !== null && $request->getMethod() === 'GET') {
-            $query = urlencode($options['queryParam']) . '=' . urlencode($request->getRequestTarget());
+            $uri = $request->getUri();
+            /** @psalm-suppress NoInterfaceProperties */
+            if (property_exists($uri, 'base')) {
+                $uri = $uri->withPath($uri->base . $uri->getPath());
+            }
+            $redirect = $uri->getPath();
+            if ($uri->getQuery()) {
+                $redirect .= '?' . $uri->getQuery();
+            }
+            $query = urlencode($options['queryParam']) . '=' . urlencode($redirect);
             if (strpos($url, '?') !== false) {
                 $query = '&' . $query;
             } else {
