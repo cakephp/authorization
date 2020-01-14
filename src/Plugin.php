@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Authorization;
 
+use Authorization\Command\PolicyCommand;
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 
 /**
@@ -23,4 +25,18 @@ use Cake\Core\BasePlugin;
  */
 class Plugin extends BasePlugin
 {
+    /**
+     * Add console commands if bake is also available.
+     *
+     * @param \Cake\Console\CommandCollection $commands The command collection to update
+     * @return \Cake\Console\CommandCollection
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        if (class_exists('Bake\Command\SimpleBakeCommand')) {
+            $commands->add('bake policy', PolicyCommand::class);
+        }
+
+        return $commands;
+    }
 }
