@@ -146,7 +146,7 @@ option::
         'requireAuthorizationCheck' => false
     ]));
 
-Handling unauthorized requests
+Handling Unauthorized Requests
 ------------------------------
 
 By default authorization exceptions thrown by the application are rethrown by the middleware.
