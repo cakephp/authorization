@@ -9,7 +9,7 @@ Contents
     /policies
     /policy-resolvers
     /middleware
-    /component
     /checking-authorization
+    /component
     /request-authorization-middleware
     /2-0-migration-guide
