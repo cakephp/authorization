@@ -146,7 +146,7 @@ class RedirectHandlerTest extends TestCase
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(
-            '/basedir/login?redirect=%2Fbasedir%2Fpath',
+            '/basedir/login?redirect=%2Fpath',
             $response->getHeaderLine('Location')
         );
     }

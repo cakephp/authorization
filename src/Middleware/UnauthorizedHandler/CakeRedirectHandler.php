@@ -69,10 +69,6 @@ class CakeRedirectHandler extends RedirectHandler
         $url = $options['url'];
         if ($options['queryParam'] !== null) {
             $uri = $request->getUri();
-            /** @psalm-suppress NoInterfaceProperties */
-            if (property_exists($uri, 'base')) {
-                $uri = $uri->withPath($uri->base . $uri->getPath());
-            }
             $redirect = $uri->getPath();
             if ($uri->getQuery()) {
                 $redirect .= '?' . $uri->getQuery();

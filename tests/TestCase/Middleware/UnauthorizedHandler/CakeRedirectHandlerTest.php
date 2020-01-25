@@ -145,7 +145,7 @@ class CakeRedirectHandlerTest extends TestCase
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(
-            '/basedir/login?redirect=%2Fbasedir%2Fadmin%2Fdashboard',
+            '/basedir/login?redirect=%2Fadmin%2Fdashboard',
             $response->getHeaderLine('Location')
         );
     }
