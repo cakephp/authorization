@@ -46,7 +46,7 @@ it starts handling the request. This hook method allows your application to
 define the ``AuthorizationService`` it wants to use. Add the following method your
 **src/Application.php**::
 
-    public function getAuthorizationService(ServerRequestInterface $request)
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
     {
         $resolver = new OrmResolver();
 
