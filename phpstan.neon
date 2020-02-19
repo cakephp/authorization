@@ -1,6 +1,10 @@
 parameters:
-    level: 5
+    level: 6
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    treatPhpDocTypesAsCertain: false
     ignoreErrors:
-        - '#Else branch is unreachable because ternary operator condition is always true#'
-        - '#Result of && is always false#'
-        - '#Authorization\\Identity::__construct\(\) does not call parent constructor from Authorization\\IdentityDecorator#'
+        -
+            message: "#^Method Authorization\\\\Policy\\\\Exception\\\\MissingPolicyException\\:\\:__construct\\(\\) has parameter \\$resource with no typehint specified\\.$#"
+            count: 1
+            path: src/Policy/Exception/MissingPolicyException.php
