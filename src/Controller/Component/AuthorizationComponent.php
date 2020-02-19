@@ -92,9 +92,11 @@ class AuthorizationComponent extends Component
      * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @return bool
+     * @psalm-suppress InvalidReturnType
      */
     public function can($resource, ?string $action = null): bool
     {
+        /** @psalm-suppress InvalidReturnStatement */
         return $this->performCheck($resource, $action);
     }
 
@@ -107,9 +109,11 @@ class AuthorizationComponent extends Component
      * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @return \Authorization\Policy\ResultInterface
+     * @psalm-suppress InvalidReturnType
      */
     public function canResult($resource, ?string $action = null): ResultInterface
     {
+        /** @psalm-suppress InvalidReturnStatement */
         return $this->performCheck($resource, $action, 'canResult');
     }
 
