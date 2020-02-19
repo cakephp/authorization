@@ -10,19 +10,21 @@
     "type": "cakephp-plugin",
     "require": {
         "php": ">=7.2",
-        "cakephp/cakephp": "^4.0",
+        "cakephp/core": "^4.0",
         "psr/http-client": "^1.0",
         "psr/http-message": "^1.0",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
+        "cakephp/cakephp": "^4.0",
         "cakephp/authentication": "^2.0",
         "cakephp/cakephp-codesniffer": "^4.0",
         "cakephp/bake": "^2.0",
         "phpunit/phpunit": "^8.0"
     },
     "suggest": {
+        "cakephp/http": "To use \"RequestPolicyInterface\" (Not needed separately if using full CakePHP framework).",
         "cakephp/orm": "To use \"OrmResolver\" (Not needed separately if using full CakePHP framework)."
     },
     "license": "MIT",
@@ -66,7 +68,7 @@
             "@phpstan",
             "@psalm"
         ],
-        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan-shim:^0.11.18 psalm/phar:^3.5 && mv composer.backup composer.json",
+        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^0.12 psalm/phar:^3.5 && mv composer.backup composer.json",
         "test": "phpunit",
         "test-coverage": "phpunit --coverage-clover=clover.xml"
     },
