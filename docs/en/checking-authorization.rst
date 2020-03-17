@@ -27,10 +27,10 @@ Typically this is an ORM entity, or application domain object. Your
     }
 
 If your policies return :ref:`policy-result-objects`
-be sure to check their status as ``can()`` returns the result instance::
+be sure to check their status as ``canResult()`` returns the result instance::
 
    // Assuming our policy returns a result.
-   $result = $user->can('delete', $article);
+   $result = $user->canResult('delete', $article);
    if ($result->getStatus()) {
        // Do deletion
    }
