@@ -13,7 +13,7 @@ from cakephpsphinx.config.all import *
 release = '1.1'
 
 # The search index version.
-search_version = 'authorization-11'
+search_version = 'authorization-1'
 
 # The marketing display name for the book.
 version_name = ''
