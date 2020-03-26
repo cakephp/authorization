@@ -4,15 +4,15 @@ Authorization Middleware
 Authorization is applied to your application as a middleware. The
 ``AuthorizationMiddleware`` handles the following responsibilities:
 
-* Decorating the request 'identity' with a decorator that adds the ``can`` and
-  ``applyScope`` if necessary.
+* Decorating the request 'identity' with a decorator that adds the ``can``,
+  ``canResult``, and ``applyScope`` methods if necessary.
 * Ensuring that authorization has been checked/bypassed in the request.
 
 To use the middleware implement ``AuthorizationServiceProviderInterface`` in your
 application class. Then pass your app instance into the middlware and add the
 middleware to the queue.
 
-A very simple example would be::
+An basic example would be::
 
     namespace App;
 
@@ -74,17 +74,25 @@ implementing the ``Authorization\IdentityInterface`` and using the
 
     use Authorization\AuthorizationServiceInterface;
     use Authorization\IdentityInterface;
+    use Authorization\Policy\ResultInterface;
     use Cake\ORM\Entity;
 
     class User extends Entity implements IdentityInterface
     {
-
         /**
          * Authorization\IdentityInterface method
          */
         public function can($action, $resource)
         {
             return $this->authorization->can($this, $action, $resource);
+        }
+
+        /**
+         * Authorization\IdentityInterface method
+         */
+        public function canResult($action, $resource): ResultInterface
+        {
+            return $this->authorization->canResult($this, $action, $resource);
         }
 
         /**
