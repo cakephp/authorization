@@ -12,7 +12,7 @@ To use the middleware implement ``AuthorizationServiceProviderInterface`` in you
 application class. Then pass your app instance into the middlware and add the
 middleware to the queue.
 
-An basic example would be::
+A basic example would be::
 
     namespace App;
 
