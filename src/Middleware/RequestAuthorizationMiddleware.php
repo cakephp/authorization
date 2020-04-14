@@ -24,6 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
+use Zend\Diactoros\Response\RedirectResponse;
 
 /**
  * Request Authorization Middleware
@@ -48,6 +49,7 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
         'authorizationAttribute' => 'authorization',
         'identityAttribute' => 'identity',
         'method' => 'access',
+        'unauthorizedRedirect' => null,
     ];
 
     /**
@@ -96,7 +98,12 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
 
         $result = $service->canResult($identity, $this->getConfig('method'), $request);
         if (!$result->getStatus()) {
-            throw new ForbiddenException($result);
+            $redirectUrl = $this->getConfig('unauthorizedRedirect');
+            if (!empty($redirectUrl)) {
+                return new RedirectResponse($redirectUrl);
+            } else {
+                throw new ForbiddenException($result);
+            }
         }
 
         return $handler->handle($request);
