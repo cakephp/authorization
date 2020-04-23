@@ -93,7 +93,7 @@ class IdentityDecorator implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getOriginalData()
     {

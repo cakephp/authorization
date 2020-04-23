@@ -40,7 +40,6 @@ class AuthorizationService implements AuthorizationServiceInterface
     protected $authorizationChecked = false;
 
     /**
-     *
      * @param \Authorization\Policy\ResolverInterface $resolver Authorization policy resolver.
      */
     public function __construct(ResolverInterface $resolver)

@@ -293,7 +293,7 @@ class AuthorizationComponentTest extends TestCase
     public function testAuthorizeBadIdentity()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegexp('/Expected that `identity` would be/');
+        $this->expectExceptionMessageMatches('/Expected that `identity` would be/');
 
         $this->Controller->setRequest($this->request
             ->withAttribute('identity', 'derp'));
@@ -428,7 +428,7 @@ class AuthorizationComponentTest extends TestCase
             ->withAttribute('authorization', 'derp'));
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegexp('/Expected that `authorization` would be/');
+        $this->expectExceptionMessageMatches('/Expected that `authorization` would be/');
         $this->Auth->skipAuthorization();
     }
 
