@@ -86,7 +86,7 @@ class MapResolver implements ResolverInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @throws \InvalidArgumentException When a resource is not an object.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for a resource has not been defined.

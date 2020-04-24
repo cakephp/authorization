@@ -55,7 +55,7 @@ class Identity extends IdentityDecorator implements AuthenIdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getOriginalData()
     {

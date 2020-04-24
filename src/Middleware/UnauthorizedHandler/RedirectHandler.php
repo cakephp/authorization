@@ -47,9 +47,9 @@ class RedirectHandler implements HandlerInterface
     ];
 
     /**
-     * Return a response with a location header set if an exception matches.
+     * {@inheritDoc}
      *
-     * @inheritDoc
+     * Return a response with a location header set if an exception matches.
      */
     public function handle(
         Exception $exception,

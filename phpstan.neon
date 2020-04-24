@@ -4,7 +4,3 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
-        -
-            message: "#^Method Authorization\\\\Policy\\\\Exception\\\\MissingPolicyException\\:\\:__construct\\(\\) has parameter \\$resource with no typehint specified\\.$#"
-            count: 1
-            path: src/Policy/Exception/MissingPolicyException.php

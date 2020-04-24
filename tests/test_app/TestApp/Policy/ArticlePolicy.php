@@ -24,7 +24,6 @@ class ArticlePolicy
      *
      * @param \Authorization\IdentityInterface $user
      * @param \TestApp\Model\Entity\Article $article
-     *
      * @return bool
      */
     public function canEdit($user, Article $article)
@@ -41,7 +40,6 @@ class ArticlePolicy
      *
      * @param \Authorization\IdentityInterface $user
      * @param \TestApp\Model\Entity\Article $article
-     *
      * @return bool
      */
     public function canModify($user, Article $article)
