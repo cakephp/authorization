@@ -1,8 +1,10 @@
 # CakePHP Authorization
 
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
-[![Build Status](https://img.shields.io/travis/cakephp/authorization/master.svg?style=flat-square)](https://travis-ci.org/cakephp/authorization)
+[![Build Status](https://img.shields.io/travis/com/cakephp/twig-view?style=flat-square)](https://travis-ci.com/cakephp/twig-view)
+[![Latest Stable Version](https://img.shields.io/github/v/release/cakephp/authorization?sort=semver&style=flat-square)](https://packagist.org/packages/cakephp/authorization)
+[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/authorization?style=flat-square)](https://packagist.org/packages/cakephp/authorization/stats)
 [![Coverage Status](https://img.shields.io/codecov/c/github/cakephp/authorization.svg?style=flat-square)](https://codecov.io/github/cakephp/authorization)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 
 Authorization stack for the CakePHP framework.
 
