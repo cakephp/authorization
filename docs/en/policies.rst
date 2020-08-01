@@ -33,6 +33,16 @@ Query objects will have their ``repository()`` method called, and a policy class
 will be generated based on the table name. A table class of
 ``App\Model\Table\ArticlesTable`` will map to ``App\Policy\ArticlesTablePolicy``.
 
+You can generate empty policy classes for ORM objects using ``bake``:
+
+.. code-block:: bash
+
+    # Create an entity policy
+    bin/cake bake policy --type entity Article
+
+    # Create a table policy
+    bin/cake bake policy --type table Articles
+
 Writing Policy Methods
 ======================
 
