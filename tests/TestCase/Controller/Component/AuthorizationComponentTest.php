@@ -138,7 +138,7 @@ class AuthorizationComponentTest extends TestCase
             $this->Auth->authorize($article, 'publish');
         } catch (ForbiddenException $e) {
             $result = $e->getResult();
-            $this->assertEquals('public', $result->getReason());
+            $this->assertSame('public', $result->getReason());
             $this->assertFalse($result->getStatus());
 
             throw $e;

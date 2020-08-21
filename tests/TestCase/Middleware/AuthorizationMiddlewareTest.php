@@ -127,7 +127,7 @@ class AuthorizationMiddlewareTest extends TestCase
             $identity = $request->getAttribute('identity');
             $this->assertInstanceOf(IdentityInterface::class, $identity);
             $this->assertInstanceOf(\Authentication\IdentityInterface::class, $identity);
-            $this->assertEquals(1, $identity->getIdentifier());
+            $this->assertSame(1, $identity->getIdentifier());
 
             return new Response();
         });
@@ -169,7 +169,7 @@ class AuthorizationMiddlewareTest extends TestCase
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
             $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('user'));
-            $this->assertEquals(1, $request->getAttribute('user')['id']);
+            $this->assertSame(1, $request->getAttribute('user')['id']);
 
             return new Response();
         });
