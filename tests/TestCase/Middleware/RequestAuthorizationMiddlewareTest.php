@@ -117,7 +117,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         try {
             $middleware->process($request, $handler);
         } catch (ForbiddenException $e) {
-            $this->assertEquals('wrong action', $e->getResult()->getReason());
+            $this->assertSame('wrong action', $e->getResult()->getReason());
 
             throw $e;
         }

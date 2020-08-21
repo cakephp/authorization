@@ -53,8 +53,8 @@ class CakeRedirectHandlerTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?redirect=%2Fadmin%2Fdashboard', $response->getHeaderLine('Location'));
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('/login?redirect=%2Fadmin%2Fdashboard', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionNamed()
@@ -75,8 +75,8 @@ class CakeRedirectHandlerTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?redirect=%2Fadmin%2Fdashboard', $response->getHeaderLine('Location'));
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('/login?redirect=%2Fadmin%2Fdashboard', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionWithQuery()
@@ -100,8 +100,8 @@ class CakeRedirectHandlerTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login?foo=bar&redirect=%2F', $response->getHeaderLine('Location'));
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('/login?foo=bar&redirect=%2F', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectionNoQuery()
@@ -120,8 +120,8 @@ class CakeRedirectHandlerTest extends TestCase
             'queryParam' => null,
         ]);
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('/login', $response->getHeaderLine('Location'));
     }
 
     public function testHandleRedirectWithBasePath()
@@ -143,8 +143,8 @@ class CakeRedirectHandlerTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals(
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame(
             '/basedir/login?redirect=%2Fadmin%2Fdashboard',
             $response->getHeaderLine('Location')
         );
