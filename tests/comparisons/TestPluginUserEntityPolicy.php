@@ -12,24 +12,24 @@ use TestPlugin\Model\Entity\User;
 class UserPolicy
 {
     /**
-     * Check if $user can create User
+     * Check if $user can add/create User
      *
      * @param \Authorization\IdentityInterface $user The user.
      * @param \TestPlugin\Model\Entity\User $resource
      * @return bool
      */
-    public function canCreate(IdentityInterface $user, User $resource)
+    public function canAdd(IdentityInterface $user, User $resource)
     {
     }
 
     /**
-     * Check if $user can update User
+     * Check if $user can edit/update User
      *
      * @param \Authorization\IdentityInterface $user The user.
      * @param \TestPlugin\Model\Entity\User $resource
      * @return bool
      */
-    public function canUpdate(IdentityInterface $user, User $resource)
+    public function canEdit(IdentityInterface $user, User $resource)
     {
     }
 
