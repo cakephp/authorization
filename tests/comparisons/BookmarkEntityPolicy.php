@@ -12,24 +12,24 @@ use TestApp\Model\Entity\Bookmark;
 class BookmarkPolicy
 {
     /**
-     * Check if $user can create Bookmark
+     * Check if $user can add Bookmark
      *
      * @param \Authorization\IdentityInterface $user The user.
      * @param \TestApp\Model\Entity\Bookmark $bookmark
      * @return bool
      */
-    public function canCreate(IdentityInterface $user, Bookmark $bookmark)
+    public function canAdd(IdentityInterface $user, Bookmark $bookmark)
     {
     }
 
     /**
-     * Check if $user can update Bookmark
+     * Check if $user can edit Bookmark
      *
      * @param \Authorization\IdentityInterface $user The user.
      * @param \TestApp\Model\Entity\Bookmark $bookmark
      * @return bool
      */
-    public function canUpdate(IdentityInterface $user, Bookmark $bookmark)
+    public function canEdit(IdentityInterface $user, Bookmark $bookmark)
     {
     }
 
