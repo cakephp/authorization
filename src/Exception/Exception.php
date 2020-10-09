@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace Authorization\Exception;
 
-use Cake\Core\Exception\Exception as CakeException;
+use Cake\Http\Exception\HttpException;
 
-class Exception extends CakeException
+class Exception extends HttpException
 {
 }

@@ -16,12 +16,10 @@ declare(strict_types=1);
  */
 namespace Authorization\Exception;
 
-use Authorization\Exception\Exception as BaseException;
-
 /**
  * Exception raised when authorization is required.
  */
-class AuthorizationRequiredException extends BaseException
+class AuthorizationRequiredException extends Exception
 {
     /**
      * @inheritDoc
