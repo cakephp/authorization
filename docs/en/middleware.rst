@@ -82,7 +82,7 @@ implementing the ``Authorization\IdentityInterface`` and using the
         /**
          * Authorization\IdentityInterface method
          */
-        public function can($action, $resource)
+        public function can($action, $resource): bool
         {
             return $this->authorization->can($this, $action, $resource);
         }
