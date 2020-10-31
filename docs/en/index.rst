@@ -81,12 +81,9 @@ the :doc:`identity stored in the request <checking-authorization>`.
 Further Reading
 ===============
 
-.. toctree::
-    :maxdepth: 2
-
-    /policies
-    /policy-resolvers
-    /middleware
-    /component
-    /checking-authorization
-    /request-authorization-middleware
+* :doc:`/policies`
+* :doc:`/policy-resolvers`
+* :doc:`/middleware`
+* :doc:`/component`
+* :doc:`/checking-authorization`
+* :doc:`/request-authorization-middleware`
