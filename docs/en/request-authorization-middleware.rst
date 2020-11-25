@@ -28,7 +28,7 @@ interface here to implement::
         /**
          * Method to check if the request can be accessed
          *
-         * @param \Authorization\IdentityInterface|null Identity
+         * @param \Authorization\IdentityInterface|null $identity Identity
          * @param \Cake\Http\ServerRequest $request Server Request
          * @return bool
          */
