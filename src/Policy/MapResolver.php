@@ -88,6 +88,8 @@ class MapResolver implements ResolverInterface
     /**
      * {@inheritDoc}
      *
+     * @param mixed $resource A resource that the access is checked against.
+     * @return mixed
      * @throws \InvalidArgumentException When a resource is not an object.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for a resource has not been defined.
      */

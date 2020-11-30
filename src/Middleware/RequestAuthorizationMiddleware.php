@@ -19,6 +19,7 @@ namespace Authorization\Middleware;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
 use Cake\Core\InstanceConfigTrait;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -48,6 +49,7 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
         'authorizationAttribute' => 'authorization',
         'identityAttribute' => 'identity',
         'method' => 'access',
+        'unauthorizedRedirect' => null,
     ];
 
     /**
@@ -96,6 +98,11 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
 
         $result = $service->canResult($identity, $this->getConfig('method'), $request);
         if (!$result->getStatus()) {
+            $redirectUrl = $this->getConfig('unauthorizedRedirect');
+            if ($redirectUrl) {
+                return new RedirectResponse($redirectUrl);
+            }
+
             throw new ForbiddenException($result);
         }
 
