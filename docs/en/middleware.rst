@@ -139,6 +139,28 @@ setup::
 You no longer have to change any existing typehints, and can start using
 authorization policies anywhere you have access to your user.
 
+If you also use the Authentication plugin make sure to implement both interfaces.::
+
+    use Authorization\IdentityInterface as AuthorizationIdentity;
+    use Authentication\IdentityInterface as AuthenticationIdentity;
+
+    class User extends Entity implements AuthorizationIdentity, AuthenticationIdentity
+    {
+        ...
+        
+        /**
+         * Authentication\IdentityInterface method
+         *
+         * @return string
+         */
+        public function getIdentifier()
+        {
+            return $this->id;
+        }
+        
+        ...
+    }
+
 Ensuring Authorization is Applied
 ---------------------------------
 
