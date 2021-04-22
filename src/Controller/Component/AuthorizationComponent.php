@@ -51,17 +51,34 @@ class AuthorizationComponent extends Component
     ];
 
     /**
-     * Check the policy for $resource, raising an exception on error.
+     * Check the policy for $resource and raise an exception if user
+     * is not authorized.
      *
-     * If $action is left undefined, the current controller action will
-     * be used.
+     * If $action is left undefined, the current controller action is used.
      *
-     * @param mixed $resource The resource to check authorization on.
-     * @param string|null $action The action to check authorization for.
+     * @param mixed $resource The resource being accessed.
+     * @param string|null $action The type of access being requested.
      * @return void
      * @throws \Authorization\Exception\ForbiddenException when policy check fails.
+     * @deprecated 2.2.0 Use `check()` instead.
      */
     public function authorize($resource, ?string $action = null): void
+    {
+        $this->check($resource, $action);
+    }
+
+    /**
+     * Check the policy for $resource and raise an exception if user
+     * is not authorized.
+     *
+     * If $action is left undefined, the current controller action is used.
+     *
+     * @param mixed $resource The resource being accessed.
+     * @param string|null $action The type of access being requested.
+     * @return void
+     * @throws \Authorization\Exception\ForbiddenException When user is not authorized.
+     */
+    public function check($resource, ?string $action = null): void
     {
         if ($action === null) {
             $request = $this->getController()->getRequest();
@@ -275,27 +292,46 @@ class AuthorizationComponent extends Component
     }
 
     /**
-     * Action authorization handler.
+     * Runs authorization checks based on currnet action.
      *
-     * Checks identity and model authorization.
+     * Checks authorization to access default model for controller
+     * if enabled by `authorizeModel()`.
+     *
+     * Skips all checks if `skipAuthorization` is set.
+     *
+     * @return void
+     * @deprecated 2.2.0 `Use checkAction()` instead.
+     */
+    public function authorizeAction(): void
+    {
+        $this->checkAction();
+    }
+
+    /**
+     * Runs authorization checks based on currnet action.
+     *
+     * Checks authorization to access default model for controller
+     * if enabled by `authorizeModel()`.
+     *
+     * Skips all checks if `skipAuthorization` is set.
      *
      * @return void
      */
-    public function authorizeAction(): void
+    public function checkAction(): void
     {
         $request = $this->getController()->getRequest();
         $action = $request->getParam('action');
 
-        $skipAuthorization = $this->checkAction($action, 'skipAuthorization');
+        $skipAuthorization = $this->actionConfigured($action, 'skipAuthorization');
         if ($skipAuthorization) {
             $this->skipAuthorization();
 
             return;
         }
 
-        $authorizeModel = $this->checkAction($action, 'authorizeModel');
+        $authorizeModel = $this->actionConfigured($action, 'authorizeModel');
         if ($authorizeModel) {
-            $this->authorize($this->getController()->loadModel());
+            $this->check($this->getController()->loadModel());
         }
     }
 
@@ -306,7 +342,7 @@ class AuthorizationComponent extends Component
      * @param string $configKey Configuration key with actions.
      * @return bool
      */
-    protected function checkAction(string $action, string $configKey): bool
+    protected function actionConfigured(string $action, string $configKey): bool
     {
         $actions = (array)$this->getConfig($configKey);
 
@@ -345,7 +381,7 @@ class AuthorizationComponent extends Component
     public function implementedEvents(): array
     {
         return [
-            $this->getConfig('authorizationEvent') => 'authorizeAction',
+            $this->getConfig('authorizationEvent') => 'checkAction',
         ];
     }
 }
