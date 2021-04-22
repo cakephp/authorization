@@ -51,17 +51,35 @@ class AuthorizationComponent extends Component
     ];
 
     /**
-     * Check the policy for $resource, raising an exception on error.
+     * Check the policy for $resource and raise an exception if user
+     * is not authorized.
      *
-     * If $action is left undefined, the current controller action will
-     * be used.
+     * If $action is left undefined, the current controller action is used.
      *
-     * @param mixed $resource The resource to check authorization on.
-     * @param string|null $action The action to check authorization for.
+     * @param mixed $resource The resource being accessed.
+     * @param string|null $action The type of access being requested.
      * @return void
      * @throws \Authorization\Exception\ForbiddenException when policy check fails.
+     * @deprecated 2.2.0 Use `access()` instead.
      */
     public function authorize($resource, ?string $action = null): void
+    {
+        deprecationWarning('authorize() is deprecated. Use access() instead.');
+        $this->access($resource, $action);
+    }
+
+    /**
+     * Check the policy for $resource and raise an exception if user
+     * is not authorized.
+     *
+     * If $action is left undefined, the current controller action is used.
+     *
+     * @param mixed $resource The resource being accessed.
+     * @param string|null $action The type of access being requested.
+     * @return void
+     * @throws \Authorization\Exception\ForbiddenException When user is not authorized.
+     */
+    public function access($resource, ?string $action = null): void
     {
         if ($action === null) {
             $request = $this->getController()->getRequest();
@@ -275,9 +293,12 @@ class AuthorizationComponent extends Component
     }
 
     /**
-     * Action authorization handler.
+     * Runs authorization checks based on currnet action.
      *
-     * Checks identity and model authorization.
+     * Checks authorization to access default model for controller
+     * if enabled by `authorizeModel()`.
+     *
+     * Skips all checks if `skipAuthorization` is set.
      *
      * @return void
      */
@@ -295,7 +316,7 @@ class AuthorizationComponent extends Component
 
         $authorizeModel = $this->checkAction($action, 'authorizeModel');
         if ($authorizeModel) {
-            $this->authorize($this->getController()->loadModel());
+            $this->access($this->getController()->loadModel());
         }
     }
 

@@ -68,12 +68,12 @@ authorization on a per-action basis more easily. For example, we can do::
     public function edit($id = null)
     {
         $article = $this->Article->get($id);
-        $this->Authorization->authorize($article, 'update');
+        $this->Authorization->access($article, 'update');
 
         // Rest of action
     }
 
-By calling ``authorize`` we can use our :doc:`/policies` to enforce our
+By calling ``check`` we can use our :doc:`/policies` to enforce our
 application's access control rules. You can check permissions anywhere by using
 the :doc:`identity stored in the request <checking-authorization>`.
 
