@@ -45,16 +45,16 @@ the component::
     public function edit($id)
     {
         $article = $this->Articles->get($id);
-        $this->Authorization->authorize($article);
+        $this->Authorization->check($article);
         // Rest of the edit method.
     }
 
-Above we see an article being authorized for the current user. Since we haven't 
+Above we see an article being authorized for the current user. Since we haven't
 specified the action to check the request's ``action`` is used. You can specify
 a policy action with the second parameter::
 
     // Use a policy method that doesn't match the current controller action.
-    $this->Authorization->authorize($article, 'update');
+    $this->Authorization->check($article, 'update');
 
 The ``authorize()`` method will raise an ``Authorization\Exception\ForbiddenException``
 when permission is denied. If you want to check authorization and get a boolean
@@ -84,7 +84,10 @@ $query = $this->Authorization->applyScope($this->Articles->find());
 If the current action has no logged in user a ``MissingIdentityException`` will
 be raised.
 
-If you want to map actions to different authorization methods use the 
+Using Action Aliases
+====================
+
+If you want to map actions to different authorization methods use the
 ``actionMap`` option::
 
    // In you controller initialize() method:
@@ -109,7 +112,7 @@ Example::
         $query = $this->Articles->find();
 
         //this will apply `list` scope while being called in `index` controller action.
-        $this->Authorization->applyScope($query); 
+        $this->Authorization->applyScope($query);
         ...
     }
 
@@ -117,15 +120,15 @@ Example::
     {
         $article = $this->Articles->get($id);
 
-        //this will authorize against `remove` entity action while being called in `delete` controller action.
-        $this->Authorization->authorize($article); 
+        // check authorization to access $article with action 'remove'
+        $this->Authorization->check($article);
         ...
     }
 
     public function add()
     {
-        //this will authorize against `insert` model action while being called in `add` controller action.
-        $this->Authorization->authorizeModel(); 
+        // check authorization to access $article with action 'insert'
+        $this->Authorization->check($article);
         ...
     }
 
