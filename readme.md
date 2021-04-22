@@ -1,6 +1,6 @@
 # CakePHP Authorization
 
-[![Build Status](https://img.shields.io/travis/com/cakephp/twig-view?style=flat-square)](https://travis-ci.com/cakephp/twig-view)
+![Build Status](https://github.com/cakephp/authorization/actions/workflows/ci.yml/badge.svg?branch=master)
 [![Latest Stable Version](https://img.shields.io/github/v/release/cakephp/authorization?sort=semver&style=flat-square)](https://packagist.org/packages/cakephp/authorization)
 [![Total Downloads](https://img.shields.io/packagist/dt/cakephp/authorization?style=flat-square)](https://packagist.org/packages/cakephp/authorization/stats)
 [![Coverage Status](https://img.shields.io/codecov/c/github/cakephp/authorization.svg?style=flat-square)](https://codecov.io/github/cakephp/authorization)
