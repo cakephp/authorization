@@ -64,6 +64,7 @@ class AuthorizationComponent extends Component
      */
     public function authorize($resource, ?string $action = null): void
     {
+        deprecationWarning('authorize() is deprecated. Use check() instead.');
         $this->check($resource, $action);
     }
 
@@ -304,6 +305,7 @@ class AuthorizationComponent extends Component
      */
     public function authorizeAction(): void
     {
+        deprecationWarning('authorizeAction() is deprecated. Use checkAction() instead.');
         $this->checkAction();
     }
 
