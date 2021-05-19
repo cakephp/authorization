@@ -297,6 +297,26 @@ class AuthorizationComponentTest extends TestCase
         $this->assertSame($query, $result);
     }
 
+    public function testApplyScopeOptions()
+    {
+        $articles = new ArticlesTable();
+        $query = $this->createMock(QueryInterface::class);
+        $query->method('getRepository')
+            ->willReturn($articles);
+
+        $query->expects($this->once())
+            ->method('where')
+            ->with([
+                'custom_id' => 1,
+            ])
+            ->willReturn($query);
+
+        $result = $this->Auth->applyScope($query, 'options', ['column' => 'custom_id']);
+
+        $this->assertInstanceOf(QueryInterface::class, $result);
+        $this->assertSame($query, $result);
+    }
+
     public function testCheckSuccessWithExplicitAction()
     {
         $article = new Article(['user_id' => 1]);

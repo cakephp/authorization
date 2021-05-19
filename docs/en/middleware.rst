@@ -98,9 +98,9 @@ implementing the ``Authorization\IdentityInterface`` and using the
         /**
          * Authorization\IdentityInterface method
          */
-        public function applyScope($action, $resource)
+        public function applyScope($action, $resource, array $options = [])
         {
-            return $this->authorization->applyScope($this, $action, $resource);
+            return $this->authorization->applyScope($this, $action, $resource, $options);
         }
 
         /**
@@ -147,7 +147,7 @@ If you also use the Authentication plugin make sure to implement both interfaces
     class User extends Entity implements AuthorizationIdentity, AuthenticationIdentity
     {
         ...
-        
+
         /**
          * Authentication\IdentityInterface method
          *
@@ -157,7 +157,7 @@ If you also use the Authentication plugin make sure to implement both interfaces
         {
             return $this->id;
         }
-        
+
         ...
     }
 
