@@ -36,4 +36,9 @@ class ArticlesTablePolicy
             'identity_id' => $user['id'],
         ]);
     }
+
+    public function scopeOptions(IdentityInterface $user, QueryInterface $query, array $options)
+    {
+        return $query->where([$options['column'] => $user['id']]);
+    }
 }

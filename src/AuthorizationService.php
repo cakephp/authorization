@@ -116,13 +116,13 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @inheritDoc
      */
-    public function applyScope(?IdentityInterface $user, string $action, $resource)
+    public function applyScope(?IdentityInterface $user, string $action, $resource, array $options = [])
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
         $handler = $this->getScopeHandler($policy, $action);
 
-        return $handler($user, $resource);
+        return $handler($user, $resource, $options);
     }
 
     /**
