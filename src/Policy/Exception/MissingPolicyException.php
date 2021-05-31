@@ -46,8 +46,8 @@ class MissingPolicyException extends Exception
             ) {
                 $repositoryClass = get_class($resource->getRepository());
                 $resource = sprintf($this->_messageTemplate, $resourceClass);
-                $queryMessage = ' This resource looks like a Query. If you are using OrmResolver, ' .
-                    'you might need to create a new policy class for your %s class in `src/Policy/`.';
+                $queryMessage = ' This resource looks like a Query, if you are using the OrmResolver, ' .
+                    'you might need to create a new policy class for your %s class in `src/Policy/`';
                 $resource .= sprintf($queryMessage, $repositoryClass);
             } else {
                 $resource = [$resourceClass];

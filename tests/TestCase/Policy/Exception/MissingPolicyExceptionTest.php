@@ -30,9 +30,9 @@ class MissingPolicyExceptionTest extends TestCase
         $query->method('getRepository')
             ->willReturn($articles);
         $missingPolicyException = new MissingPolicyException($query);
-        $needle = 'This resource looks like a Query. If you are using ' .
-            'OrmResolver, you might need to create a new policy class for ' .
-            'your TestApp\Model\Table\ArticlesTable class in `src/Policy/`.';
+        $needle = 'This resource looks like a Query, if you are using the OrmResolver, ' .
+            'you might need to create a new policy class for your TestApp\Model\Table\ArticlesTable ' .
+            'class in `src/Policy/`';
         $this->assertTextContains($needle, $missingPolicyException->getMessage());
     }
 
