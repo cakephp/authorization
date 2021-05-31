@@ -17,9 +17,14 @@ declare(strict_types=1);
 namespace Authorization\Test\TestCase\Policy\Exception;
 
 use Authorization\Policy\Exception\MissingPolicyException;
+use Authorization\Policy\MapResolver;
 use Cake\Datasource\QueryInterface;
+use Cake\ORM\Table;
 use Cake\TestSuite\TestCase;
+use InvalidArgumentException;
+use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
+use TestApp\Policy\ArticlePolicy;
 
 class MissingPolicyExceptionTest extends TestCase
 {
@@ -30,9 +35,7 @@ class MissingPolicyExceptionTest extends TestCase
         $query->method('getRepository')
             ->willReturn($articles);
         $missingPolicyException = new MissingPolicyException($query);
-        $needle = 'This resource looks like a Query, if you are using the OrmResolver, ' .
-            'you might need to create a new policy class for your TestApp\Model\Table\ArticlesTable ' .
-            'class in `src/Policy/`';
+        $needle = 'This resource looks like a Query, if you are using the OrmResolver, you might need to create a new policy class for your TestApp\Model\Table\ArticlesTable class in `src/Policy/`';
         $this->assertTextContains($needle, $missingPolicyException->getMessage());
     }
 
