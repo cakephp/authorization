@@ -45,7 +45,7 @@ the component::
     public function edit($id)
     {
         $article = $this->Articles->get($id);
-        $this->Authorization->check($article);
+        $this->Authorization->access($article);
         // Rest of the edit method.
     }
 
@@ -54,9 +54,9 @@ specified the action to check the request's ``action`` is used. You can specify
 a policy action with the second parameter::
 
     // Use a policy method that doesn't match the current controller action.
-    $this->Authorization->check($article, 'update');
+    $this->Authorization->access($article, 'update');
 
-The ``authorize()`` method will raise an ``Authorization\Exception\ForbiddenException``
+The ``access()`` method will raise an ``Authorization\Exception\ForbiddenException``
 when permission is denied. If you want to check authorization and get a boolean
 result you can use the ``can()`` method::
 
@@ -121,14 +121,14 @@ Example::
         $article = $this->Articles->get($id);
 
         // check authorization to access $article with action 'remove'
-        $this->Authorization->check($article);
+        $this->Authorization->access($article);
         ...
     }
 
     public function add()
     {
         // check authorization to access $article with action 'insert'
-        $this->Authorization->check($article);
+        $this->Authorization->access($article);
         ...
     }
 

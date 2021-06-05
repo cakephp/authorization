@@ -68,7 +68,7 @@ authorization on a per-action basis more easily. For example, we can do::
     public function edit($id = null)
     {
         $article = $this->Article->get($id);
-        $this->Authorization->check($article, 'update');
+        $this->Authorization->access($article, 'update');
 
         // Rest of action
     }

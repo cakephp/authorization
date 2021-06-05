@@ -64,8 +64,8 @@ class AuthorizationComponent extends Component
      */
     public function authorize($resource, ?string $action = null): void
     {
-        deprecationWarning('authorize() is deprecated. Use check() instead.');
-        $this->check($resource, $action);
+        deprecationWarning('authorize() is deprecated. Use access() instead.');
+        $this->access($resource, $action);
     }
 
     /**
@@ -79,7 +79,7 @@ class AuthorizationComponent extends Component
      * @return void
      * @throws \Authorization\Exception\ForbiddenException When user is not authorized.
      */
-    public function check($resource, ?string $action = null): void
+    public function access($resource, ?string $action = null): void
     {
         if ($action === null) {
             $request = $this->getController()->getRequest();
@@ -333,7 +333,7 @@ class AuthorizationComponent extends Component
 
         $authorizeModel = $this->actionConfigured($action, 'authorizeModel');
         if ($authorizeModel) {
-            $this->check($this->getController()->loadModel());
+            $this->access($this->getController()->loadModel());
         }
     }
 

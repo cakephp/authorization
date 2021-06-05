@@ -94,7 +94,7 @@ class AuthorizationComponentTest extends TestCase
         $componentRegistry = new ComponentRegistry($controller);
         $auth = new AuthorizationComponent($componentRegistry);
 
-        $auth->check($article);
+        $auth->access($article);
     }
 
     public function testNullIdentityAllowed()
@@ -111,31 +111,31 @@ class AuthorizationComponentTest extends TestCase
         $componentRegistry = new ComponentRegistry($controller);
         $auth = new AuthorizationComponent($componentRegistry);
 
-        $this->assertNull($auth->check($article));
+        $this->assertNull($auth->access($article));
     }
 
-    public function testCheckWithUnresolvedPolicy()
+    public function testAccessWithUnresolvedPolicy()
     {
         $this->expectException(MissingPolicyException::class);
 
-        $this->Auth->check(new stdClass());
+        $this->Auth->access(new stdClass());
     }
 
-    public function testCheckFailure()
+    public function testAccessFailure()
     {
         $this->expectException(ForbiddenException::class);
 
         $article = new Article(['user_id' => 99]);
-        $this->Auth->check($article);
+        $this->Auth->access($article);
     }
 
-    public function testCheckFailureWithResult()
+    public function testAccessFailureWithResult()
     {
         $this->expectException(ForbiddenException::class);
 
         $article = new Article(['user_id' => 1, 'visibility' => 'public']);
         try {
-            $this->Auth->check($article, 'publish');
+            $this->Auth->access($article, 'publish');
         } catch (ForbiddenException $e) {
             $result = $e->getResult();
             $this->assertSame('public', $result->getReason());
@@ -145,7 +145,7 @@ class AuthorizationComponentTest extends TestCase
         }
     }
 
-    public function testCheckFailureWithStringResolver()
+    public function testAccessFailureWithStringResolver()
     {
         // Reset the system to use the string resolver
         $service = new AuthorizationService(new StringResolver());
@@ -164,16 +164,16 @@ class AuthorizationComponentTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->Auth->check('ArticlesTable');
+        $this->Auth->access('ArticlesTable');
     }
 
-    public function testCheckSuccessWithImplicitAction()
+    public function testAccessSuccessWithImplicitAction()
     {
         $article = new Article(['user_id' => 1]);
-        $this->assertNull($this->Auth->check($article));
+        $this->assertNull($this->Auth->access($article));
     }
 
-    public function testCheckSuccessWithMappedAction()
+    public function testAccessSuccessWithMappedAction()
     {
         $policy = $this->createMock(ArticlePolicy::class);
         $service = new AuthorizationService(new MapResolver([
@@ -194,10 +194,10 @@ class AuthorizationComponentTest extends TestCase
         $article = new Article(['user_id' => 1]);
 
         $this->Auth->setConfig('actionMap', ['edit' => 'modify']);
-        $this->assertNull($this->Auth->check($article));
+        $this->assertNull($this->Auth->access($article));
     }
 
-    public function testCheckSuccessWithStringResolver()
+    public function testAccessSuccessWithStringResolver()
     {
         // Reset the system to use the string resolver
         $service = new AuthorizationService(new StringResolver());
@@ -214,13 +214,13 @@ class AuthorizationComponentTest extends TestCase
         $this->ComponentRegistry = new ComponentRegistry($this->Controller);
         $this->Auth = new AuthorizationComponent($this->ComponentRegistry);
 
-        $this->assertNull($this->Auth->check('ArticlesTable'));
+        $this->assertNull($this->Auth->access('ArticlesTable'));
     }
 
-    public function testCheckSuccessfulWithResult()
+    public function testAccessSuccessfulWithResult()
     {
         $article = new Article(['user_id' => 1]);
-        $this->assertNull($this->Auth->check($article, 'publish'));
+        $this->assertNull($this->Auth->access($article, 'publish'));
     }
 
     /**
@@ -300,10 +300,10 @@ class AuthorizationComponentTest extends TestCase
     public function testCheckSuccessWithExplicitAction()
     {
         $article = new Article(['user_id' => 1]);
-        $this->assertNull($this->Auth->check($article, 'edit'));
+        $this->assertNull($this->Auth->access($article, 'edit'));
     }
 
-    public function testCheckWithBadIdentity()
+    public function testAccessWithBadIdentity()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/Expected that `identity` would be/');
@@ -312,7 +312,7 @@ class AuthorizationComponentTest extends TestCase
             ->withAttribute('identity', 'derp'));
 
         $article = new Article(['user_id' => 1]);
-        $this->Auth->check($article);
+        $this->Auth->access($article);
     }
 
     public function testCheckActionSuccess()
