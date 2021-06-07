@@ -223,19 +223,6 @@ class AuthorizationComponentTest extends TestCase
         $this->assertNull($this->Auth->access($article, 'publish'));
     }
 
-    /**
-     * Test deprecated authorize().
-     *
-     * @return void
-     */
-    public function testAuthorizeDeprecation()
-    {
-        $this->deprecated(function () {
-            $article = new Article(['user_id' => 1]);
-            $this->assertNull($this->Auth->authorize($article, 'publish'));
-        });
-    }
-
     public function testApplyScopeImplicitAction()
     {
         $articles = new ArticlesTable();

@@ -59,24 +59,6 @@ class AuthorizationComponent extends Component
      * @param mixed $resource The resource being accessed.
      * @param string|null $action The type of access being requested.
      * @return void
-     * @throws \Authorization\Exception\ForbiddenException when policy check fails.
-     * @deprecated 2.2.0 Use `access()` instead.
-     */
-    public function authorize($resource, ?string $action = null): void
-    {
-        deprecationWarning('authorize() is deprecated. Use access() instead.');
-        $this->access($resource, $action);
-    }
-
-    /**
-     * Check the policy for $resource and raise an exception if user
-     * is not authorized.
-     *
-     * If $action is left undefined, the current controller action is used.
-     *
-     * @param mixed $resource The resource being accessed.
-     * @param string|null $action The type of access being requested.
-     * @return void
      * @throws \Authorization\Exception\ForbiddenException When user is not authorized.
      */
     public function access($resource, ?string $action = null): void
