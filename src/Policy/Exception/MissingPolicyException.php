@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization\Policy\Exception;
 
 use Authorization\Exception\Exception;
+use Cake\Datasource\RepositoryInterface;
 use Throwable;
 
 class MissingPolicyException extends Exception
@@ -37,7 +38,20 @@ class MissingPolicyException extends Exception
     public function __construct($resource, ?int $code = null, ?Throwable $previous = null)
     {
         if (is_object($resource)) {
-            $resource = [get_class($resource)];
+            $resourceClass = get_class($resource);
+            if (
+                method_exists($resource, 'getRepository') &&
+                $resource->getRepository() &&
+                $resource->getRepository() instanceof RepositoryInterface
+            ) {
+                $repositoryClass = get_class($resource->getRepository());
+                $resource = sprintf($this->_messageTemplate, $resourceClass);
+                $queryMessage = ' This resource looks like a `Query`. If you are using `OrmResolver`, ' .
+                    'you should create a new policy class for your `%s` class in `src/Policy/`.';
+                $resource .= sprintf($queryMessage, $repositoryClass);
+            } else {
+                $resource = [$resourceClass];
+            }
         }
 
         parent::__construct($resource, $code, $previous);
