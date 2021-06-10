@@ -48,6 +48,7 @@ class AuthorizationComponent extends Component
         'skipAuthorization' => [],
         'authorizeModel' => [],
         'actionMap' => [],
+        'actions' => [],
     ];
 
     /**
@@ -232,10 +233,45 @@ class AuthorizationComponent extends Component
      *
      * @param string ...$actions Controller action to authorize against table policy.
      * @return $this
+     * @deprecated 2.2.0 Use configureAction() instead.
      */
     public function authorizeModel(string ...$actions)
     {
-        $this->_config['authorizeModel'] = array_merge($this->_config['authorizeModel'], $actions);
+        deprecationWarning('authorizeModel() is deprecated. Use configureAction() instead.');
+        foreach ($actions as $action) {
+            $this->setConfig("actions.$action.model", true);
+        }
+
+        return $this;
+    }
+
+    /**
+     *  Configure authorization checks for controller actions.
+     *
+     *  ## Configure options
+     *
+     *  - access
+     *     This overrides the policy action used during authorization checks.
+     *     The default is the controller action name.
+     *  - model
+     *     Enables authorization checks against the controller's default model.
+     *  - skip
+     *     This disables authorization checks for the controller action.
+     *
+     * @param array|string $action Name of action or array of controller action name to config.
+     * @param array|null $config Controller action config if $action is the name of the action.
+     * @param bool $overwrite Whether to overwrite the config array or merge.
+     * @return $this
+     */
+    public function configureAction($action, ?array $config = null, bool $overwrite = false)
+    {
+        if (is_string($action)) {
+            $action = [$action => $config];
+        }
+
+        foreach ($action as $action => $actionConfig) {
+            $this->setConfig('actions.' . $action, $actionConfig, !$overwrite);
+        }
 
         return $this;
     }
@@ -316,6 +352,10 @@ class AuthorizationComponent extends Component
 
         $authorizeModel = $this->checkAction($action, 'authorizeModel');
         if ($authorizeModel) {
+            $this->access($this->getController()->loadModel());
+        }
+
+        if ($this->getConfig("actions.$action.model", false) === true) {
             $this->access($this->getController()->loadModel());
         }
     }

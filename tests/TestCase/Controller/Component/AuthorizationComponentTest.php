@@ -333,7 +333,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Controller->setRequest($this->request
             ->withAttribute('identity', $identity));
 
-        $this->Auth->setConfig('authorizeModel', ['edit']);
+        $this->Auth->configureAction('edit', ['model' => true]);
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionCode(403);
         $this->expectExceptionMessage('Identity is not authorized to perform `edit` on `TestApp\Model\Table\ArticlesTable`.');
@@ -365,7 +365,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Controller->setRequest($this->request
             ->withAttribute('identity', $identity));
 
-        $this->Auth->setConfig('authorizeModel', ['edit']);
+        $this->Auth->configureAction('edit', ['model' => true]);
         $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
     }
@@ -388,7 +388,7 @@ class AuthorizationComponentTest extends TestCase
             ->method('canModify')
             ->willReturn(true);
 
-        $this->Auth->setConfig('authorizeModel', ['edit']);
+        $this->Auth->configureAction('edit', ['model' => true]);
         $this->Auth->setConfig('actionMap', ['edit' => 'modify']);
         $result = $this->Auth->authorizeAction();
         $this->assertNull($result);
@@ -401,7 +401,7 @@ class AuthorizationComponentTest extends TestCase
         $this->Controller->setRequest($this->request
             ->withAttribute('identity', $identity));
 
-        $this->Auth->setConfig('authorizeModel', ['edit']);
+        $this->Auth->configureAction('edit', ['model' => true]);
         $this->Auth->setConfig('actionMap', ['edit' => new stdClass()]);
 
         $this->expectException(UnexpectedValueException::class);
@@ -480,13 +480,52 @@ class AuthorizationComponentTest extends TestCase
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
-    public function testAuthorizeModel()
+    public function testDeprecatedAuthorizeModel()
     {
-        $this->Auth->authorizeModel('foo', 'bar');
-        $this->assertEquals(['foo', 'bar'], $this->Auth->getConfig('authorizeModel'));
+        $this->deprecated(function () {
+            $service = new AuthorizationService(new OrmResolver());
+            $identity = new IdentityDecorator($service, ['can_edit' => true]);
+            $this->Controller->setRequest($this->request
+                ->withAttribute('identity', $identity));
 
-        $this->Auth->authorizeModel('baz');
-        $this->assertEquals(['foo', 'bar', 'baz'], $this->Auth->getConfig('authorizeModel'));
+            $expected = [
+                'edit' => ['model' => true],
+            ];
+            $this->Auth->authorizeModel('edit');
+            $this->assertEquals($expected, $this->Auth->getConfig('actions'));
+
+            $this->Auth->setConfig('authorizeModel', ['edit']);
+            $result = $this->Auth->authorizeAction();
+            $this->assertNull($result);
+
+            $expected = [
+                'edit' => ['model' => true],
+                'foo' => ['model' => true],
+            ];
+            $this->Auth->authorizeModel('foo');
+            $this->assertEquals($expected, $this->Auth->getConfig('actions'));
+        });
+    }
+
+    /**
+     * Test configuring model authorization check.
+     *
+     * @return void
+     */
+    public function testConfigureActionModel()
+    {
+        $expected = [
+            'foo' => ['model' => true],
+        ];
+        $this->Auth->configureAction(['foo' => ['model' => true]]);
+        $this->assertEquals($expected, $this->Auth->getConfig('actions'));
+
+        $expected = [
+            'foo' => ['model' => true],
+            'bar' => ['model' => true],
+        ];
+        $this->Auth->configureAction('bar', ['model' => true]);
+        $this->assertEquals($expected, $this->Auth->getConfig('actions'));
     }
 
     public function testMapAction()
