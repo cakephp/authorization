@@ -60,7 +60,7 @@ A continuación, agregue el ``AuthorizationComponent`` a ``AppController``. En
     $this->loadComponent('Authorization.Authorization');
 
 Al cargar :doc:`/component`, podremos verificar la autorización
-por acción más fácilmente. Por ejemplo, podemos hacer:
+por acción más fácilmente. Por ejemplo, podemos hacer::
 
     public function edit($id = null)
     {
