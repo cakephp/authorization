@@ -55,7 +55,7 @@ Esto configura :doc:`/policy-resolvers` que hará coincidir las entidades ORM
 con sus clases policy.
 
 A continuación, agregue el ``AuthorizationComponent`` a ``AppController``. En 
-**src/Controller/AppController.php** agregue lo siguiente al método ``initialize()``:
+**src/Controller/AppController.php** agregue lo siguiente al método ``initialize()``::
 
     $this->loadComponent('Authorization.Authorization');
 
