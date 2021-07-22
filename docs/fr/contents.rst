@@ -1,9 +1,9 @@
-Contents
+Sommaire
 ########
 
 .. toctree::
     :maxdepth: 2
-    :caption: CakePHP Authorization
+    :caption: Authorization dans CakePHP
 
     /index
     /policies
