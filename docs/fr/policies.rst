@@ -1,22 +1,24 @@
 Policies
 ########
 
-Policies are classes that resolve permissions for a given object. You can create
-policies for any class in your application that you wish to apply permissions
-checks to.
+Les stratégies (*policies*) sont des classes qui résolvent les permissions pour
+un objet donné. Vous pouvez créer des policies pour n'importe quelle classe de
+votre application à laquelle vous souhaitez appliquer des vérifications de
+permissions.
 
-Creating Policies
-=================
+Créer des Policies
+==================
 
-You can create policies in your ``src/Policy`` directory. Policy classes don't
-have a common base class or interface they are expected to implement.
-Application classes are then 'resolved' to a matching policy class. See the
-:doc:`policy-resolvers` section for how policies can be resolved.
+Vous pouvez créer des policies dans votre répertoire ``src/Policy``. Les classes
+de policy n'ont pas de classe de base ni d'interface commune qu'elles devraient
+implémenter. Les classes de l'application sont 'résolues' avec une classe de
+policy qui leur correspond. Pour savoir comment les policies peuvent être
+résolues, consultez la section :doc:`policy-resolvers`.
 
-Generally you'll want to put your policies in **src/Policy** and use the
-``Policy`` class suffix. For now we'll create a policy class for the `Article`
-entity in our application.  In **src/Policy/ArticlePolicy.php** put the
-following content::
+La plupart du temps, vous placerez vos policies dans **src/Policy** et
+utiliserez le suffixe de classe ``Policy``. Pour l'instant nous allons créer une
+classe de policy pour l'entité `Article` de notre application. Collez le
+contenu suivant dans **src/Policy/ArticlePolicy.php**::
 
     <?php
     namespace App\Policy;
@@ -28,47 +30,52 @@ following content::
     {
     }
 
-In addition to entities, table objects and queries can have policies resolved.
-Query objects will have their ``repository()`` method called, and a policy class
-will be generated based on the table name. A table class of
-``App\Model\Table\ArticlesTable`` will map to ``App\Policy\ArticlesTablePolicy``.
+En plus des entities, les objets de table et les queries peuvent avoir des
+policies. Sur les objets query, la méthode ``repository()`` sera appelée, et une
+classe de policy sera générée à partir du nom de la table. Une classe de table
+telle que ``App\Model\Table\ArticlesTable`` correspondra à
+``App\Policy\ArticlesTablePolicy``.
 
-You can generate empty policy classes for ORM objects using ``bake``:
+Vous pouvez générer des classes de policy vides pour vos objets de l'ORM en
+utilisant ``bake``:
 
 .. code-block:: bash
 
-    # Create an entity policy
+    # Crée une policy d'entity
     bin/cake bake policy --type entity Article
 
-    # Create a table policy
+    # Crée une policy de table
     bin/cake bake policy --type table Articles
 
-Writing Policy Methods
-======================
+Écrire des Méthodes de Policy
+=============================
 
-The policy class we just created doesn't do much right now. Lets define a method
-that allows us to check if a user can update an article::
+La classe de policy que nous venons de créer ne fait pas grand chose pour le
+moment. Définissons une méthode qui nous permettra de vérifier si un utilisateur
+a le droit de mettre à jour un article::
 
     public function canUpdate(IdentityInterface $user, Article $article)
     {
         return $user->id == $article->user_id;
     }
 
-Policy methods must return ``true`` or a ``Result`` objects to indicate success.
-All other values will be interpreted as failure.
+Les méthodes de policy doivent renvoyer ``true`` ou un objet ``Result`` pour
+indiquer qu'elles ont réussi. Toutes les autres valeurs s'interprètent comme des
+échecs.
 
-Policy methods will receive ``null`` for the ``$user`` parameter when handling
-unauthencticated users. If you want to automatically fail policy methods for
-anonymous users you can use the ``IdentityInterface`` typehint.
+Les méthodes de policy recevront ``null`` pour le paramètre ``$user`` lorsqu'il
+s'agit d'utilisateurs non authentifiés. Si vous voulez que les méthodes de
+policy échouent automatiquement pour les utilisateurs anonymes, vous pouvez
+utiliser les typehints de ``IdentityInterface``.
 
 .. _policy-result-objects:
 
-Policy Result Objects
-=====================
+Objets Result d'une Policy
+==========================
 
-In addition to booleans, policy methods can return a ``Result`` object.
-``Result`` objects allow more context to be provided on why the policy
-passed/failed::
+À part les booléens, les méthodes de policy peuvent renvoyer un objet
+``Result``. Les objets ``Result`` permettent de donner plus de contexte sur les
+raisons pour lesquelles la policy est passée ou a échoué::
 
    use Authorization\Policy\Result;
 
@@ -77,20 +84,20 @@ passed/failed::
        if ($user->id == $article->user_id) {
            return new Result(true);
        }
-       // Results let you define a 'reason' for the failure.
-       return new Result(false, 'not-owner');
+       // Les Results vous autorisent à définir la 'raison' de l'échec.
+       return new Result(false, 'non-propriétaire');
    }
 
-Any return value that is not ``true`` or a ``ResultInterface`` object will be
-considered a failure.
+Toute valeur renvoyée qui n'est ni ``true`` ni un objet ``ResultInterface`` sera
+considérée comme un échec.
 
-Policy Scopes
--------------
+Portées de Policy (Scope)
+-------------------------
 
-In addition to policies being able to define pass/fail authorization checks,
-they can also define 'scopes'. Scope methods allow you to modify another object
-applying authorization conditions. A perfect use case for this is restricting
-a list view to the current user::
+En plus de définir les validations ou échecs d'autorisation, les policies
+peuvent définir des 'scopes'. Avec les méthodes *scope*, vous pouvez modifier un
+autre objet sous certaines conditions d'accès. La vue d'une liste restreinte à
+l'utilisateur courant en est un parfait exemple::
 
     namespace App\Policy;
 
@@ -102,13 +109,13 @@ a list view to the current user::
         }
     }
 
-Policy Pre-conditions
----------------------
+Pré-conditions de Policy
+------------------------
 
-In some policies you may wish to apply common checks across all operations in
-a policy. This is useful when you need to deny all actions to the provided
-resource. To use pre-conditions you need to implement the ``BeforePolicyInterface``
-in your policy::
+Dans certaines policies, vous voudrez peut-être appliquer des conditions à
+toutes les opérations de la policy. Cela peut être utile pour interdire toutes
+les actions sur la ressource demandée. Pour utiliser les pré-conditions, votre
+policy doit implémenter ``BeforePolicyInterface``::
 
     namespace App\Policy;
 
@@ -121,13 +128,13 @@ in your policy::
             if ($user->getOriginalData()->is_admin) {
                 return true;
             }
-            // fall through
+            // continuer
         }
     }
 
-Before hooks are expected to return one of three values:
+Les méthodes *before* sont censées renvoyer une de ces trois valeurs:
 
-- ``true`` The user is allowed to proceed with the action.
-- ``false`` The user is not allowed to proceed with the action.
-- ``null`` The before hook did not make a decision, and the authorization method
-  will be invoked.
+- ``true`` L'utilisateur est autorisé à effectuer l'action.
+- ``false`` L'utilisateur n'est pas autorisé à effectuer l'action.
+- ``null`` La méthode *before* n'a pas pris de décision, et la méthode
+  d'autorisation doit être appelée.
