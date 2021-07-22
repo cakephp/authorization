@@ -1,87 +1,90 @@
-Policy Resolvers
-################
+Résolveurs de Policy
+####################
 
-Mapping resource objects to their respective policy classes is a behavior
-handled by a policy resolver. We provide a few resolvers to get you started, but
-you can create your own resolver by implementing the
-``Authorization\Policy\ResolverInterface``. The built-in resolvers are:
+Le résolveur de policy se charge de faire correspondre des classes de policy à
+chaque objet ressource. Nous fournissons quelques résolveurs pour vous permettre
+de commencer, mais vous pouvez créer votre propre résolveur en implémentant
+``Authorization\Policy\ResolverInterface``. Les résolveurs intégrés sont:
 
-* ``MapResolver`` allows you to map resource names to their policy class names, or
-  to objects and callables.
-* ``OrmResolver`` applies conventions based policy resolution for common ORM
-  objects.
-* ``ResolverCollection`` allows you to aggregate multiple resolvers together,
-  searching them sequentially.
+* ``MapResolver`` vous permet de faire correspondre des noms de ressources aux
+  noms de leurs classes de policy, ou à des objets ou des callables.
+* ``OrmResolver`` résout une policy en appliquant des conventions pour les
+  objets ORM habituels.
+* ``ResolverCollection`` vous permet d'agréger plusieurs résolveurs, et de les
+  exécuter les uns à la suite des autres.
 
-Using MapResolver
-=================
+Utiliser MapResolver
+====================
 
-``MapResolver`` lets you map resource class names to policy classnames, policy
-objects, or factory callables::
+``MapResolver`` fait correspondre des noms de classes de ressources à des noms
+de classes de policy, des objets policy ou des callables::
 
     use Authorization\Policy\MapResolver;
 
     $mapResolver = new MapResolver();
 
-    // Map a resource class to a policy classname
+    // Mappe une classe de ressource à un nom de classe de policy
     $mapResolver->map(Article::class, ArticlePolicy::class);
 
-    // Map a resource class to a policy instance.
+    // Mappe une classe de ressource à une instance de policy.
     $mapResolver->map(Article::class, new ArticlePolicy());
 
-    // Map a resource class to a factory function
+    // Mappe une classe de ressource à une fonction callable
     $mapResolver->map(Article::class, function ($resource, $mapResolver) {
-        // Return a policy object.
+        // Renvoie un objet policy.
     });
 
-Using OrmResolver
-=================
+Utiliser OrmResolver
+====================
 
-The ``OrmResolver`` is a conventions based policy resolver for CakePHP's ORM. The
-OrmResolver applies the following conventions:
+Le ``OrmResolver`` est un résolveur de policy basé sur des conventions pour
+l'ORM de CakePHP. L'OrmResolver applique les conventions suivantes:
 
-#. Policies live in ``App\Policy``
-#. Policy classes end with the ``Policy`` class suffix.
+#. Les policies se trouvent dans ``App\Policy``
+#. Les classes de policy se terminent avec le suffixe de classe ``Policy``.
 
-The OrmResolver can resolve policies for the following object types:
+Le OrmResolver peut résoudre des policies pour les types d'objets suivants:
 
-* Entities - Using the entity classname.
-* Tables - Using the table classname.
-* Queries - Using the return of the query's ``repository()`` to get a classname.
+* Entities - En utilisant le nom de classe de l'entity.
+* Tables - En utilisant le nom de classe de la table.
+* Queries - En utilisant le résultat de la méthode ``repository()`` de la query
+  pour obtenir un nom de classe.
 
-In all cases the following rules are applied:
+Les règles suivantes s'appliquent dans tous les cas:
 
-#. The resource classname is used to generate a policy class name. e.g
-   ``App\Model\Entity\Bookmark`` will map to ``App\Policy\BookmarkPolicy``
-#. Plugin resources will first check for an application policy e.g
-   ``App\Policy\Bookmarks\BookmarkPolicy`` for ``Bookmarks\Model\Entity\Bookmark``.
-#. If no application override policy can be found, a plugin policy will be
-   checked. e.g. ``Bookmarks\Policy\BookmarkPolicy``
+#. On utilise le nom de classe de la ressource pour générer le nom de classe
+   d'une policy. Par exemple ``App\Model\Entity\Bookmark`` correspondra à
+   ``App\Policy\BookmarkPolicy``.
+#. Les ressources de plugins rechercheront d'abord une policy d'application, par
+   exemple ``App\Policy\Bookmarks\BookmarkPolicy`` pour
+   ``Bookmarks\Model\Entity\Bookmark``.
+#. Si on ne trouve aucune policy d'application en priorité, on recherche une
+   policy du plugin. Par exemple ``Bookmarks\Policy\BookmarkPolicy``.
 
-For table objects the class name tranformation would result in
-``App\Model\Table\ArticlesTable`` mapping to ``App\Policy\ArticlesTablePolicy``.
-Query objects will have their ``repository()`` method called, and a policy will be
-generated based on the resulting table class.
+Pour les objets tables, la transformation du nom de table ferait correspondre
+``App\Model\Table\ArticlesTable`` à ``App\Policy\ArticlesTablePolicy``.
+Pour les objets query, la méthode ``repository()`` sera appelée, et une policy
+sera générée à partir de la classe de table obtenue.
 
-The OrmResolver supports customization through its constructor::
+Le OrmResolver peut être personnalisé par son constructeur::
 
     use Authorization\Policy\OrmResolver;
 
-    // Change when using a custom application namespace.
+    // Changer pour utiliser un namespace d'application personnalisé.
     $appNamespace = 'App';
 
-    // Map policies in one namespace to another.
-    // Here we have mapped policies for classes in the ``Blog`` namespace to be 
-    // found in the ``Cms`` namespace.
+    // Fait correspondre des policies d'un namespace à un autre.
+    // Ici nous avons mappé des policies pour les classes du namespace ``Blog``
+    // pour qu'elles soient recherchées dans le namespace ``Cms``.
     $overrides = [
         'Blog' => 'Cms',
     ];
     $resolver = new OrmResolver($appNamespace, $overrides)
 
-Using ResolverCollection
-========================
+Utiliser ResolverCollection
+===========================
 
-``ResolverCollection`` allows you to aggregate multiple resolvers together::
+``ResolverCollection`` vous permet d'agréger plusieurs résolveurs::
 
     use Authorization\Policy\ResolverCollection;
     use Authorization\Policy\MapResolver;
@@ -90,13 +93,13 @@ Using ResolverCollection
     $ormResolver = new OrmResolver();
     $mapResolver = new MapResolver();
 
-    // Check the map resolver, and fallback to the orm resolver if
-    // a resource is not explicitly mapped.
+    // Vérifie le MapResolver, et se rabat sur l'OrmResolver si une ressource
+    // n'est pas mappée explicitement.
     $resolver = new ResolverCollection([$mapResolver, $ormResolver]);
 
-Creating a Resolver
-===================
+Créer un Resolver
+=================
 
-You can implement your own resolver by implementing the
-``Authorization\Policy\ResolverInterface`` which requires defining the
-``getPolicy($resource)`` method.
+Vous pouvez écrire votre propre résolveur en implémentant
+``Authorization\Policy\ResolverInterface``, qui nécessite de définir la méthode
+``getPolicy($resource)``.
