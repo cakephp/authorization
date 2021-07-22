@@ -1,28 +1,29 @@
-Quick Start
-###########
+Prise en main rapide
+####################
 
 Installation
 ============
 
-Install the plugin with `composer <https://getcomposer.org/>`__ from your CakePHP
-Project's ROOT directory (where the **composer.json** file is located)
+Installez le plugin avec `composer <https://getcomposer.org/>`__ depuis le
+répertoire racine de votre project CakePHP (là où se trouve le fichier
+**composer.json**).
 
 .. code-block:: shell
 
     php composer.phar require "cakephp/authorization:^2.0"
 
-Load the plugin by adding the following statement in your project's
-``src/Application.php``::
+Chargez le plugin en ajoutant la ligne suivante dans le fichier
+``src/Application.php`` de votre projet::
 
     $this->addPlugin('Authorization');
 
-Getting Started
-===============
+Pour commencer
+==============
 
-The Authorization plugin integrates into your application as a middleware layer
-and optionally a component to make checking authorization easier. First, lets
-apply the middleware. In **src/Application.php** add the following to the class
-imports::
+Le plugin Authorization s'intègre dans votre application en tant que middleware,
+et sur option comme composant (*component*) pour faciliter la vérification des
+autorisations. Commençons par mettre en place le middleware. Dans
+**src/Application.php**, ajoutez les imports de classes suivants::
 
     use Authorization\AuthorizationService;
     use Authorization\AuthorizationServiceInterface;
@@ -32,19 +33,20 @@ imports::
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
 
-Add the ``AuthorizationProviderInterface`` to the implemented interfaces on your application::
+Ajoutez ``AuthorizationProviderInterface`` aux interfaces implémentées par votre
+classe Application::
 
     class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 
-Then add the following to your ``middleware()`` method::
+Puis ajoutez ceci à votre méthode ``middleware()``::
 
-    // Add authorization (after authentication if you are using that plugin too).
+    // Ajoute authorization (après authentication, si vous utilisez aussi ce plugin).
     $middleware->add(new AuthorizationMiddleware($this));
 
-The ``AuthorizationMiddleware`` will call a hook method on your application when
-it starts handling the request. This hook method allows your application to
-define the ``AuthorizationService`` it wants to use. Add the following method your
-**src/Application.php**::
+Le ``AuthorizationMiddleware`` appellera une méthode crochet (*hook*) de votre
+application au démarrage du traitement de la requête. Cette méthode permet à
+votre application de définir le ``AuthorizationService`` qu'elle veut utiliser.
+Ajoutez la méthode suivante à votre **src/Application.php**::
 
     public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
     {
@@ -53,33 +55,34 @@ define the ``AuthorizationService`` it wants to use. Add the following method yo
         return new AuthorizationService($resolver);
     }
 
-This configures basic :doc:`/policy-resolvers` that will match
-ORM entities with their policy classes.
+Cela configure les :doc:`/policy-resolvers` basiques qui confronteront les
+entities de l'ORM avec leurs classes de policies (politiques d'autorisations).
 
-Next, lets add the ``AuthorizationComponent`` to ``AppController``. In
-**src/Controller/AppController.php** add the following to the ``initialize()``
-method::
+Ensuite, ajoutons le ``AuthorizationComponent`` à ``AppController``. Dans
+**src/Controller/AppController.php**, ajoutez ceci à la méthode
+``initialize()``::
 
     $this->loadComponent('Authorization.Authorization');
 
-By loading the :doc:`/component` we'll be able to check
-authorization on a per-action basis more easily. For example, we can do::
+En chargeant le :doc:`/component` nous pourrons plus facilement vérifier les
+autorisations action par action. Par exemple, nous pouvons faire ceci::
 
     public function edit($id = null)
     {
         $article = $this->Article->get($id);
         $this->Authorization->authorize($article, 'update');
 
-        // Rest of action
+        // Le reste de l'action
     }
 
-By calling ``authorize`` we can use our :doc:`/policies` to enforce our
-application's access control rules. You can check permissions anywhere by using
-the :doc:`identity stored in the request <checking-authorization>`.
+En appelant ``authorize``, nous pouvons utiliser nos :doc:`/policies` pour
+renforcer les règles de contrôle d'accès à notre application. Vous pouvez
+vérifier les permissions depuis n'importe quel endroit en utilisant
+:doc:`l'identity stockée dans la requête <checking-authorization>`.
 
 
-Further Reading
-===============
+Pour Aller Plus Loin
+====================
 
 * :doc:`/policies`
 * :doc:`/policy-resolvers`
