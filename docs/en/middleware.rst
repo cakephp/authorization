@@ -258,7 +258,7 @@ How to create a custom UnauthorizedHandler
 
     class CustomRedirectHandler extends \Authorization\Middleware\UnauthorizedHandler\RedirectHandler
 
-4) If not add the ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface`` to your class::
+#. If not add the ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface`` to your class::
 
     class CustomRedirectHandler implements \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
 
