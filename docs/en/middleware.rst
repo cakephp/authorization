@@ -9,7 +9,7 @@ Authorization is applied to your application as a middleware. The
 * Ensuring that authorization has been checked/bypassed in the request.
 
 To use the middleware implement ``AuthorizationServiceProviderInterface`` in your
-application class. Then pass your app instance into the middlware and add the
+application class. Then pass your app instance into the middleware and add the
 middleware to the queue.
 
 A basic example would be::
