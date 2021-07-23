@@ -229,7 +229,7 @@ add other ``Authorization\Exception\Exception`` based exceptions to the
         ForbiddenException::class
     ],
 
-See https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/RedirectHandler.php 
+See the `RedirectHandler source <https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__
 
 Configuration options are passed to the handler's ``handle()`` method as the
 last parameter.
