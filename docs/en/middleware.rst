@@ -201,6 +201,8 @@ Both redirect handlers share the same configuration options:
 
 For example::
 
+    use Authorization\Exception\MissingIdentityException;
+    
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
             'className' => 'Authorization.Redirect',
@@ -264,9 +266,18 @@ How to create a custom UnauthorizedHandler
 
 6) After you are done with the implementation of that function tell the middleware you want to use your custom handler via::
 
+    use Authorization\Exception\MissingIdentityException;
+    use Authorization\Exception\ForbiddenException;
+    
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
             'className' => 'CustomRedirect',
+            'url' => '/users/login',
+            'queryParam' => 'redirectUrl',
+            'exceptions' => [
+                MissingIdentityException::class,
+                ForbiddenException::class
+            ],
             'custom_param' => true,
         ],
     ]));
