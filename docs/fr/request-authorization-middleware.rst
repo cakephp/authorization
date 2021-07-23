@@ -1,22 +1,23 @@
-Request Authorization Middleware
-################################
+Middleware d'Autorisation de Requête
+####################################
 
-This middleware is useful when you want to authorize your requests, for example
-each controller and action, against a role based access system or any other kind
-of authorization process that controls access to certain actions.
+Ce middleware est utile pour autoriser vos requêtes, par exemple chaque
+controller et action, en fonction d'un système d'accès basé sur des rôles ou
+n'importe quel autre type de processus d'autorisation qui contrôle l'accès à
+certaines actions.
 
-This **must** be added after the Authorization, Authentication and
-RoutingMiddleware in the Middleware Queue!
+Il **doit** être ajouté après Authorization, Authentication et RoutingMiddleware
+dans la Middleware Queue !
+La logique de gestion de l'autorisation de la requête sera implémentée dans la
+policy de la requête. Vous pouvez ajouter toute votre logique à cet endroit ou
+simplement passer l'information de la requête vers une implémentation ACL ou
+RBAC.
 
-The logic of handling the request authorization will be implemented in the
-request policy. You can add all your logic there or just pass the information
-from the request into an ACL or RBAC implementation.
+Comment l'utiliser
+==================
 
-Using it
-========
-
-Create a policy for handling the request object. The plugin ships with an
-interface here to implement::
+Créez une policy pour gérer l'objet requête. Le plugin est livré avec une
+interface à implémenter ici::
 
     namespace App\Policy;
 
@@ -26,10 +27,10 @@ interface here to implement::
     class RequestPolicy implements RequestPolicyInterface
     {
         /**
-         * Method to check if the request can be accessed
+         * Méthode pour vérifier si on peut accéder à la requête
          *
          * @param \Authorization\IdentityInterface|null $identity Identity
-         * @param \Cake\Http\ServerRequest $request Server Request
+         * @param \Cake\Http\ServerRequest $request Requête du serveur
          * @return bool
          */
         public function canAccess($identity, ServerRequest $request)
@@ -44,7 +45,8 @@ interface here to implement::
         }
     }
 
-Map the request class to the policy inside ``Application::getAuthorizationService()``::
+Mappez la classe de la requête vers la policy à l'intérieur de
+``Application::getAuthorizationService()``::
 
     use App\Policy\RequestPolicy;
     use Authorization\AuthorizationService;
@@ -56,9 +58,9 @@ Map the request class to the policy inside ``Application::getAuthorizationServic
 
     return new AuthorizationService($mapResolver);
 
-In your ``Application.php`` make sure you're loading the
-RequestAuthorizationMiddleware **after** the AuthorizationMiddleware::
+Dans votre ``Application.php`` assurez-vous que vous chargez le
+RequestAuthorizationMiddleware **après** le AuthorizationMiddleware::
 
-    // Add authorization (after authentication if you are using that plugin too).
+    // Ajoutez l'autorisation (après authentication si vous utilisez aussi ce plugin).
     $middleware->add(new AuthorizationMiddleware($this));
     $middleware->add(new RequestAuthorizationMiddleware());
