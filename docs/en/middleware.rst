@@ -262,7 +262,7 @@ How to create a custom UnauthorizedHandler
 
     class CustomRedirectHandler implements \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
 
-5) Add the flash message logic inside the ``handle()`` method like so::
+#. Add the flash message logic inside the ``handle()`` method like so::
 
     use Authorization\Exception\Exception;
     use Psr\Http\Message\ServerRequestInterface;
