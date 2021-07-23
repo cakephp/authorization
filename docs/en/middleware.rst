@@ -244,13 +244,17 @@ How to create a custom UnauthorizedHandler
 
 3) If you want to have the basic redirect logic then extend your class with::
 
-    class CustomRedirectHandler extends Authorization\Middleware\UnauthorizedHandler\RedirectHandler
+    class CustomRedirectHandler extends \Authorization\Middleware\UnauthorizedHandler\RedirectHandler
 
 4) If not add the ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface`` to your class::
 
-    class CustomRedirectHandler implements Authorization\Middleware\UnauthorizedHandler\HandlerInterface
+    class CustomRedirectHandler implements \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
 
 5) Add the flash message logic inside the ``handle()`` method like so::
+
+    use Authorization\Exception\Exception;
+    use Psr\Http\Message\ServerRequestInterface;
+    use Psr\Http\Message\ResponseInterface;
 
     public function handle(Exception $exception, ServerRequestInterface $request, array $options = []): ResponseInterface {
         $response = parent::handle($exception, $request, $options);
