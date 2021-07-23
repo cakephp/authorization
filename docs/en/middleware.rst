@@ -245,8 +245,8 @@ other logic you want to happen on redirect)
 How to create a custom UnauthorizedHandler
 -------------------------------------------
 
-1) Create the folder ``src/Middleware/UnauthorizedHandler``
-2) Create a class with the namespace ``Middleware\UnauthorizedHandler`` which ends with the string ``Handler`` (like ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``)::
+#. Create the folder ``src/Middleware/UnauthorizedHandler``
+#. Create a class with the namespace ``Middleware\UnauthorizedHandler`` which ends with the string ``Handler`` (like ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``)::
 
     <?php
     declare(strict_types=1);
