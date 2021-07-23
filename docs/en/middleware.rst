@@ -215,16 +215,21 @@ For example::
         ],
     ]));
     
-The default ``Authorization.RedirectHandler`` can only check 
-exceptions which extend the ``Authorization\Exception\Exception`` class.
-If you want to catch any other exceptions which should
-be handled via your handler then they need to be added to
-the ``execeptions`` array like::
+All handlers get the thrown exception object given as a parameter.
+This excepction will always be an instance of ``Authorization\Exception\Exception``.
+In this example the ``Authorization.Redirect`` handler just gives you the option to 
+specify which exceptions you want to listen to.
+
+So in this example where we use the ``Authorization.Redirect`` handler we can
+add other ``Authorization\Exception\Exception`` based exceptions to the 
+``execeptions`` array if we wan't to handle them gracefully::
 
     'exceptions' => [
         MissingIdentityException::class,
         ForbiddenException::class
     ],
+
+See https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/RedirectHandler.php 
 
 Configuration options are passed to the handler's ``handle()`` method as the
 last parameter.
