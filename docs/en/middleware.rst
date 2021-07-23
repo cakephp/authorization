@@ -254,7 +254,7 @@ How to create a custom UnauthorizedHandler
     
     class CustomRedirectHandler {...}
 
-3) If you want to have the basic redirect logic then extend your class with::
+#. If you want to have the basic redirect logic then extend your class with::
 
     class CustomRedirectHandler extends \Authorization\Middleware\UnauthorizedHandler\RedirectHandler
 
