@@ -1,55 +1,58 @@
-Checking Authorization
-######################
+Vérifier une Autorisation
+#########################
 
-Once you have applied the :doc:`/middleware` to your application and added an
-``identity`` to the request, you can start checking authorization. The
-middleware will wrap the ``identity`` in each request with an
-``IdentityDecorator`` that adds authorization related methods.
+Une fois que vous avez appliqué le :doc:`/middleware` à votre application et
+ajouté une ``identity`` à votre requête, vous pouvez commencer à vérifier les
+autorisations. Le middleware enveloppe l'\ ``identity`` dans chaque requête par
+un ``IdentityDecorator`` qui ajoute les méthodes liées à l'autorisation.
 
-You can pass the ``identity`` into your models, services or templates allowing
-you to check authorization anywhere in your application easily. See the
-:ref:`identity-decorator` section for how to customize or replace the default
-decorator.
+Vous pouvez passer l'\ ``identity`` à vos modèles, services ou templates, ce qui
+vous permet de vérifier facilement l'autorisation depuis n'importe quel endroit
+de votre application. Pour savoir comment personnaliser ou remplacer le
+décorateur par défaut, consultez la section :ref:`identity-decorator`.
 
-Checking Authorization for a Single Resource
-============================================
+Vérifier l'Autorisation pour Une Seule Ressource
+================================================
 
-The ``can`` method enables you to check authorization on a single resource.
-Typically this is an ORM entity, or application domain object. Your
-:doc:`/policies` provide logic to make the authorization decision::
+La méthode ``can`` vous permet de vérifier l'autorisation sur une seule
+ressource. Typiquement, ce sera une entity de l'ORM, ou un objet du domaine de
+l'application. Vos :doc:`/policies` fournissent la logique pour prendre la
+décision d'autorisation::
 
-    // Get the identity from the request
+    // Obtenir l'identity à partir de la requête
     $user = $this->request->getAttribute('identity');
 
-    // Check authorization on $article
+    // Vérifier l'autorisation sur $article
     if ($user->can('delete', $article)) {
-        // Do delete operation
+        // Faire l'opération delete
     }
 
-If your policies return :ref:`policy-result-objects`
-be sure to check their status as ``canResult()`` returns the result instance::
+Si vos policies renvoient des :ref:`policy-result-objects`, pensez à vérifier
+leur statut avec ``canResult()`` qui renvoie l'instance Result::
 
    // Assuming our policy returns a result.
    $result = $user->canResult('delete', $article);
    if ($result->getStatus()) {
-       // Do deletion
+       // Procéder à l'effacement
    }
 
-Applying Scope Conditions
-=========================
+Appliquer des Conditions de Portée (Scope)
+==========================================
 
-When you need to apply authorization checks to a collection of objects like
-a paginated query you will often want to only fetch records that the current
-user has access to. This plugin implements this concept as 'scopes'. Scope
-policies allow you to 'scope' a query or result set and return the updated list
-or query object::
+Quand vous avez besoin de vérifier l'autorisation sur une collection d'objets,
+telle qu'une requête (*query*) paginée, vous serez souvent amené à ne vouloir
+récupérer que les enregistrements auxquel l'utilisateur courant a accès. Le
+plugin implémente ce concept sous le nom de 'scopes'. Les policies de scope vous
+permettent de limiter (*scope*) une query ou un result set et de renvoyer la
+liste modifiée ou l'objet query::
 
-    // Get the identity from the request
+    // Obtenir l'identity à partir de la requête HTML
     $user = $this->request->getAttribute('identity');
 
-    // Apply permission conditions to a query so only
-    // the records the current user has access to are returned.
+    // Appliquer les conditions de permissions à la query de façon à ne
+    // retourner que les enregistrements auxquels l'utilisateur actuel a accès.
     $query = $user->applyScope('index', $query);
 
-The :doc:`/component` can be used in controller actions
-to streamline authorization checks that raise exceptions on failure.
+Dans les actions du controller, vous pouvez utiliser le :doc:`/component` pour
+traiter sur-le-champ les vérifications d'autorisation susceptibles de lever une
+exception en cas d'échec.
