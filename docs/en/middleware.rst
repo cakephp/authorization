@@ -204,7 +204,7 @@ For example::
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
             'className' => 'Authorization.Redirect',
-            'url' => '/users/login',
+            'url' => '/pages/unauthorized',
             'queryParam' => 'redirectUrl',
             'exceptions' => [
                 MissingIdentityException::class,
@@ -212,14 +212,49 @@ For example::
             ],
         ],
     ]));
-
-You can also add your own handler. Handlers should implement
-``Authorization\Middleware\UnauthorizedHandler\HandlerInterface``, be suffixed
-with ``Handler`` suffix and reside under your app's or plugin's
-``Middleware\UnauthorizedHandler`` namespace.
+    
+Handlers catch ONLY those exceptions which extend the 
+``Authorization\Exception\Exception`` class.
+If you want to catch any other exceptions which should
+be handled via your handler they need to be added to
+the ``execeptions`` array
 
 Configuration options are passed to the handler's ``handle()`` method as the
 last parameter.
 
-Handlers catch only those exceptions which extend the
-``Authorization\Exception\Exception`` class.
+Add a flash message after being redirected by an unauthorized request
+------------------------------
+
+Currently there is no straightforward way to add a flash message to the unauthorized redirect.
+
+Therefore you need to create your own Handler which adds th flash message (or any 
+other logic you want to happen on redirect)
+
+How to create a custom UnauthorizedHandler
+------------------------------
+
+1) Create the folder ``src/Middleware/UnauthorizedHandler``
+2) Create a class with the namespace ``Middleware\UnauthorizedHandler`` which ends with the string ``Handler`` (like ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``)
+3) Add the ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface`` to that class (``implements Authorization\Middleware\UnauthorizedHandler\HandlerInterface``)
+
+4) Add the flash message logic inside the ``handle()`` method like so::
+
+    public function handle(Exception $exception, ServerRequestInterface $request, array $options = []): ResponseInterface {
+        $response = parent::handle($exception, $request, $options);
+        $request->getFlash()->error('You are not authorized to access that location');
+        return $response;
+    }
+
+5) After you are done with the implementation of that function tell the middleware you want to use your custom handler via::
+
+    $middlewareQueue->add(new AuthorizationMiddleware($this, [
+        'unauthorizedHandler' => [
+            'className' => 'CustomRedirect',
+            'custom_param' => true,
+        ],
+    ]));
+    
+The ``custom_param`` appears in the ``$options`` array given to you in the ``handle()`` function inside your ``CustomRedirectHandler``.
+
+You can look at https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/RedirectHandler.php 
+how such a Handler can/should look like.
