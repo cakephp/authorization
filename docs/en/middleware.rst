@@ -215,11 +215,16 @@ For example::
         ],
     ]));
     
-Handlers catch ONLY those exceptions which extend the 
-``Authorization\Exception\Exception`` class.
+The default ``Authorization.RedirectHandler`` can only check 
+exceptions which extend the ``Authorization\Exception\Exception`` class.
 If you want to catch any other exceptions which should
-be handled via your handler they need to be added to
-the ``execeptions`` array
+be handled via your handler then they need to be added to
+the ``execeptions`` array like::
+
+    'exceptions' => [
+        MissingIdentityException::class,
+        ForbiddenException::class
+    ],
 
 Configuration options are passed to the handler's ``handle()`` method as the
 last parameter.
