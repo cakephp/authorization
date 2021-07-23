@@ -1,33 +1,37 @@
 AuthorizationComponent
 ######################
 
-The ``AuthorizationComponent`` exposes a few conventions based helper methods for
-checking permissions from your controllers. It abstracts getting the user and
-calling the ``can`` or ``applyScope`` methods. Using the AuthorizationComponent
-requires use of the Middleware, so make sure it is applied as well. To use the
-component, first load it::
+Le ``AuthorizationComponent`` propose quelques méthodes de convenance, basées
+sur des conventions, pour vérifier les permissions depuis vos controllers. Il
+rend transparents l'obtention de l'utilisateur et l'appel aux méthodes ``can``
+ou ``applyScope``. Vous devez utiliser le Middleware pour pouvoir utiliser
+l'AuthorizationComponent, donc vérifiez qu'il est effectivement en place. Pour
+utiliser le composant, commençons par le charger::
 
-    // In your AppController
+    // Dans votre AppController
     public function initialize()
     {
         parent::initialize();
         $this->loadComponent('Authorization.Authorization');
     }
 
-Automatic authorization checks
-==============================
+Vérifications Automatiques d'Autorisation
+=========================================
 
-``AuthorizationComponent`` can be configured to automatically apply
-authorization based on the controller's default model class and current action
-name. In the following example ``index`` and ``add`` actions will be authorized::
+``AuthorizationComponent`` peut être configuré pour appliquer automatiquement
+des règles d'autorisation selon la classe du modèle par défaut associé au
+controller et le nom de l'action en cours. Dans l'exemple suivant, les actions
+``index`` et ``add`` seront autorisées::
 
     $this->Authorization->authorizeModel('index', 'add');
 
-You can also configure actions to skip authorization. This will make actions **public**,
-accessible to all users. By default all actions require authorization and
-``AuthorizationRequiredException`` will be thrown if authorization checking is enabled.
+Vous pouvez aussi le configurer de sorte que certaines actions sautent (*skip*)
+l'autorisation. Cela rendra ces actions **publiques**, accessibles à tous les
+utilisateurs. Par défaut, toutes les actions nécessitent une autorisation et une
+``AuthorizationRequiredException`` sera levée si la vérification d'autorisation
+est activée.
 
-Authorization can be skipped for individual actions::
+L'autorisation peut être sautée pour des actions individuelles::
 
     $this->loadComponent('Authorization.Authorization', [
         'skipAuthorization' => [
@@ -35,72 +39,75 @@ Authorization can be skipped for individual actions::
         ]
     ]);
 
-Checking Authorization
-======================
+Vérifier l'Autorisation
+=======================
 
-In your controller actions or callback methods you can check authorization using
-the component::
+Dans vos actions de controller ou vos méthodes callback, vous pouvez vérifier
+l'autorisation en utilisant le composant::
 
-    // In the Articles Controller.
+    // Dans le controller Articles.
     public function edit($id)
     {
         $article = $this->Articles->get($id);
         $this->Authorization->authorize($article);
-        // Rest of the edit method.
+        // Le reste de la méthode edit.
     }
 
-Above we see an article being authorized for the current user. Since we haven't 
-specified the action to check the request's ``action`` is used. You can specify
-a policy action with the second parameter::
+Ci-dessus, nous voyons un article autorisé pour l'utilisateur courant. Puisque
+nous n'avons pas spécifié l'action à vérifier, c'est le paramètre ``action`` de
+la requête qui sera utilisé. Vous pouvez spécifier une action de policy en
+second paramètre::
 
-    // Use a policy method that doesn't match the current controller action.
+    // Utilisation d'une méthode de policy autre que l'action en cours dans le controller.
     $this->Authorization->authorize($article, 'update');
 
-The ``authorize()`` method will raise an ``Authorization\Exception\ForbiddenException``
-when permission is denied. If you want to check authorization and get a boolean
-result you can use the ``can()`` method::
+La méthode ``authorize()`` soulèvera une
+``Authorization\Exception\ForbiddenException`` si la permission est refusée.
+Si vous voulez vérifier l'autorisation et obtenir un booléen comme résultat,
+utilisez la méthode ``can()``::
 
     if ($this->Authorization->can($article, 'update')) {
-        // Do something to the article.
+        // Faire quelque chose sur l'article.
     }
 
-Anonymous Users
-===============
+Utilisateurs Anonymes
+=====================
 
-Some resources in your application may be accessible to users who are not logged
-in. Whether or not a resource can be accessed by an un-authenticated
-user is in the domain of policies. Through the component you can check
-authorization for anonymous users. Both the ``can()`` and ``authorize()`` support
-anonymous users. Your policies can expect to get ``null`` for the 'user' parameter
-when the user is not logged in.
+Certaines ressources de votre application peuvent être accessibles aux
+utilisateurs non connectés. Savoir si un utilisateur, connecté ou pas, peut ou
+non accéder à une ressource relève du domaine des policies. Avec le composant,
+vous pouvez vérifier l'autorisation pour les utilisateurs anonymes. Les deux
+méthodes ``can()`` et ``authorize()`` supportent les utilisateurs anonymes. Vos
+policies peuvent s'attendre à recevoir ``null`` pour le paramètre 'user' si
+l'utilisateur n'est pas connecté.
 
-Applying Policy Scopes
-======================
+Appliquer les Périmètres (Scopes) des Policies
+==============================================
 
-You can also apply policy scopes using the component::
+Vous pouvez aussi appliquer des scopes de policy avec le composant::
 
 $query = $this->Authorization->applyScope($this->Articles->find());
 
-If the current action has no logged in user a ``MissingIdentityException`` will
-be raised.
+Si l'action courante n'a pas d'utilisateur connecté, cela lèvera une
+``MissingIdentityException``.
 
-If you want to map actions to different authorization methods use the 
-``actionMap`` option::
+Si vous voulez mapper des actions vers différentes méthodes d'autorisation,
+utilisez l'option ``actionMap``::
 
-   // In you controller initialize() method:
+   // Dans la méthode initialize() de votre controller:
    $this->Authorization->mapActions([
        'index' => 'list',
        'delete' => 'remove',
        'add' => 'insert',
    ]);
 
-   // or map actions individually.
+   // ou mapper des actions individuellement.
    $this->Authorization
        ->mapAction('index','list')
        ->mapAction('delete', 'remove')
        ->mapAction('add', 'insert');
 
-Example::
+Exemple::
 
     //ArticlesController.php
 
@@ -108,7 +115,8 @@ Example::
     {
         $query = $this->Articles->find();
 
-        //this will apply `list` scope while being called in `index` controller action.
+        // cela appliquera le scope `list` puisque l'appel
+        // est fait depuis l'action `index` du controller.
         $this->Authorization->applyScope($query); 
         ...
     }
@@ -117,22 +125,24 @@ Example::
     {
         $article = $this->Articles->get($id);
 
-        //this will authorize against `remove` entity action while being called in `delete` controller action.
+        // l'autorisation sera accordée selon l'action `remove` de l'entity
+        // puisque l'appel est fait depuis l'action `delete` du controller.
         $this->Authorization->authorize($article); 
         ...
     }
 
     public function add()
     {
-        //this will authorize against `insert` model action while being called in `add` controller action.
+        // l'autorisation sera accordée selon l'action `insert` du model
+        // puisque l'appel est fait depuis l'action `add` du controller.
         $this->Authorization->authorizeModel(); 
         ...
     }
 
-Skipping Authorization
-======================
+Sauter l'Autorisation
+=====================
 
-Authorization can also be skipped inside an action::
+Vous pouvez sauter l'autorisation depuis l'intérieur d'une action::
 
     //ArticlesController.php
 
