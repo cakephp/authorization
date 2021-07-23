@@ -1,18 +1,19 @@
-Authorization Middleware
+Middleware Authorization
 ########################
 
-Authorization is applied to your application as a middleware. The
-``AuthorizationMiddleware`` handles the following responsibilities:
+Le plugin Authorization s'intègre dans votre application en tant que middleware.
+Le ``AuthorizationMiddleware`` assume les responsablités suivantes:
 
-* Decorating the request 'identity' with a decorator that adds the ``can``,
-  ``canResult``, and ``applyScope`` methods if necessary.
-* Ensuring that authorization has been checked/bypassed in the request.
+* Décorer l'\ 'identity' de la requête avec un décorateur qui ajoute les méthodes
+  ``can``, ``canResult``, et ``applyScope`` si nécessaire.
+* S'assurer que l'autorisation a été vérifiée ou contournée dans la requête.
 
-To use the middleware implement ``AuthorizationServiceProviderInterface`` in your
-application class. Then pass your app instance into the middlware and add the
-middleware to the queue.
+Pour utiliser le middleware, implémentez
+``AuthorizationServiceProviderInterface`` dans votre classe d'application. Puis
+passez votre instance d'application au middleware et ajoutez le middleware à la
+middleware queue.
 
-A basic example would be::
+Voici un exemple basique::
 
     namespace App;
 
@@ -33,42 +34,45 @@ A basic example would be::
 
         public function middleware($middlewareQueue)
         {
-            // other middleware
+            // autres middlewares
             $middlewareQueue->add(new AuthorizationMiddleware($this));
 
             return $middlewareQueue;
         }
     }
 
-The authorization service requires a policy resolver. See the
-:doc:`/policies` documentation on what resolvers are available and how
-to use them.
+Le service d'autorisation a besoin d'un résolveur de policy. Pour savoir quels
+sont les résolveurs disponibles et comment les utiliser, consultez la
+documentation des :doc:`/policies`.
 
 .. _identity-decorator:
 
-Identity Decorator
-==================
+Décorateur d'Identity
+=====================
 
-By default the ``identity`` in the request will be decorated (wrapped) with
-``Authorization\IdentityDecorator``. The decorator class proxies method calls,
-array access and property access to the decorated identity object. To access the
-underlying identity directly use ``getOriginalData()``::
+Par défaut, l'\ ``identity`` dans une requête sera décorée (envelopée) par
+``Authorization\IdentityDecorator``. La classe du décorateur intercepte les
+appels aux méthodes, les accès à la manière des tableaux et les accès aux
+propriétés vers l'objet décoré. Utilisez ``getOriginalData()`` pour accéder
+directement à l'objet sous-jacent::
 
     $originalUser = $user->getOriginalData();
 
-If your application uses the `cakephp/authentication
-<https://github.com/cakephp/authentication>`_ plugin then the
-``Authorization\Identity`` class will be used. This class implements the
-``Authentication\IdentityInterface`` in addition to the
-``Authorization\IdentityInterface``. This allows you to use the
-``Authentication`` lib's component and helper to get the decorated identity.
+Si votre application utilise le plugin `cakephp/authentication
+<https://github.com/cakephp/authentication>`_ alors c'est la classe
+``Authorization\Identity`` qui sera utilisée. Cette classe implémente
+``Authentication\IdentityInterface`` en plus de
+``Authorization\IdentityInterface``. Cela vous permet d'utiliser le component et
+le helper des bibliothèques de ``Authentication`` pour obtenir l'identity
+décorée.
 
-Using your User class as the Identity
--------------------------------------
+Utiliser votre class User en tant qu'Identity
+---------------------------------------------
 
-If you have an existing ``User`` or identity class you can skip the decorator by
-implementing the ``Authorization\IdentityInterface`` and using the
-``identityDecorator`` middleware option. First lets update our ``User`` class::
+Si vous avez déjà une classe ``User`` ou une classe d'identité, vous pouvez vous
+passer du décorateur en implémentant ``Authorization\IdentityInterface`` et en
+utilisant l'option ``identityDecorator`` du middleware. Pour commencer, mettons
+à jour notre classe ``User``::
 
     namespace App\Model\Entity;
 
@@ -80,7 +84,7 @@ implementing the ``Authorization\IdentityInterface`` and using the
     class User extends Entity implements IdentityInterface
     {
         /**
-         * Authorization\IdentityInterface method
+         * Méthode Authorization\IdentityInterface
          */
         public function can($action, $resource): bool
         {
@@ -88,7 +92,7 @@ implementing the ``Authorization\IdentityInterface`` and using the
         }
 
         /**
-         * Authorization\IdentityInterface method
+         * Méthode Authorization\IdentityInterface
          */
         public function canResult($action, $resource): ResultInterface
         {
@@ -96,7 +100,7 @@ implementing the ``Authorization\IdentityInterface`` and using the
         }
 
         /**
-         * Authorization\IdentityInterface method
+         * Méthode Authorization\IdentityInterface
          */
         public function applyScope($action, $resource)
         {
@@ -104,7 +108,7 @@ implementing the ``Authorization\IdentityInterface`` and using the
         }
 
         /**
-         * Authorization\IdentityInterface method
+         * Méthode Authorization\IdentityInterface
          */
         public function getOriginalData()
         {
@@ -112,7 +116,7 @@ implementing the ``Authorization\IdentityInterface`` and using the
         }
 
         /**
-         * Setter to be used by the middleware.
+         * Setter utilisé par le middleware.
          */
         public function setAuthorization(AuthorizationServiceInterface $service)
         {
@@ -121,13 +125,13 @@ implementing the ``Authorization\IdentityInterface`` and using the
             return $this;
         }
 
-        // Other methods
+        // Autres méthodes
     }
 
-Now that our user implements the necessary interface, lets update our middleware
-setup::
+Maintenant que votre user implémente l'interface nécessaire, mettons à jour la
+configuration de notre middleware::
 
-    // In your Application::middleware() method;
+    // Dans votre méthode Application::middleware()
 
     // Authorization
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
@@ -136,10 +140,11 @@ setup::
         }
     ]));
 
-You no longer have to change any existing typehints, and can start using
-authorization policies anywhere you have access to your user.
+Vous n'avez plus à changer les typehints, et vous pouvez commencer à utiliser
+les policies d'autorisation partout où vous avez accès à votre user.
 
-If you also use the Authentication plugin make sure to implement both interfaces.::
+Si vous utilisez aussi le plugin Authentication, assurez-vous d'implémenter les
+deux interfaces.::
 
     use Authorization\IdentityInterface as AuthorizationIdentity;
     use Authentication\IdentityInterface as AuthenticationIdentity;
@@ -149,7 +154,7 @@ If you also use the Authentication plugin make sure to implement both interfaces
         ...
         
         /**
-         * Authentication\IdentityInterface method
+         * Méthode Authentication\IdentityInterface
          *
          * @return string
          */
@@ -161,45 +166,50 @@ If you also use the Authentication plugin make sure to implement both interfaces
         ...
     }
 
-Ensuring Authorization is Applied
----------------------------------
+S'assurer que Authorization est Appliqué
+----------------------------------------
 
-By default the ``AuthorizationMiddleware`` will ensure that each request
-containing an ``identity`` also has authorization checked/bypassed. If
-authorization is not checked an ``AuthorizationRequiredException`` will be raised.
-This exception is raised **after** your other middleware/controller actions are
-complete, so you cannot rely on it to prevent unauthorized access, however it is
-a helpful aid during development/testing. You can disable this behavior via an
+Par défaut, le ``AuthorizationMiddleware`` s'assurera que chaque requête
+contenant une ``identity`` a aussi passé ou contourné l'autorisation d'accès. Si
+l'autorisation d'accès n'est pas vérifiée, il soulèvera une
+``AuthorizationRequiredException``.
+Cette exception est soulevée **après** la fin des actions de votre
+middleware/controller, donc vous ne pouvez pas vous y fier pour prévenir des
+accès non autorisés. Toutefois cela peut être une aide utile pendant le
+développement et les tests. Vous pouvez désactiver ce comportement grâce à une
 option::
 
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'requireAuthorizationCheck' => false
     ]));
 
-Handling Unauthorized Requests
-------------------------------
+Gérer les Requêtes Non Autorisées
+---------------------------------
 
-By default authorization exceptions thrown by the application are rethrown by the middleware.
-You can configure handlers for unauthorized requests and perform custom action, e.g.
-redirect the user to the login page.
+Par défaut, le middleware fait suivre les exceptions d'autorisation lancées par
+l'application. Vous pouvez configurer des gestionnaires pour les requêtes non
+autorisées et exécuter une action personnalisée, par exemple rediriger
+l'utilisateur vers la page de connexion.
 
-The built-in handlers are:
+Les gestionnaires intégrés sont:
 
-* ``Exception`` - this handler will rethrow the exception, this is a default
-  behavior of the middleware.
-* ``Redirect`` - this handler will redirect the request to the provided URL.
-* ``CakeRedirect`` - redirect handler with support for CakePHP Router.
+* ``Exception`` - ce gestionnaire fera suivre l'exception, c'est le comportement
+  par défaut du middleware.
+* ``Redirect`` - ce gestionnaire redirigera la requête vers l'URL indiquée.
+* ``CakeRedirect`` - gestionnaire de redirection supportant le Router CakePHP.
 
-Both redirect handlers share the same configuration options:
+Les deux gestionnaires de redirection partagent les mêmes options de
+configuration:
 
-* ``url`` - URL to redirect to (``CakeRedirect`` supports CakePHP Router syntax).
-* ``exceptions`` - a list of exception classes that should be redirected. By
-  default only ``MissingIdentityException`` is redirected.
-* ``queryParam`` - the accessed request URL will be attached to the redirect URL
-  query parameter (``redirect`` by default).
-* ``statusCode`` - HTTP status code of a redirect, ``302`` by default.
+* ``url`` - URL vers laquelle rediriger (``CakeRedirect`` supporte la syntaxe du
+  Router CakePHP).
+* ``exceptions`` - une liste de classes d'exceptions à rediriger. Par défaut
+  seule ``MissingIdentityException`` est redirigée.
+* ``queryParam`` - l'URL à laquelle la requête a tenté d'accéder sera attachée
+  à un paramètre query de l'URL de redirection (par défaut ``redirect``).
+* ``statusCode`` - le code de statut HTTP d'une redirection, par défaut ``302``.
 
-For example::
+Par exemple::
 
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
@@ -213,13 +223,13 @@ For example::
         ],
     ]));
 
-You can also add your own handler. Handlers should implement
-``Authorization\Middleware\UnauthorizedHandler\HandlerInterface``, be suffixed
-with ``Handler`` suffix and reside under your app's or plugin's
-``Middleware\UnauthorizedHandler`` namespace.
+Vous pouvez aussi ajouter votre propre gestionnaire. Les gestionnaires doivent
+implémenter ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface``,
+être suffixés par ``Handler`` et se trouver dans le namespace
+``Middleware\UnauthorizedHandler`` de votre application ou de votre plugin.
 
-Configuration options are passed to the handler's ``handle()`` method as the
-last parameter.
+Les options de configuration sont passées à la méthode ``handle()`` du
+gestionnaire comme dernier paramètre.
 
-Handlers catch only those exceptions which extend the
-``Authorization\Exception\Exception`` class.
+Les gestionnaires attrapent seulement les exceptions qui étendent la classe
+``Authorization\Exception\Exception``.
