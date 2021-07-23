@@ -234,9 +234,21 @@ How to create a custom UnauthorizedHandler
 ------------------------------
 
 1) Create the folder ``src/Middleware/UnauthorizedHandler``
-2) Create a class with the namespace ``Middleware\UnauthorizedHandler`` which ends with the string ``Handler`` (like ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``)
-3) If you want to have the basic redirect logic then extend your class with ``extends Authorization\Middleware\UnauthorizedHandler\RedirectHandler``
-4) Add the ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface`` to your class (``implements Authorization\Middleware\UnauthorizedHandler\HandlerInterface``)
+2) Create a class with the namespace ``Middleware\UnauthorizedHandler`` which ends with the string ``Handler`` (like ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``)::
+
+    <?php
+    declare(strict_types=1);
+    namespace App\Middleware\UnauthorizedHandler;
+    
+    class CustomRedirectHandler {...}
+
+3) If you want to have the basic redirect logic then extend your class with::
+
+    class CustomRedirectHandler extends Authorization\Middleware\UnauthorizedHandler\RedirectHandler
+
+4) If not add the ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface`` to your class::
+
+    class CustomRedirectHandler implements Authorization\Middleware\UnauthorizedHandler\HandlerInterface
 
 5) Add the flash message logic inside the ``handle()`` method like so::
 
