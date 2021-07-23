@@ -1,18 +1,20 @@
-2.0 Migration Guide
-###################
+Guide de Migration vers 2.0
+###########################
 
-Authorization 2.0 contains new features and a few breaking changes.
+Authorization 2.0 contient de nouvelles fonctionnalités et quelques changements
+entraînant une rupture de compatibilité.
 
-Breaking Changes
-================
+Ruptures de Compatibilité
+=========================
 
-The ``IdentityInterface`` has had typehinting added. If you have implemented the
-``IdentityInterface`` you will need to update your application's implementation
-to reflect the new typehints.
+Le typehinting a été ajouté dans ``IdentityInterface``. Si vous avez implémenté
+``IdentityInterface``, il faudra que vous mettiez à jour l'implémentation de
+votre application pour qu'elle reflète les nouveaux typehints.
 
-In addition to typehints ``IdentityInterface`` has a ``canResult()`` method
-added. This method always returns a ``ResultInterface`` object while ``can()``
-always returns a boolean. In 1.x the ``can()`` method would return a boolean or
-``ResultInterface`` depending on what the policy returned. This made knowing the
-return value of ``can()`` very hard. The new methods and additional typings
-make ``IdentityInterface`` simpler and more reliable to use.
+En plus des typehints, une nouvelle méthode ``canResult()`` a été ajoutée à
+``IdentityInterface``. Cette méthode renvoie toujours un objet
+``ResultInterface`` tandis que ``can()`` renvoie toujours un booléen. Dans 1.x,
+la méthode ``can()`` renvoyait un booléen ou un ``ResultInterface`` selon ce que
+renvoyait la policy. Cela rendait très difficile de savoir ce que renvoyait
+``can()``. Les nouvelles méthodes et le typehint supplémentaire rendent
+``IdentityInterface`` plus simple et plus pratique à utiliser.
