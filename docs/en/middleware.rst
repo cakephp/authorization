@@ -267,6 +267,8 @@ How to create a custom UnauthorizedHandler
 
 #. Tell the AuthorizationMiddleware that it should use your new custom Handler::
 
+    // in your src/Application.php
+    
     use Authorization\Exception\MissingIdentityException;
     use Authorization\Exception\ForbiddenException;
     
