@@ -235,9 +235,10 @@ How to create a custom UnauthorizedHandler
 
 1) Create the folder ``src/Middleware/UnauthorizedHandler``
 2) Create a class with the namespace ``Middleware\UnauthorizedHandler`` which ends with the string ``Handler`` (like ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``)
-3) Add the ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface`` to that class (``implements Authorization\Middleware\UnauthorizedHandler\HandlerInterface``)
+3) If you want to have the basic redirect logic then extend your class with ``extends Authorization\Middleware\UnauthorizedHandler\RedirectHandler``
+4) Add the ``Authorization\Middleware\UnauthorizedHandler\HandlerInterface`` to your class (``implements Authorization\Middleware\UnauthorizedHandler\HandlerInterface``)
 
-4) Add the flash message logic inside the ``handle()`` method like so::
+5) Add the flash message logic inside the ``handle()`` method like so::
 
     public function handle(Exception $exception, ServerRequestInterface $request, array $options = []): ResponseInterface {
         $response = parent::handle($exception, $request, $options);
@@ -245,7 +246,7 @@ How to create a custom UnauthorizedHandler
         return $response;
     }
 
-5) After you are done with the implementation of that function tell the middleware you want to use your custom handler via::
+6) After you are done with the implementation of that function tell the middleware you want to use your custom handler via::
 
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
@@ -256,5 +257,5 @@ How to create a custom UnauthorizedHandler
     
 The ``custom_param`` appears in the ``$options`` array given to you in the ``handle()`` function inside your ``CustomRedirectHandler``.
 
-You can look at https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/RedirectHandler.php 
+You can look at https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php or https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/RedirectHandler.php 
 how such a Handler can/should look like.
