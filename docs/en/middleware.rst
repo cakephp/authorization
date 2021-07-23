@@ -294,5 +294,5 @@ How to create a custom UnauthorizedHandler
     
 The ``custom_param`` appears in the ``$options`` array given to you in the ``handle()`` function inside your ``CustomRedirectHandler``.
 
-You can look at https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php or https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/RedirectHandler.php 
+You can look at `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/master/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
 how such a Handler can/should look like.
