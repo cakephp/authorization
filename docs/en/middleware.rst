@@ -222,7 +222,7 @@ specify which exceptions you want to listen to.
 
 So in this example where we use the ``Authorization.Redirect`` handler we can
 add other ``Authorization\Exception\Exception`` based exceptions to the 
-``execeptions`` array if we wan't to handle them gracefully::
+``execeptions`` array if we want to handle them gracefully::
 
     'exceptions' => [
         MissingIdentityException::class,
