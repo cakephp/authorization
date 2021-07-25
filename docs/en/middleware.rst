@@ -216,7 +216,7 @@ For example::
     ]));
     
 All handlers get the thrown exception object given as a parameter.
-This excepction will always be an instance of ``Authorization\Exception\Exception``.
+This exception will always be an instance of ``Authorization\Exception\Exception``.
 In this example the ``Authorization.Redirect`` handler just gives you the option to 
 specify which exceptions you want to listen to.
 
