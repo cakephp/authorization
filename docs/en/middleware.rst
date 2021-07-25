@@ -235,7 +235,7 @@ Configuration options are passed to the handler's ``handle()`` method as the
 last parameter.
 
 Add a flash message after being redirected by an unauthorized request
-------------------------------
+----------------------------------------------------------------------
 
 Currently there is no straightforward way to add a flash message to the unauthorized redirect.
 
