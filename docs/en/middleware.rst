@@ -201,10 +201,12 @@ Both redirect handlers share the same configuration options:
 
 For example::
 
+    use Authorization\Exception\MissingIdentityException;
+    
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
             'className' => 'Authorization.Redirect',
-            'url' => '/users/login',
+            'url' => '/pages/unauthorized',
             'queryParam' => 'redirectUrl',
             'exceptions' => [
                 MissingIdentityException::class,
@@ -212,14 +214,82 @@ For example::
             ],
         ],
     ]));
+    
+All handlers get the thrown exception object given as a parameter.
+This exception will always be an instance of ``Authorization\Exception\Exception``.
+In this example the ``Authorization.Redirect`` handler just gives you the option to 
+specify which exceptions you want to listen to.
 
-You can also add your own handler. Handlers should implement
-``Authorization\Middleware\UnauthorizedHandler\HandlerInterface``, be suffixed
-with ``Handler`` suffix and reside under your app's or plugin's
-``Middleware\UnauthorizedHandler`` namespace.
+So in this example where we use the ``Authorization.Redirect`` handler we can
+add other ``Authorization\Exception\Exception`` based exceptions to the 
+``execeptions`` array if we want to handle them gracefully::
+
+    'exceptions' => [
+        MissingIdentityException::class,
+        ForbiddenException::class
+    ],
+
+See the `RedirectHandler source <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__
 
 Configuration options are passed to the handler's ``handle()`` method as the
 last parameter.
 
-Handlers catch only those exceptions which extend the
-``Authorization\Exception\Exception`` class.
+Add a flash message after being redirected by an unauthorized request
+----------------------------------------------------------------------
+
+Currently there is no straightforward way to add a flash message to the unauthorized redirect.
+
+Therefore you need to create your own Handler which adds th flash message (or any 
+other logic you want to happen on redirect)
+
+How to create a custom UnauthorizedHandler
+-------------------------------------------
+
+#. Create this file ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``::
+
+    <?php
+    declare( strict_types = 1 );
+
+    namespace App\Middleware\UnauthorizedHandler;
+
+    use Authorization\Exception\Exception;
+    use Authorization\Middleware\UnauthorizedHandler\RedirectHandler;
+    use Psr\Http\Message\ResponseInterface;
+    use Psr\Http\Message\ServerRequestInterface;
+
+    class CustomRedirectHandler extends RedirectHandler {
+        public function handle( Exception $exception, ServerRequestInterface $request, array $options = [] ): ResponseInterface {
+            $response = parent::handle( $exception, $request, $options );
+            $request->getFlash()->error( 'You are not authorized to access that location' );
+            return $response;
+        }
+    }
+
+#. Tell the AuthorizationMiddleware that it should use your new custom Handler::
+
+    // in your src/Application.php
+    
+    use Authorization\Exception\MissingIdentityException;
+    use Authorization\Exception\ForbiddenException;
+    
+    $middlewareQueue->add(new AuthorizationMiddleware($this, [
+        'unauthorizedHandler' => [
+            'className' => 'CustomRedirect', // <--- see here
+            'url' => '/users/login',
+            'queryParam' => 'redirectUrl',
+            'exceptions' => [
+                MissingIdentityException::class,
+                ForbiddenException::class
+            ],
+            'custom_param' => true,
+        ],
+    ]));
+    
+As you can see you still have the same config parameters as if we are using ``Authorization.Redirect`` as a className.
+
+This is, because we extend our handler based on the RedirectHandler present in the plugin. Therefore all that functionality is present + our own funtionality in the ``handle()`` function.
+    
+The ``custom_param`` appears in the ``$options`` array given to you in the ``handle()`` function inside your ``CustomRedirectHandler`` if you wish to add some more config parameters to your functionality.
+
+You can look at `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
+how such a Handler can/should look like.
