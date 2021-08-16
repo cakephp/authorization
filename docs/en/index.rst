@@ -36,10 +36,11 @@ Add the ``AuthorizationProviderInterface`` to the implemented interfaces on your
 
     class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 
-Then add the following to your ``middleware()`` method::
+Then make your application's ``middleware()`` method look like::
 
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
+        // Middleware provided by CakePHP
         $middlewareQueue->add(new ErrorHandlerMiddleware(Configure::read('Error')))
             ->add(new AssetMiddleware())
             ->add(new RoutingMiddleware($this))
