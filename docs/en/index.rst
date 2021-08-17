@@ -36,10 +36,29 @@ Add the ``AuthorizationProviderInterface`` to the implemented interfaces on your
 
     class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 
-Then add the following to your ``middleware()`` method::
+Then make your application's ``middleware()`` method look like::
 
-    // Add authorization (after authentication if you are using that plugin too).
-    $middleware->add(new AuthorizationMiddleware($this));
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
+    {
+        // Middleware provided by CakePHP
+        $middlewareQueue->add(new ErrorHandlerMiddleware(Configure::read('Error')))
+            ->add(new AssetMiddleware())
+            ->add(new RoutingMiddleware($this))
+            ->add(new BodyParserMiddleware())
+
+            // If you are using Authentication it should be *before* Authorization.
+            ->add(new AuthenticationMiddleware($this));
+
+            // Add the AuthorizationMiddleware *after* routing, body parser
+            // and authentication middleware.
+            ->add(new AuthorizationMiddleware($this));
+
+        return $middlewareQueue();
+    }
+
+The placement of the ``AuthorizationMiddleware`` is important and must be added
+*after* your authentication middleware. This ensures that the request has an
+``identity`` which can be used for authorization checks.
 
 The ``AuthorizationMiddleware`` will call a hook method on your application when
 it starts handling the request. This hook method allows your application to
