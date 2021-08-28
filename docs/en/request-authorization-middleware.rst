@@ -16,7 +16,7 @@ Using it
 ========
 
 Create a policy for handling the request object. The plugin ships with an
-interface here to implement, create ``src/Policy/RequestPolicy.php``  ::
+interface we can implement. Start by creating **src/Policy/RequestPolicy.php** and add::
 
     namespace App\Policy;
 
