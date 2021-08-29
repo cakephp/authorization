@@ -16,7 +16,8 @@ Using it
 ========
 
 Create a policy for handling the request object. The plugin ships with an
-interface we can implement. Start by creating **src/Policy/RequestPolicy.php** and add::
+interface we can implement. Start by creating **src/Policy/RequestPolicy.php**
+and add::
 
     namespace App\Policy;
 
@@ -44,17 +45,18 @@ interface we can implement. Start by creating **src/Policy/RequestPolicy.php** a
         }
     }
 
-Map the request class to the policy inside ``Application::getAuthorizationService()``, in **src/Application.php** ::
+Next, map the request class to the policy inside
+``Application::getAuthorizationService()``, in **src/Application.php** ::
 
+    use App\Policy\RequestPolicy;
     use Authorization\AuthorizationService;
     use Authorization\AuthorizationServiceInterface;
     use Authorization\AuthorizationServiceProviderInterface;
     use Authorization\Middleware\AuthorizationMiddleware;
     use Authorization\Middleware\RequestAuthorizationMiddleware;
+    use Authorization\Policy\MapResolver;
     use Authorization\Policy\OrmResolver;
     use Psr\Http\Message\ResponseInterface;
-    use App\Policy\RequestPolicy;
-    use Authorization\Policy\MapResolver;
     use Cake\Http\ServerRequest;
 
 
@@ -63,12 +65,14 @@ Map the request class to the policy inside ``Application::getAuthorizationServic
         $mapResolver->map(ServerRequest::class, RequestPolicy::class);
         return new AuthorizationService($mapResolver);
     }
-    
-In your  **src/Application.php**  make sure you're loading the
-RequestAuthorizationMiddleware **after** the AuthorizationMiddleware::
- 
+
+Ensure you're loading the RequestAuthorizationMiddleware **after** the
+AuthorizationMiddleware::
+
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue {
+        // other middleware...
         // $middlewareQueue->add(new AuthenticationMiddleware($this));
+
         // Add authorization (after authentication if you are using that plugin too).
         $middlewareQueue->add(new AuthorizationMiddleware($this));
         $middlewareQueue->add(new RequestAuthorizationMiddleware());
