@@ -10,6 +10,8 @@ Project's ROOT directory (where the **composer.json** file is located)
 .. code-block:: shell
 
     php composer.phar require "cakephp/authorization:^2.0"
+    
+Version 2 of the Authorization Plugin is compatible with CakePHP 4.
 
 Load the plugin by adding the following statement in your project's
 ``src/Application.php``::
