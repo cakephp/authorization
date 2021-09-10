@@ -185,7 +185,7 @@ class IdentityDecorator implements IdentityInterface
      * @return mixed
      * @psalm-suppress LessSpecificImplementedReturnType
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         return $this->identity[$offset] = $value;
