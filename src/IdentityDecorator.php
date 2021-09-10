@@ -166,6 +166,7 @@ class IdentityDecorator implements IdentityInterface
      * @param mixed $offset Offset
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (isset($this->identity[$offset])) {
@@ -184,6 +185,7 @@ class IdentityDecorator implements IdentityInterface
      * @return mixed
      * @psalm-suppress LessSpecificImplementedReturnType
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         return $this->identity[$offset] = $value;
