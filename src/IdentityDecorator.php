@@ -20,6 +20,7 @@ use ArrayAccess;
 use Authorization\Policy\ResultInterface;
 use BadMethodCallException;
 use InvalidArgumentException;
+use ReturnTypeWillChange;
 
 /**
  * An decorator implementing the IdentityInterface.
@@ -166,6 +167,7 @@ class IdentityDecorator implements IdentityInterface
      * @param mixed $offset Offset
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (isset($this->identity[$offset])) {
@@ -184,6 +186,7 @@ class IdentityDecorator implements IdentityInterface
      * @return mixed
      * @psalm-suppress LessSpecificImplementedReturnType
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         return $this->identity[$offset] = $value;
