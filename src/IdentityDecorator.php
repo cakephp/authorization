@@ -20,6 +20,7 @@ use ArrayAccess;
 use Authorization\Policy\ResultInterface;
 use BadMethodCallException;
 use InvalidArgumentException;
+use ReturnTypeWillChange;
 
 /**
  * An decorator implementing the IdentityInterface.
