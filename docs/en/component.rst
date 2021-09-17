@@ -87,7 +87,7 @@ be raised.
 If you want to map actions to different authorization methods use the 
 ``actionMap`` option::
 
-   // In you controller initialize() method:
+   // In your controller initialize() method:
    $this->Authorization->mapActions([
        'index' => 'list',
        'delete' => 'remove',

@@ -2,12 +2,12 @@ linters:
   phpcs:
     standard: CakePHP4
     extensions: 'php'
-    fixer: true
+    fixer: false
 
 files:
   ignore:
     - 'vendor/*'
 
 fixers:
-  enable: true
+  enable: false
   workflow: 'commit'
