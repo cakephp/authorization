@@ -7,6 +7,10 @@ COPY docs /data/docs
 RUN cd /data/docs-builder && \
   make website LANGS="en es fr" SOURCE=/data/docs DEST=/data/website
 
+# Update elastic search index
+RUN cd /data/docs-builder && \
+  make populate-index LANGS="en es fr" SOURCE=/data/docs ES_HOST="$DOKKU_ELASTICSEARCH_AQUA_URL" SEARCH_URL_PREFIX="/authorization/2"
+
 # Build a small nginx container with just the static site in it.
 FROM nginx:1.15-alpine
 
