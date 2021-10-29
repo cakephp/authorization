@@ -340,7 +340,7 @@ class AuthorizationComponent extends Component
     /**
      * Returns model authorization handler if model authorization is enabled.
      *
-     * @return array<array-key, mixed>
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {
