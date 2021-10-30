@@ -10,24 +10,16 @@ RUN cd /data/docs-builder && \
   make website LANGS="$LANGS" SOURCE=/data/docs DEST=/data/website
 
 # Build a small nginx container with just the static site in it.
-FROM nginx:1.15-alpine
+FROM markstory/cakephp-docs-builder:runtime as runtime
 
 # Configure search index script
 ENV LANGS="en es fr"
 ENV SEARCH_SOURCE="/data/docs"
 ENV SEARCH_URL_PREFIX="/authorization/2"
 
-# Janky but we could extract this into an image we re-use.
-RUN apk add --update php php-curl php-json
-
+COPY --from=builder /data/docs /data/docs
 COPY --from=builder /data/website /data/website
 COPY --from=builder /data/docs-builder/nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy the search index script, and source files over.
-COPY --from=builder /data/docs-builder/scripts/populate_search_index.php /data/populate_search_index.php
-COPY --from=builder /data/docs /data/docs
-
-COPY run.sh /data/run.sh
 
 # Move files into final location
 RUN cp -R /data/website/html/* /usr/share/nginx/html \
