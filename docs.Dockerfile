@@ -18,7 +18,7 @@ ENV SEARCH_SOURCE="/data/docs"
 ENV SEARCH_URL_PREFIX="/authorization/2"
 
 # Janky but we could extract this into an image we re-use.
-RUN apk add --update php php-curl
+RUN apk add --update php php-curl php-json
 
 COPY --from=builder /data/website /data/website
 COPY --from=builder /data/docs-builder/nginx.conf /etc/nginx/conf.d/default.conf
