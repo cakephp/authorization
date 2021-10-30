@@ -7,4 +7,4 @@ do
 done
 
 # Run nginx like normal.
-nginx -g daemon off;
+nginx -g 'daemon off;'
