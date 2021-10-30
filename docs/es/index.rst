@@ -79,8 +79,9 @@ Otras lecturas
 ==============
 
 * :doc:`/policies`
-* :doc:`/policy-resolvers`
-* :doc:`/middleware`
-* :doc:`/component`
-* :doc:`/checking-authorization`
-* :doc:`/request-authorization-middleware`
+
+.. * :doc:`/policy-resolvers`
+.. * :doc:`/middleware`
+.. * :doc:`/component`
+.. * :doc:`/checking-authorization`
+.. * :doc:`/request-authorization-middleware`
