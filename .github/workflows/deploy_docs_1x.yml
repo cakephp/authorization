@@ -1,5 +1,5 @@
 ---
-name: 'deploy_docs 1.x'
+name: 'deploy_docs_1x'
 
 on:
   push:
