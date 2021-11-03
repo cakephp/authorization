@@ -18,5 +18,5 @@ jobs:
       - name: Push to dokku
         uses: dokku/github-action@master
         with:
-          git_remote_url: 'ssh://dokku@apps.cakephp.org:22/authorization-docs-1'
+          git_remote_url: 'ssh://dokku@apps.cakephp.org:22/authorization-docs'
           ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
