@@ -61,7 +61,6 @@ class AuthorizationMiddleware implements MiddlewareInterface
         'identityDecorator' => null,
         'identityAttribute' => 'identity',
         'requireAuthorizationCheck' => true,
-        'unauthorizedHandler' => 'Authorization.Exception',
     ];
 
     /**
@@ -132,11 +131,11 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
             }
         } catch (Exception $exception) {
-            $unauthorizedHandler = $this->getHandler();
+            $unauthorizedHandler = $this->getHandler($service->getConfig('unauthorizedHandler'));
             $response = $unauthorizedHandler->handle(
                 $exception,
                 $request,
-                (array)$this->getConfig('unauthorizedHandler')
+                (array)$service->getConfig('unauthorizedHandler')
             );
         }
 
@@ -146,11 +145,11 @@ class AuthorizationMiddleware implements MiddlewareInterface
     /**
      * Returns unauthorized handler.
      *
+     * @param array|string $handler The handler config.
      * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
      */
-    protected function getHandler(): HandlerInterface
+    protected function getHandler($handler): HandlerInterface
     {
-        $handler = $this->getConfig('unauthorizedHandler');
         if (!is_array($handler)) {
             $handler = [
                 'className' => $handler,
@@ -184,6 +183,18 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 getTypeName($service),
                 AuthorizationServiceInterface::class
             ));
+        }
+        $deprecated = ['unauthorizedHandler'];
+        foreach ($deprecated as $key) {
+            $value = $this->getConfig($key);
+            if ($value) {
+                deprecationWarning(
+                    "The `{$key}` configuration key on AuthorizationMiddleware is deprecated. " .
+                    "Instead set the `{$key}` on your AuthorizationService instance."
+                );
+                $service->setConfig($key, $value);
+            }
+
         }
 
         return $service;

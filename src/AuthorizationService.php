@@ -22,9 +22,21 @@ use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\ResolverInterface;
 use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
+use Cake\Core\InstanceConfigTrait;
 
 class AuthorizationService implements AuthorizationServiceInterface
 {
+    use InstanceConfigTrait;
+
+    /**
+     * Default config.
+     *
+     * @var array
+     */
+    protected $_defaultConfig = [
+        'unauthorizedHandler' => 'Authorization.Exception',
+    ];
+
     /**
      * Authorization policy resolver.
      *

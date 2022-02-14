@@ -25,6 +25,7 @@ use RuntimeException;
  * This handler will redirect the response if one of configured exception classes is encountered.
  *
  * CakePHP Router compatible array URL syntax is supported.
+ * @deprecated use RedirectHandler instead.
  */
 class CakeRedirectHandler extends RedirectHandler
 {
