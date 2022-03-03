@@ -33,8 +33,8 @@ autorisations. Commençons par mettre en place le middleware. Dans
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
 
-Ajoutez ``AuthorizationProviderInterface`` aux interfaces implémentées par votre
-classe Application::
+Ajoutez ``AuthorizationServiceProviderInterface`` aux interfaces implémentées par
+votre classe Application::
 
     class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 
