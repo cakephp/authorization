@@ -84,7 +84,7 @@ a list view to the current user::
 
     namespace App\Policy;
 
-    class ArticlesPolicy
+    class ArticlesTablePolicy
     {
         public function scopeIndex($user, $query)
         {
