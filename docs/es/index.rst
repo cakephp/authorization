@@ -31,7 +31,8 @@ En **src/Application.php** agregue lo siguiente a las importaciones de la clase:
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
 
-Agregue la ``AuthorizationProviderInterface`` a las interfaces implementadas en su aplicación::
+Agregue la ``AuthorizationServiceProviderInterface`` a las interfaces
+implementadas en su aplicación::
 
     class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 
