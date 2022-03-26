@@ -39,7 +39,7 @@ class AuthorizationComponent extends Component
     /**
      * Default config
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'identityAttribute' => 'identity',
