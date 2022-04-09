@@ -17,7 +17,8 @@ Comment l'utiliser
 ==================
 
 Créez une policy pour gérer l'objet requête. Le plugin est livré avec une
-interface à implémenter ici::
+interface que nous pouvons implémenter. Commencez par créer
+**src/Policy/RequestPolicy.php** et ajoutez-y::
 
     namespace App\Policy;
 
@@ -45,22 +46,34 @@ interface à implémenter ici::
         }
     }
 
-Mappez la classe de la requête vers la policy à l'intérieur de
-``Application::getAuthorizationService()``::
+Ensuite, mappez la classe de la requête vers la policy à l'intérieur de
+``Application::getAuthorizationService()``, dans **src/Application.php** ::
 
     use App\Policy\RequestPolicy;
     use Authorization\AuthorizationService;
+    use Authorization\AuthorizationServiceInterface;
+    use Authorization\AuthorizationServiceProviderInterface;
+    use Authorization\Middleware\AuthorizationMiddleware;
+    use Authorization\Middleware\RequestAuthorizationMiddleware;
     use Authorization\Policy\MapResolver;
+    use Authorization\Policy\OrmResolver;
+    use Psr\Http\Message\ResponseInterface;
     use Cake\Http\ServerRequest;
 
-    $mapResolver = new MapResolver();
-    $mapResolver->map(ServerRequest::class, RequestPolicy::class);
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface {
+        $mapResolver = new MapResolver();
+        $mapResolver->map(ServerRequest::class, RequestPolicy::class);
+        return new AuthorizationService($mapResolver);
+    }
 
-    return new AuthorizationService($mapResolver);
+Assurez-vous de charger RequestAuthorizationMiddleware **après**
+AuthorizationMiddleware::
 
-Dans votre ``Application.php`` assurez-vous que vous chargez le
-RequestAuthorizationMiddleware **après** le AuthorizationMiddleware::
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue {
+        // autres middlewares...
+        // $middlewareQueue->add(new AuthenticationMiddleware($this));
 
-    // Ajoutez l'autorisation (après authentication si vous utilisez aussi ce plugin).
-    $middleware->add(new AuthorizationMiddleware($this));
-    $middleware->add(new RequestAuthorizationMiddleware());
+        // Ajoutez l'autorisation (après authentication si vous utilisez aussi ce plugin).
+        $middlewareQueue->add(new AuthorizationMiddleware($this));
+        $middlewareQueue->add(new RequestAuthorizationMiddleware());
+    }

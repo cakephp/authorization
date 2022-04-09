@@ -10,7 +10,9 @@ répertoire racine de votre project CakePHP (là où se trouve le fichier
 
 .. code-block:: shell
 
-    php composer.phar require "cakephp/authorization:^2.0"
+    php composer.phar require "cakephp/authorization:^2.0"+    
+
+La version 2 du Plugin Authorization est compatible avec CakePHP 4.
 
 Chargez le plugin en ajoutant la ligne suivante dans le fichier
 ``src/Application.php`` de votre projet::
@@ -38,10 +40,29 @@ votre classe Application::
 
     class Application extends BaseApplication implements AuthorizationServiceProviderInterface
 
-Puis ajoutez ceci à votre méthode ``middleware()``::
+Puis modifiez votre méthode ``middleware()`` pour la faire ressembler à ceci::
 
-    // Ajoute authorization (après authentication, si vous utilisez aussi ce plugin).
-    $middleware->add(new AuthorizationMiddleware($this));
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
+    {
+        // Middleware fourni par CakePHP
+        $middlewareQueue->add(new ErrorHandlerMiddleware(Configure::read('Error')))
+            ->add(new AssetMiddleware())
+            ->add(new RoutingMiddleware($this))
+            ->add(new BodyParserMiddleware())
+
+            // Si vous utilisez Authentication, il doit se trouver *avant* Authorization.
+            ->add(new AuthenticationMiddleware($this));
+
+            // Ajoutez le AuthorizationMiddleware *après* les middlewares
+            // routing, body parser et authentication.
+            ->add(new AuthorizationMiddleware($this));
+
+        return $middlewareQueue();
+    }
+
+Le placement du ``AuthorizationMiddleware`` est important. Il faut l'ajouter
+*après* le middleware authentication. Cela garantit que la requête ait une
+indtance ``identity`` utilisable pour les vérifications d'autorisations.
 
 Le ``AuthorizationMiddleware`` appellera une méthode crochet (*hook*) de votre
 application au démarrage du traitement de la requête. Cette méthode permet à
