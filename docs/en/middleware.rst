@@ -222,7 +222,7 @@ specify which exceptions you want to listen to.
 
 So in this example where we use the ``Authorization.Redirect`` handler we can
 add other ``Authorization\Exception\Exception`` based exceptions to the 
-``execeptions`` array if we want to handle them gracefully::
+``exceptions`` array if we want to handle them gracefully::
 
     'exceptions' => [
         MissingIdentityException::class,
@@ -291,5 +291,6 @@ This is, because we extend our handler based on the RedirectHandler present in t
     
 The ``custom_param`` appears in the ``$options`` array given to you in the ``handle()`` function inside your ``CustomRedirectHandler`` if you wish to add some more config parameters to your functionality.
 
-You can look at `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
+You can look at `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`
+or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`
 how such a Handler can/should look like.
