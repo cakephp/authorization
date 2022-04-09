@@ -312,6 +312,5 @@ dans la fonction ``handle()`` à l'intérieur de votre ``CustomRedirectHandler``
 si vous souhaitez ajouter quelques paramètres de configuration supplémentaires à
 vos fonctionnalités personnalisées.
 
-Vous pouvez consulter les classes `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`
-ou `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`
+Vous pouvez consulter les classes `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ ou `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
 pour voir à quoi un Handler pourrait/devrait ressembler.
