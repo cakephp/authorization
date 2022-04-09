@@ -20,8 +20,9 @@ Vérifications Automatiques d'Autorisation
 
 ``AuthorizationComponent`` peut être configuré pour appliquer automatiquement
 des règles d'autorisation selon la classe du modèle par défaut associé au
-controller et le nom de l'action en cours. Dans l'exemple suivant, les actions
-``index`` et ``add`` seront autorisées::
+controller et le nom de l'action en cours. Dans l'exemple suivant, les
+autorisations seront vérifiées automatiquement dans les actions ``index`` et
+``add``::
 
     $this->Authorization->authorizeModel('index', 'add');
 
