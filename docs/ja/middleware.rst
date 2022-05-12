@@ -1,82 +1,56 @@
-Authorization Middleware
+認可ミドルウェア
 ########################
-
-Authorization is applied to your application as a middleware. The
-``AuthorizationMiddleware`` handles the following responsibilities:
-
-* Decorating the request 'identity' with a decorator that adds the ``can``,
-  ``canResult``, and ``applyScope`` methods if necessary.
-* Ensuring that authorization has been checked/bypassed in the request.
-
-To use the middleware implement ``AuthorizationServiceProviderInterface`` in your
-application class. Then pass your app instance into the middleware and add the
-middleware to the queue.
-
-A basic example would be::
-
+認可はミドルウェアとしてアプリケーションに適用されます。
+``AuthorizationMiddleware`` は次のような役割があります。:
+* リクエストの '識別要素' を必要に応じて ``can``, ``canResult``, ``applyScope`` メソッドで装飾します。
+* リクエストの確認/回避を確実にする
+アプリケーションにミドルウェアを反映させるにはApplicationクラスに ``AuthorizationServiceProviderInterface`` を追加します。
+ミドルウェアをキューに追加するのもお忘れなく。
+基本的な例::
     namespace App;
-
     use Authorization\AuthorizationService;
     use Authorization\AuthorizationServiceProviderInterface;
     use Authorization\Middleware\AuthorizationMiddleware;
     use Authorization\Policy\OrmResolver;
     use Cake\Http\BaseApplication;
-
     class Application extends BaseApplication implements AuthorizationServiceProviderInterface
     {
         public function getAuthorizationService(ServerRequestInterface $request, ResponseInterface $response)
         {
             $resolver = new OrmResolver();
-
             return new AuthorizationService($resolver);
         }
-
         public function middleware($middlewareQueue)
         {
             // other middleware
             $middlewareQueue->add(new AuthorizationMiddleware($this));
-
             return $middlewareQueue;
         }
     }
-
-The authorization service requires a policy resolver. See the
-:doc:`/policies` documentation on what resolvers are available and how
-to use them.
-
+認可Serviceにはポリシーリゾルバが必要です。
+詳しくは :doc:`/policies` をご覧ください。
 .. _identity-decorator:
-
 Identity Decorator
 ==================
-
-By default the ``identity`` in the request will be decorated (wrapped) with
-``Authorization\IdentityDecorator``. The decorator class proxies method calls,
-array access and property access to the decorated identity object. To access the
-underlying identity directly use ``getOriginalData()``::
-
+デフォルトの ``identity`` (リクエスト) は ``Authorization\IdentityDecorator`` でデコレートされます。
+デコレータクラスは、メソッド呼び出し、配列アクセス、プロパティアクセスをデコレートされたIDオブジェクトにプロキシします。
+アクセスするのに基礎となる ``getOriginalData()`` を直接使う::
     $originalUser = $user->getOriginalData();
-
-If your application uses the `cakephp/authentication
-<https://github.com/cakephp/authentication>`_ plugin then the
-``Authorization\Identity`` class will be used. This class implements the
-``Authentication\IdentityInterface`` in addition to the
-``Authorization\IdentityInterface``. This allows you to use the
-``Authentication`` lib's component and helper to get the decorated identity.
-
-Using your User class as the Identity
+もしあなたのアプリケーションで、 `cakephp/authentication
+<https://github.com/cakephp/authentication>`_ プラグインが使われていたら、
+``Authorization\Identity`` クラスを使用しています。
+このクラスは ``Authorization\IdentityInterface`` に ``Authentication\IdentityInterface``を加えて実装します。
+これにより、 ``Authentication`` のコンポーネントとヘルパーを使用して、デコレートされたIDが取得できます。
+Userクラスを識別子として使用する
 -------------------------------------
-
-If you have an existing ``User`` or identity class you can skip the decorator by
-implementing the ``Authorization\IdentityInterface`` and using the
-``identityDecorator`` middleware option. First lets update our ``User`` class::
-
+``User`` クラスか識別子クラスがある場合、 ``Authorization\IdentityInterface`` を実装して、
+``identityDecorator`` ミドルウェアオプションを使用していた場合、デコレータを省略することができます。
+最初に ``User`` クラスを変更します::
     namespace App\Model\Entity;
-
     use Authorization\AuthorizationServiceInterface;
     use Authorization\IdentityInterface;
     use Authorization\Policy\ResultInterface;
     use Cake\ORM\Entity;
-
     class User extends Entity implements IdentityInterface
     {
         /**
@@ -86,7 +60,6 @@ implementing the ``Authorization\IdentityInterface`` and using the
         {
             return $this->authorization->can($this, $action, $resource);
         }
-
         /**
          * Authorization\IdentityInterface method
          */
@@ -94,7 +67,6 @@ implementing the ``Authorization\IdentityInterface`` and using the
         {
             return $this->authorization->canResult($this, $action, $resource);
         }
-
         /**
          * Authorization\IdentityInterface method
          */
@@ -102,7 +74,6 @@ implementing the ``Authorization\IdentityInterface`` and using the
         {
             return $this->authorization->applyScope($this, $action, $resource);
         }
-
         /**
          * Authorization\IdentityInterface method
          */
@@ -110,40 +81,28 @@ implementing the ``Authorization\IdentityInterface`` and using the
         {
             return $this;
         }
-
         /**
          * Setter to be used by the middleware.
          */
         public function setAuthorization(AuthorizationServiceInterface $service)
         {
             $this->authorization = $service;
-
             return $this;
         }
-
         // Other methods
     }
-
-Now that our user implements the necessary interface, lets update our middleware
-setup::
-
-    // In your Application::middleware() method;
-
+必要なインターフェースは実装したので、ミドルウェアの設定を更新しましょう::
+    // Application::middleware() メソッド内で
     // Authorization
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'identityDecorator' => function ($auth, $user) {
             return $user->setAuthorization($auth);
         }
     ]));
-
-You no longer have to change any existing typehints, and can start using
-authorization policies anywhere you have access to your user.
-
-If you also use the Authentication plugin make sure to implement both interfaces.::
-
+既存のタイプヒントを変更する必要がなくなり、ユーザーへのアクセスが可能な場所であれば、どこでも認可ポリシーを使い始めることができます。
+Authentication(認証)プラグインを使っているなら、両方のインターフェイスを実装します。::
     use Authorization\IdentityInterface as AuthorizationIdentity;
     use Authentication\IdentityInterface as AuthenticationIdentity;
-
     class User extends Entity implements AuthorizationIdentity, AuthenticationIdentity
     {
         ...
@@ -160,47 +119,32 @@ If you also use the Authentication plugin make sure to implement both interfaces
         
         ...
     }
-
-Ensuring Authorization is Applied
+認可を確実に適用する
 ---------------------------------
-
-By default the ``AuthorizationMiddleware`` will ensure that each request
-containing an ``identity`` also has authorization checked/bypassed. If
-authorization is not checked an ``AuthorizationRequiredException`` will be raised.
-This exception is raised **after** your other middleware/controller actions are
-complete, so you cannot rely on it to prevent unauthorized access, however it is
-a helpful aid during development/testing. You can disable this behavior via an
-option::
-
+デフォルトでは、 ``AuthorizationMiddleware`` は ``identity`` を含む各リクエストに対して、認可のチェックと回避を行います。
+認可が確認できなかった場合 ``AuthorizationRequiredException`` を投げます。
+この例外はミドルウェア/コントローラーが動作した **後に** 発生するため、不正アクセスの防止に使えません。
+しかし、開発やテストの時は補助として使うことができます。
+この動作は、オプションで無効にすることができます::
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'requireAuthorizationCheck' => false
     ]));
-
-Handling Unauthorized Requests
+不正なリクエストへの対処
 ------------------------------
-
-By default authorization exceptions thrown by the application are rethrown by the middleware.
-You can configure handlers for unauthorized requests and perform custom action, e.g.
-redirect the user to the login page.
-
-The built-in handlers are:
-
-* ``Exception`` - this handler will rethrow the exception, this is a default
-  behavior of the middleware.
-* ``Redirect`` - this handler will redirect the request to the provided URL.
-* ``CakeRedirect`` - redirect handler with support for CakePHP Router.
-
-Both redirect handlers share the same configuration options:
-
-* ``url`` - URL to redirect to (``CakeRedirect`` supports CakePHP Router syntax).
-* ``exceptions`` - a list of exception classes that should be redirected. By
-  default only ``MissingIdentityException`` is redirected.
-* ``queryParam`` - the accessed request URL will be attached to the redirect URL
-  query parameter (``redirect`` by default).
-* ``statusCode`` - HTTP status code of a redirect, ``302`` by default.
-
-For example::
-
+デフォルトでは、アプリケーションがスローする認証例外は、ミドルウェアによって再スローされます。
+不正なリクエストへの対処を設定し、ユーザーをログインページにリダイレクトさせるなど、
+カスタムアクションを実行することができます。
+:
+* ``Exception`` - このハンドラーは例外を再スローします。これはミドルウェアのデフォルトの動作です。
+* ``Redirect`` - このハンドラーは、指定されたURLにリクエストをリダイレクトします。
+* ``CakeRedirect`` - CakePHPルーターをサポートするハンドラーをリダイレクトします。
+両方のリダイレクトハンドラーは同じ構成オプションを共有します:
+* ``url`` - リダイレクトするURL (``CakeRedirect`` はCakePHPルーター構文をサポートします。).
+* ``exceptions`` - リダイレクトする必要がある例外クラスのリスト。 
+デフォルトでは ``MissingIdentityException`` のみがリダイレクトされます。
+* ``queryParam`` -アクセスされたリクエストURLは、リダイレクトURLクエリパラメータにアタッチされます。(デフォルトは ``redirect``)
+* ``statusCode`` - リダイレクトのHTTPステータスコードで、デフォルトは ``302`` です。
+例::
     use Authorization\Exception\MissingIdentityException;
     
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
@@ -215,48 +159,35 @@ For example::
         ],
     ]));
     
-All handlers get the thrown exception object given as a parameter.
-This exception will always be an instance of ``Authorization\Exception\Exception``.
-In this example the ``Authorization.Redirect`` handler just gives you the option to 
-specify which exceptions you want to listen to.
-
-So in this example where we use the ``Authorization.Redirect`` handler we can
-add other ``Authorization\Exception\Exception`` based exceptions to the 
-``execeptions`` array if we want to handle them gracefully::
-
+すべてのハンドラは、パラメータとして与えられたスローされた例外オブジェクトを取得します。
+この例外はいつも ``Authorization\Exception\Exception`` のインスタンスです。
+この例では、 ``Authorization.Redirect`` ハンドラで、どの例外をリスニングするかを指定するオプションが提供されているだけです。
+この例では ``Authorization.Redirect`` ハンドラを使用していますが、
+他の ``AuthorizationException`` ベースの例外を優雅に処理したい場合は、
+``execeptions`` 配列に追加することができます。::
     'exceptions' => [
         MissingIdentityException::class,
         ForbiddenException::class
     ],
+`RedirectHandler source <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ を見てください。
+設定オプションはハンドラの ``handle()`` メソッドに最後のパラメータとして渡されます。
 
-See the `RedirectHandler source <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__
-
-Configuration options are passed to the handler's ``handle()`` method as the
-last parameter.
-
-Add a flash message after being redirected by an unauthorized request
+不正なリクエストでリダイレクトされた後のフラッシュメッセージの追加
 ----------------------------------------------------------------------
+現在、不正なリダイレクトにフラッシュメッセージを追加するストレートな方法はありません。
+したがって、フラッシュメッセージ (またはリダイレクト時に発生させたいその他のロジック) を
+追加する独自のハンドラを作成する必要があります。
 
-Currently there is no straightforward way to add a flash message to the unauthorized redirect.
-
-Therefore you need to create your own Handler which adds th flash message (or any 
-other logic you want to happen on redirect)
-
-How to create a custom UnauthorizedHandler
+どうやってカスタムUnauthorizedHandlerを作成するか
 -------------------------------------------
-
-#. Create this file ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``::
-
+#. ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``ファイルを作成::
     <?php
     declare( strict_types = 1 );
-
     namespace App\Middleware\UnauthorizedHandler;
-
     use Authorization\Exception\Exception;
     use Authorization\Middleware\UnauthorizedHandler\RedirectHandler;
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-
     class CustomRedirectHandler extends RedirectHandler {
         public function handle( Exception $exception, ServerRequestInterface $request, array $options = [] ): ResponseInterface {
             $response = parent::handle( $exception, $request, $options );
@@ -264,10 +195,8 @@ How to create a custom UnauthorizedHandler
             return $response;
         }
     }
-
-#. Tell the AuthorizationMiddleware that it should use your new custom Handler::
-
-    // in your src/Application.php
+#.  AuthorizationMiddlewareに、新しいカスタムハンドラを使用するように指示します。::
+    // src/Application.php内で
     
     use Authorization\Exception\MissingIdentityException;
     use Authorization\Exception\ForbiddenException;
@@ -285,11 +214,8 @@ How to create a custom UnauthorizedHandler
         ],
     ]));
     
-As you can see you still have the same config parameters as if we are using ``Authorization.Redirect`` as a className.
-
-This is, because we extend our handler based on the RedirectHandler present in the plugin. Therefore all that functionality is present + our own funtionality in the ``handle()`` function.
+クラス名として ``Authorization.Redirect`` を使用した場合と同じ設定パラメータがあることがおわかりいただけると思います。
+これは、プラグインに存在する RedirectHandler をベースに私たちのハンドラを拡張しているからです。したがって、すべての機能は ``handle()`` 関数内に存在し、私たち自身の機能は ``handle()`` 内に存在します。
     
-The ``custom_param`` appears in the ``$options`` array given to you in the ``handle()`` function inside your ``CustomRedirectHandler`` if you wish to add some more config parameters to your functionality.
-
-You can look at `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
-how such a Handler can/should look like.
+カスタムパラメータを追加したい場合は、 ``CustomRedirectHandler`` 内の ``handle()`` 関数で指定した ``$options`` 配列に ``custom_param`` が含まれます。
+こちらもご覧ください `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
