@@ -1,18 +1,16 @@
 2.0 Migration Guide
 ###################
 
-Authorization 2.0 contains new features and a few breaking changes.
+Authorization 2.0 には新しい機能と、少しの破壊的変更が含まれています。
 
-Breaking Changes
+破壊的変更
 ================
 
-The ``IdentityInterface`` has had typehinting added. If you have implemented the
-``IdentityInterface`` you will need to update your application's implementation
-to reflect the new typehints.
+``IdentityInterface`` にタイプヒントが追加されました。
+もし ``IdentityInterface`` を実装している場合は、新しい typehints を反映させるためにアプリケーションの実装を更新する必要があります。
 
-In addition to typehints ``IdentityInterface`` has a ``canResult()`` method
-added. This method always returns a ``ResultInterface`` object while ``can()``
-always returns a boolean. In 1.x the ``can()`` method would return a boolean or
-``ResultInterface`` depending on what the policy returned. This made knowing the
-return value of ``can()`` very hard. The new methods and additional typings
-make ``IdentityInterface`` simpler and more reliable to use.
+タイプヒントを加えて、 ``IdentityInterface`` に ``canResult()`` メソッドが追加されました。 
+このメソッドは常に ``ResultInterface`` オブジェクトを返し ``can()`` は常にboolを返します。
+1.xバージョンの時は ``can()`` は ``bool`` と ``ResultInterface`` が返却されていました。
+このため、 ``can()`` の戻り値を知ることは非常に困難でした。
+新しいメソッドと追加の型付けにより、 ``IdentityInterface`` はよりシンプルに、より信頼性の高いものとして使用できるようになりました。
