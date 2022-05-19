@@ -1,11 +1,10 @@
 AuthorizationComponent
 ######################
 
-The ``AuthorizationComponent`` exposes a few conventions based helper methods for
-checking permissions from your controllers. It abstracts getting the user and
-calling the ``can`` or ``applyScope`` methods. Using the AuthorizationComponent
-requires use of the Middleware, so make sure it is applied as well. To use the
-component, first load it::
+``AuthorizationComponent`` は、コントローラのパーミッションをチェックするための、
+いくつかの規約に基づいたヘルパーメソッドを公開しています。
+ユーザーの取得や、 ``can`` や ``applyScope`` メソッドの呼び出しが抽象化されています。
+AuthorizationComponent を使用するには、ミドルウェアを使用する必要があるので、ミドルウェアが適用されていることを確認してください。コンポーネントを使用するには、まず、次のようにコンポーネントをロードします。::
 
     // In your AppController
     public function initialize()
@@ -14,20 +13,17 @@ component, first load it::
         $this->loadComponent('Authorization.Authorization');
     }
 
-Automatic authorization checks
+自動認可の確認
 ==============================
 
-``AuthorizationComponent`` can be configured to automatically apply
-authorization based on the controller's default model class and current action
-name. In the following example ``index`` and ``add`` actions will be authorized::
+``AuthorizationComponent`` は、コントローラのデフォルトのモデルクラスと現在のアクション名に基づいて、自動的に認可を適用するように設定することができます。
+次の例では、 ``index`` と ``add`` のアクションが許可されます。::
 
     $this->Authorization->authorizeModel('index', 'add');
 
-You can also configure actions to skip authorization. This will make actions **public**,
-accessible to all users. By default all actions require authorization and
-``AuthorizationRequiredException`` will be thrown if authorization checking is enabled.
-
-Authorization can be skipped for individual actions::
+また、認証をスキップするアクションを設定することも可能です。
+これにより、すべてのユーザーがアクセスできる、**public** なアクションが作成されます。デフォルトでは、すべてのアクションは認証が必要で、認証チェックが有効な場合は ``AuthorizationRequiredException`` がスローされます。
+Authorizationは個々のアクションをスキップできます。::
 
     $this->loadComponent('Authorization.Authorization', [
         'skipAuthorization' => [
@@ -35,57 +31,50 @@ Authorization can be skipped for individual actions::
         ]
     ]);
 
-Checking Authorization
+Authorization を確認する
 ======================
 
-In your controller actions or callback methods you can check authorization using
-the component::
+コントローラのアクションやコールバックメソッドで、 認証をチェックするにはコンポーネント::
 
-    // In the Articles Controller.
+    // ArticlesControllerの中
     public function edit($id)
     {
         $article = $this->Articles->get($id);
         $this->Authorization->authorize($article);
-        // Rest of the edit method.
+        // 残りの編集についての処理
     }
 
-Above we see an article being authorized for the current user. Since we haven't 
-specified the action to check the request's ``action`` is used. You can specify
-a policy action with the second parameter::
+上では、現在のユーザーに対して記事が認証されていることがわかります。
+チェックするアクションを指定していないので、リクエストの ``action`` が使われます。
+第2パラメータでポリシーアクションを指定することができます。::
 
-    // Use a policy method that doesn't match the current controller action.
+    // 現在のコントローラアクションに一致しないポリシーメソッドを使用します。
     $this->Authorization->authorize($article, 'update');
 
-The ``authorize()`` method will raise an ``Authorization\Exception\ForbiddenException``
-when permission is denied. If you want to check authorization and get a boolean
-result you can use the ``can()`` method::
+``authorize()`` は、拒否されると ``Authorization\Exception\ForbiddenException`` を投げます。 もし、Bool値を取得したいなら ``can()`` を使用してください ::
 
     if ($this->Authorization->can($article, 'update')) {
-        // Do something to the article.
+        // 記事に関する処理
     }
 
-Anonymous Users
+匿名のユーザー
 ===============
 
-Some resources in your application may be accessible to users who are not logged
-in. Whether or not a resource can be accessed by an un-authenticated
-user is in the domain of policies. Through the component you can check
-authorization for anonymous users. Both the ``can()`` and ``authorize()`` support
-anonymous users. Your policies can expect to get ``null`` for the 'user' parameter
-when the user is not logged in.
+アプリケーション内の一部のリソースは、ログインしていないユーザーもアクセスできる場合があります。
+未認証のユーザーがリソースにアクセスできるかどうかは、ポリシーの領域である。
+このコンポーネントを通して、匿名ユーザーの認可を確認することができます。
+``can()`` と ``authorize()`` の両方が匿名ユーザーをサポートします。ユーザーがログインしていない場合、ポリシーは 'user' パラメータに ``null`` を期待することができます。
 
-Applying Policy Scopes
+ポリシースコープを適用する
 ======================
 
-You can also apply policy scopes using the component::
+また、ポリシースコープを適用するには、コンポーネント::
 
 $query = $this->Authorization->applyScope($this->Articles->find());
 
-If the current action has no logged in user a ``MissingIdentityException`` will
-be raised.
+現在のアクションにログインしているユーザがいない場合、 ``MissingIdentityException`` が発生します。
 
-If you want to map actions to different authorization methods use the 
-``actionMap`` option::
+アクションを異なる認証方式にマッピングしたい場合は、 ``actionMap`` オプションを使用します::
 
    // In your controller initialize() method:
    $this->Authorization->mapActions([
@@ -100,7 +89,7 @@ If you want to map actions to different authorization methods use the
        ->mapAction('delete', 'remove')
        ->mapAction('add', 'insert');
 
-Example::
+例::
 
     //ArticlesController.php
 
@@ -108,7 +97,7 @@ Example::
     {
         $query = $this->Articles->find();
 
-        //this will apply `list` scope while being called in `index` controller action.
+        // これは `index` コントローラアクションで呼び出される際に `list` スコープを適用します。
         $this->Authorization->applyScope($query); 
         ...
     }
@@ -117,22 +106,22 @@ Example::
     {
         $article = $this->Articles->get($id);
 
-        //this will authorize against `remove` entity action while being called in `delete` controller action.
+        // これは、 `delete` コントローラアクションで呼び出される `remove` エンティティアクションに対して認可を行うものです。
         $this->Authorization->authorize($article); 
         ...
     }
 
     public function add()
     {
-        //this will authorize against `insert` model action while being called in `add` controller action.
+        // これは `add` コントローラアクションで呼び出される `insert` モデルアクションに対して認可を行います。
         $this->Authorization->authorizeModel(); 
         ...
     }
 
-Skipping Authorization
+ 認可をスキップする
 ======================
 
-Authorization can also be skipped inside an action::
+アクションの内部で認証を省略することもできます。::
 
     //ArticlesController.php
 

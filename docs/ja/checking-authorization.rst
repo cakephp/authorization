@@ -1,55 +1,50 @@
-Checking Authorization
+認可の確認
 ######################
 
-Once you have applied the :doc:`/middleware` to your application and added an
-``identity`` to the request, you can start checking authorization. The
-middleware will wrap the ``identity`` in each request with an
-``IdentityDecorator`` that adds authorization related methods.
+アプリケーションに :doc:`/middleware` を適用して、リクエストに ``identity`` を追加したら、認可のチェックを開始できます。
+ミドルウェアは各リクエストの ``identity`` を ``IdentityDecorator`` でラップし、認可に関連するメソッドを追加します。
 
-You can pass the ``identity`` into your models, services or templates allowing
-you to check authorization anywhere in your application easily. See the
-:ref:`identity-decorator` section for how to customize or replace the default
-decorator.
+モデル、サービス、テンプレートに ``identity`` を渡すことで、
+アプリケーションの任意の場所で簡単に認可を確認することができます。
+デフォルトのデコレーターをカスタマイズしたり置き換えたりする方法については、 :ref:`identity-decorator` のセクションを参照してください。
 
-Checking Authorization for a Single Resource
+単一リソースの認可チェック
 ============================================
 
-The ``can`` method enables you to check authorization on a single resource.
-Typically this is an ORM entity, or application domain object. Your
-:doc:`/policies` provide logic to make the authorization decision::
+``can`` メソッドを使用すると、1つのリソースの認可を確認することができます。
+通常、これはORMエンティティ、またはアプリケーションドメインオブジェクトである。
+あなたの :doc:`/policies` は認可を決定するためのロジックを提供します。::
 
-    // Get the identity from the request
+    // リクエストからIDを取得する
     $user = $this->request->getAttribute('identity');
 
-    // Check authorization on $article
+    // $article の権限をチェック
     if ($user->can('delete', $article)) {
-        // Do delete operation
+        // 削除の操作...
     }
 
-If your policies return :ref:`policy-result-objects`
-be sure to check their status as ``canResult()`` returns the result instance::
+ポリシーが :ref:`policy-result-objects` を返す場合、 ``canResult()`` が結果インスタンスを返すので、そのステータスを必ずチェックしてください。::
 
-   // Assuming our policy returns a result.
+   // ポリシーが結果を返すと仮定して
    $result = $user->canResult('delete', $article);
    if ($result->getStatus()) {
-       // Do deletion
+       // 削除する
    }
 
-Applying Scope Conditions
+条件適用の範囲
 =========================
 
-When you need to apply authorization checks to a collection of objects like
-a paginated query you will often want to only fetch records that the current
-user has access to. This plugin implements this concept as 'scopes'. Scope
-policies allow you to 'scope' a query or result set and return the updated list
-or query object::
+ページ分割されたクエリのようなオブジェクトのコレクションに権限チェックを適用する必要がある場合、
+現在のユーザがアクセスできるレコードのみを取得したいことがよくあるでしょう。
+このプラグインは、この概念を 'scope' として実装しています。
+スコープ・ポリシーでは、クエリや結果セットを 'scope' し、
+更新されたリストやクエリ・オブジェクトを返すことができます::
 
-    // Get the identity from the request
+    // リクエストから 'identity' を取得する
     $user = $this->request->getAttribute('identity');
 
-    // Apply permission conditions to a query so only
-    // the records the current user has access to are returned.
+    // クエリに許可条件を適用し、
+    // 現在のユーザーがアクセスできるレコードのみを返すようにします。
     $query = $user->applyScope('index', $query);
 
-The :doc:`/component` can be used in controller actions
-to streamline authorization checks that raise exceptions on failure.
+:doc:`/component` をコントローラのアクションで使用することで、失敗時に例外が発生する認証チェックを効率化することができます。

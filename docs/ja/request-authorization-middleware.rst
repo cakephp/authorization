@@ -1,23 +1,19 @@
-Request Authorization Middleware
+リクエスト認証ミドルウェア
 ################################
 
-This middleware is useful when you want to authorize your requests, for example
-each controller and action, against a role based access system or any other kind
-of authorization process that controls access to certain actions.
+このミドルウェアは、例えば各コントローラーやアクションなどのリクエストを、
+ロールベースアクセスシステムや、
+特定のアクションへのアクセスを制御する他の種類の認可プロセスに対して認可したい場合に便利です。
+Authorization や RoutingMiddleware の **後に** 追加する必要があります
 
-This **must** be added after the Authorization, Authentication and
-RoutingMiddleware in the Middleware Queue!
+リクエスト認可を処理するロジックは、リクエストポリシーに実装される。
+そこですべてのロジックを追加することもできるし、リクエストからの情報をACLやRBACの実装に渡すだけでいい。
 
-The logic of handling the request authorization will be implemented in the
-request policy. You can add all your logic there or just pass the information
-from the request into an ACL or RBAC implementation.
-
-Using it
+使用方法
 ========
 
-Create a policy for handling the request object. The plugin ships with an
-interface we can implement. Start by creating **src/Policy/RequestPolicy.php**
-and add::
+リクエストオブジェクトを処理するためのポリシーを作成します。プラグインは実装可能なインターフェイスを同梱しています。
+まず、 **src/Policy/RequestPolicy.php** を作成し、以下を追加します。::
 
     namespace App\Policy;
 
@@ -45,8 +41,7 @@ and add::
         }
     }
 
-Next, map the request class to the policy inside
-``Application::getAuthorizationService()``, in **src/Application.php** ::
+次に、 **src/Application.php** の ``Application::getAuthorizationService()`` 内で、リクエストクラスをポリシーにマッピングします。
 
     use App\Policy\RequestPolicy;
     use Authorization\AuthorizationService;
@@ -66,14 +61,13 @@ Next, map the request class to the policy inside
         return new AuthorizationService($mapResolver);
     }
 
-Ensure you're loading the RequestAuthorizationMiddleware **after** the
-AuthorizationMiddleware::
+RequestAuthorizationMiddlewareの読み込みが、AuthorizationMiddlewareの **後** であることを確認する。::
 
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue {
         // other middleware...
         // $middlewareQueue->add(new AuthenticationMiddleware($this));
 
-        // Add authorization (after authentication if you are using that plugin too).
+        // authorizationを加える (authenticationの後にね).
         $middlewareQueue->add(new AuthorizationMiddleware($this));
         $middlewareQueue->add(new RequestAuthorizationMiddleware());
     }

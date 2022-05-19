@@ -1,73 +1,63 @@
-Policy Resolvers
+ポリシーリゾルバー
 ################
 
-Mapping resource objects to their respective policy classes is a behavior
-handled by a policy resolver. We provide a few resolvers to get you started, but
-you can create your own resolver by implementing the
-``Authorization\Policy\ResolverInterface``. The built-in resolvers are:
+リソースオブジェクトをそれぞれのポリシークラスにマッピングすることは、ポリシーリゾルバによって処理される動作である。
+いくつかのリゾルバを用意していますが、 ``AuthorizationPolicyResolverInterface`` を実装することで、独自のリゾルバを作成することができます。
+内部のリゾルバ:
 
-* ``MapResolver`` allows you to map resource names to their policy class names, or
-  to objects and callables.
-* ``OrmResolver`` applies conventions based policy resolution for common ORM
-  objects.
-* ``ResolverCollection`` allows you to aggregate multiple resolvers together,
-  searching them sequentially.
+* ``MapResolver`` では、リソース名をそのポリシークラス名、またはオブジェクトやcallableにマッピングすることができます。
+* ``OrmResolver`` は、一般的なORMオブジェクトに対して、規約に基づいたポリシー解決を適用します。
+* ``ResolverCollection`` では、複数のリゾルバを集約して、順番に検索することができます。
 
-Using MapResolver
+MapResolver を使う
 =================
 
-``MapResolver`` lets you map resource class names to policy classnames, policy
-objects, or factory callables::
+``MapResolver`` では、リソースクラス名をポリシークラス名、ポリシーオブジェクト、
+またはファクトリーコーラブルにマッピングすることができます。::
 
     use Authorization\Policy\MapResolver;
 
     $mapResolver = new MapResolver();
 
-    // Map a resource class to a policy classname
+    // ポリシークラス名とリソースクラスの対応付け
     $mapResolver->map(Article::class, ArticlePolicy::class);
 
-    // Map a resource class to a policy instance.
+    // policyインスタンスとリソースクラスの対応付け
     $mapResolver->map(Article::class, new ArticlePolicy());
 
-    // Map a resource class to a factory function
+    // ファクトリークラスとリソースクラスの対応付け
     $mapResolver->map(Article::class, function ($resource, $mapResolver) {
         // Return a policy object.
     });
 
-Using OrmResolver
+OrmResolverを使う
 =================
 
-The ``OrmResolver`` is a conventions based policy resolver for CakePHP's ORM. The
-OrmResolver applies the following conventions:
+``OrmResolver`` は、CakePHP の ORM 用の規約ベースのポリシーリゾルバである。OrmResolver は以下の規約を適用する。:
 
-#. Policies live in ``App\Policy``
-#. Policy classes end with the ``Policy`` class suffix.
+#. ポリシーは ``App\Policy`` に保存されます。
+#. ポリシークラスは末尾が ``Policy`` で終わります。
 
-The OrmResolver can resolve policies for the following object types:
+OrmResolverは、以下のオブジェクトタイプのポリシーを解決することができます。:
 
-* Entities - Using the entity classname.
-* Tables - Using the table classname.
-* Queries - Using the return of the query's ``repository()`` to get a classname.
+* Entities - エンティティクラス名の使用
+* Tables - テーブルクラスの使用
+* Queries - クエリの ``repository()`` の戻り値を使用して、クラス名を取得する。
 
-In all cases the following rules are applied:
+すべての場合において、以下のルールが適用されます。:
 
-#. The resource classname is used to generate a policy class name. e.g
-   ``App\Model\Entity\Bookmark`` will map to ``App\Policy\BookmarkPolicy``
-#. Plugin resources will first check for an application policy e.g
-   ``App\Policy\Bookmarks\BookmarkPolicy`` for ``Bookmarks\Model\Entity\Bookmark``.
-#. If no application override policy can be found, a plugin policy will be
-   checked. e.g. ``Bookmarks\Policy\BookmarkPolicy``
+#. リソースクラス名は、ポリシークラス名を生成するために使用されます。例えば、 ``AppModelEntity Filter`` は ``AppPolicy Filter`` にマップされます。
+#. プラグインリソースは、まずアプリケーションポリシーを確認する。 例えば ``App\Policy\Bookmarks\BookmarkPolicy`` は ``Bookmarks\Model\Entity\Bookmark``に向けて。
+#. アプリケーションオーバーライドポリシーが見つからない場合、プラグインポリシーがチェックされます。例えば ``Bookmarks\Policy\BookmarkPolicy``
 
-For table objects the class name tranformation would result in
-``App\Model\Table\ArticlesTable`` mapping to ``App\Policy\ArticlesTablePolicy``.
-Query objects will have their ``repository()`` method called, and a policy will be
-generated based on the resulting table class.
+テーブルオブジェクトの場合、クラス名の変換で ``AppModelTableTable`` が ``AppPolicyArticlesTablePolicy`` にマッピングされることになります。
+クエリーオブジェクトは ``repository()`` メソッドを呼び出され、その結果得られるテーブルクラスに基づいてポリシーが生成されます。
 
-The OrmResolver supports customization through its constructor::
+OrmResolver は、そのコンストラクタでカスタマイズをサポートします。::
 
     use Authorization\Policy\OrmResolver;
 
-    // Change when using a custom application namespace.
+    // カスタムアプリケーションの名前空間を使用する場合の変更。
     $appNamespace = 'App';
 
     // Map policies in one namespace to another.
@@ -78,10 +68,10 @@ The OrmResolver supports customization through its constructor::
     ];
     $resolver = new OrmResolver($appNamespace, $overrides)
 
-Using ResolverCollection
+ResolverCollectionを使う
 ========================
 
-``ResolverCollection`` allows you to aggregate multiple resolvers together::
+``ResolverCollection``  では、複数のリゾルバをまとめることができます。::
 
     use Authorization\Policy\ResolverCollection;
     use Authorization\Policy\MapResolver;
@@ -90,13 +80,11 @@ Using ResolverCollection
     $ormResolver = new OrmResolver();
     $mapResolver = new MapResolver();
 
-    // Check the map resolver, and fallback to the orm resolver if
-    // a resource is not explicitly mapped.
+    // マップリゾルバをチェックし、リソースが明示的にマップされていない場合は、オームリゾルバにフォールバックする。
     $resolver = new ResolverCollection([$mapResolver, $ormResolver]);
 
-Creating a Resolver
+Resolver を作成する
 ===================
 
-You can implement your own resolver by implementing the
-``Authorization\Policy\ResolverInterface`` which requires defining the
-``getPolicy($resource)`` method.
+独自のリゾルバを実装するには、 ``AuthorizationPolicyResolverInterface`` を実装し、 
+``getPolicy($resource)`` メソッドを定義する必要があります。
