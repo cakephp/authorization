@@ -3,7 +3,7 @@ FROM markstory/cakephp-docs-builder as builder
 
 COPY docs /data/docs
 
-ENV LANGS="en es fr"
+ENV LANGS="en es fr ja"
 
 # Build docs with sphinx
 RUN cd /data/docs-builder && \
@@ -13,7 +13,7 @@ RUN cd /data/docs-builder && \
 FROM markstory/cakephp-docs-builder:runtime as runtime
 
 # Configure search index script
-ENV LANGS="en es fr"
+ENV LANGS="en es fr ja"
 ENV SEARCH_SOURCE="/usr/share/nginx/html"
 ENV SEARCH_URL_PREFIX="/authorization/2"
 
