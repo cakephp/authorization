@@ -41,7 +41,7 @@ Authorization や RoutingMiddleware の **後に** 追加する必要があり�
         }
     }
 
-次に、 **src/Application.php** の ``Application::getAuthorizationService()`` 内で、リクエストクラスをポリシーにマッピングします。
+次に、 **src/Application.php** の ``Application::getAuthorizationService()`` 内で、リクエストクラスをポリシーにマッピングします。::
 
     use App\Policy\RequestPolicy;
     use Authorization\AuthorizationService;
