@@ -78,7 +78,7 @@ The OrmResolver supports customization through its constructor::
     ];
     $resolver = new OrmResolver($appNamespace, $overrides)
 
-Using ResolverCollection
+Using Multiple Resolvers
 ========================
 
 ``ResolverCollection`` allows you to aggregate multiple resolvers together::
@@ -100,3 +100,45 @@ Creating a Resolver
 You can implement your own resolver by implementing the
 ``Authorization\Policy\ResolverInterface`` which requires defining the
 ``getPolicy($resource)`` method.
+
+An example scenario where a custom resolver would be useful is when bridging the
+authorization plugin with controller based access controls when migrating from
+the ``AuthComponent``. First we need to create a catch-all policy that will call
+our controller method::
+
+    // in src/Policy/ControllerHookPolicy.php
+    namespace App\Policy;
+
+    class ControllerHookPolicy
+    {
+        public function __call($user, $controller)
+        {
+            return $controller->isAuthorized($user);
+        }
+    }
+
+Our policy class uses ``__call`` so that it can handle all of the actions in our
+controller. Our policy calls the ``isAuthorized()`` method on our controller
+giving us backwards compatibility with our existing logic. Next, we'll create
+a policy resolver that will resolve controllers to our custom policy::
+
+    // in src/Policy/ControllerResolver.php
+    namespace App\Policy;
+
+    use Authorization\Policy\ResolverInterface;
+    use Authorization\Policy\Exception\MissingPolicyException;
+    use Cake\Controller\Controller;
+
+    class ControllerResolver implements ResolverInterface
+    {
+        public function getPolicy($resource)
+        {
+            if ($resource instanceof Controller) {
+                return new ControllerHookPolicy();
+            }
+            throw new MissingPolicyException([get_class($resource)]);
+        }
+    }
+
+With our policy and resolver created, we can add the resolver to our application
+directly or combine it with other resolvers using the ``ResolverCollection``.

@@ -84,7 +84,7 @@ Cualquier valor devuelto que no sea ``true`` o un objeto ``ResultInterface``
 se considerará un 'fail'.
 
 Alcances Policy
---------------
+---------------
 
 Además de que las policy pueden definir verificaciones de autorización 'pass'/'fail',
 también pueden definir 'alcances'. Los métodos de alcance le permiten modificar otro

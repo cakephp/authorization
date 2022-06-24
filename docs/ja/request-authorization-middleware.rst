@@ -1,24 +1,19 @@
-Middleware d'Autorisation de Requête
-####################################
+リクエスト認証ミドルウェア
+################################
 
-Ce middleware est utile pour autoriser vos requêtes, par exemple chaque
-controller et action, en fonction d'un système d'accès basé sur des rôles ou
-n'importe quel autre type de processus d'autorisation qui contrôle l'accès à
-certaines actions.
+このミドルウェアは、例えば各コントローラーやアクションなどのリクエストを、
+ロールベースアクセスシステムや、
+特定のアクションへのアクセスを制御する他の種類の認可プロセスに対して認可したい場合に便利です。
+Authorization や RoutingMiddleware の **後に** 追加する必要があります
 
-Il **doit** être ajouté après Authorization, Authentication et RoutingMiddleware
-dans la Middleware Queue !
-La logique de gestion de l'autorisation de la requête sera implémentée dans la
-policy de la requête. Vous pouvez ajouter toute votre logique à cet endroit ou
-simplement passer l'information de la requête vers une implémentation ACL ou
-RBAC.
+リクエスト認可を処理するロジックは、リクエストポリシーに実装される。
+そこですべてのロジックを追加することもできるし、リクエストからの情報をACLやRBACの実装に渡すだけでいい。
 
-Comment l'utiliser
-==================
+使用方法
+========
 
-Créez une policy pour gérer l'objet requête. Le plugin est livré avec une
-interface que nous pouvons implémenter. Commencez par créer
-**src/Policy/RequestPolicy.php** et ajoutez-y::
+リクエストオブジェクトを処理するためのポリシーを作成します。プラグインは実装可能なインターフェイスを同梱しています。
+まず、 **src/Policy/RequestPolicy.php** を作成し、以下を追加します。::
 
     namespace App\Policy;
 
@@ -28,10 +23,10 @@ interface que nous pouvons implémenter. Commencez par créer
     class RequestPolicy implements RequestPolicyInterface
     {
         /**
-         * Méthode pour vérifier si on peut accéder à la requête
+         * Method to check if the request can be accessed
          *
          * @param \Authorization\IdentityInterface|null $identity Identity
-         * @param \Cake\Http\ServerRequest $request Requête du serveur
+         * @param \Cake\Http\ServerRequest $request Server Request
          * @return bool
          */
         public function canAccess($identity, ServerRequest $request)
@@ -46,8 +41,7 @@ interface que nous pouvons implémenter. Commencez par créer
         }
     }
 
-Ensuite, mappez la classe de la requête vers la policy à l'intérieur de
-``Application::getAuthorizationService()``, dans **src/Application.php** ::
+次に、 **src/Application.php** の ``Application::getAuthorizationService()`` 内で、リクエストクラスをポリシーにマッピングします。::
 
     use App\Policy\RequestPolicy;
     use Authorization\AuthorizationService;
@@ -60,20 +54,20 @@ Ensuite, mappez la classe de la requête vers la policy à l'intérieur de
     use Psr\Http\Message\ResponseInterface;
     use Cake\Http\ServerRequest;
 
+
     public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface {
         $mapResolver = new MapResolver();
         $mapResolver->map(ServerRequest::class, RequestPolicy::class);
         return new AuthorizationService($mapResolver);
     }
 
-Assurez-vous de charger RequestAuthorizationMiddleware **après**
-AuthorizationMiddleware::
+RequestAuthorizationMiddlewareの読み込みが、AuthorizationMiddlewareの **後** であることを確認する。::
 
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue {
-        // autres middlewares...
+        // other middleware...
         // $middlewareQueue->add(new AuthenticationMiddleware($this));
 
-        // Ajoutez l'autorisation (après authentication si vous utilisez aussi ce plugin).
+        // authorizationを加える (authenticationの後にね).
         $middlewareQueue->add(new AuthorizationMiddleware($this));
         $middlewareQueue->add(new RequestAuthorizationMiddleware());
     }

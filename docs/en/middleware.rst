@@ -239,7 +239,7 @@ Add a flash message after being redirected by an unauthorized request
 
 Currently there is no straightforward way to add a flash message to the unauthorized redirect.
 
-Therefore you need to create your own Handler which adds th flash message (or any 
+Therefore you need to create your own Handler which adds the flash message (or any 
 other logic you want to happen on redirect)
 
 How to create a custom UnauthorizedHandler
