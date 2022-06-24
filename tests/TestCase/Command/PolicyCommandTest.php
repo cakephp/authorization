@@ -17,15 +17,17 @@ declare(strict_types=1);
 namespace Authorization\Test\TestCase\Command;
 
 use Cake\Console\Command;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Routing\Router;
-use Cake\TestSuite\ConsoleIntegrationTestCase;
 use Cake\TestSuite\StringCompareTrait;
+use Cake\TestSuite\TestCase;
 
 /**
  * PolicyCommand test class
  */
-class PolicyCommandTest extends ConsoleIntegrationTestCase
+class PolicyCommandTest extends TestCase
 {
+    use ConsoleIntegrationTestTrait;
     use StringCompareTrait;
 
     /**
@@ -44,7 +46,6 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
         Router::reload();
 
         $this->comparisonDir = dirname(dirname(__DIR__)) . DS . 'comparisons' . DS;
-        $this->useCommandRunner();
         $this->loadPlugins(['TestPlugin']);
     }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     colors="true"
-    processIsolation="false"
-    stopOnFailure="false"
     bootstrap="tests/bootstrap.php"
+    backupGlobals="true"
+    convertDeprecationsToExceptions="true"
     >
 
     <!-- Add any additional test suites you want to run here -->
@@ -14,24 +14,20 @@
         <!-- Add plugin test suites here. -->
     </testsuites>
 
-    <!-- Setup a listener for fixtures -->
-    <listeners>
-        <listener
-            class="Cake\TestSuite\Fixture\FixtureInjector">
-            <arguments>
-                <object class="Cake\TestSuite\Fixture\FixtureManager"/>
-            </arguments>
-        </listener>
-    </listeners>
+    <extensions>
+        <extension class="Cake\TestSuite\Fixture\PHPUnitExtension"/>
+    </extensions>
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+    <coverage>
+        <include>
             <directory suffix=".php">src/</directory>
-        </whitelist>
-    </filter>
+        </include>
+    </coverage>
 
     <php>
         <ini name="memory_limit" value="-1"/>
+        <env name="FIXTURE_SCHEMA_METADATA" value="./tests/schema.php"/>
+
         <!-- Postgres
         <env name="db_dsn" value="postgres://root@localhost/cake_test_db"/>
         -->

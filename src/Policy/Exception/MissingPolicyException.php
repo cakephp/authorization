@@ -27,7 +27,7 @@ class MissingPolicyException extends Exception
      *
      * @var string
      */
-    protected $_messageTemplate = 'Policy for `%s` has not been defined.';
+    protected string $_messageTemplate = 'Policy for `%s` has not been defined.';
 
     /**
      * @param object|string|array $resource Either the resource instance, a string of the error message, or an array of attributes

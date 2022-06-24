@@ -20,6 +20,7 @@ declare(strict_types=1);
  */
 namespace Authorization;
 
+use ArrayAccess;
 use Authentication\IdentityInterface as AuthenIdentityInterface;
 
 class Identity extends IdentityDecorator implements AuthenIdentityInterface
@@ -49,7 +50,7 @@ class Identity extends IdentityDecorator implements AuthenIdentityInterface
      *
      * @return string|int|null
      */
-    public function getIdentifier()
+    public function getIdentifier(): string|int|null
     {
         return $this->identity->getIdentifier();
     }
@@ -57,7 +58,7 @@ class Identity extends IdentityDecorator implements AuthenIdentityInterface
     /**
      * @inheritDoc
      */
-    public function getOriginalData()
+    public function getOriginalData(): ArrayAccess|array
     {
         return $this->identity->getOriginalData();
     }

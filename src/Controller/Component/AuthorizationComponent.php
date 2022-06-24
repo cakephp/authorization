@@ -41,7 +41,7 @@ class AuthorizationComponent extends Component
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'identityAttribute' => 'identity',
         'serviceAttribute' => 'authorization',
         'authorizationEvent' => 'Controller.startup',
@@ -295,7 +295,7 @@ class AuthorizationComponent extends Component
 
         $authorizeModel = $this->checkAction($action, 'authorizeModel');
         if ($authorizeModel) {
-            $this->authorize($this->getController()->loadModel());
+            $this->authorize($this->getController()->fetchTable());
         }
     }
 

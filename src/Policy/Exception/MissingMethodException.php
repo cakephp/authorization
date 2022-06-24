@@ -25,5 +25,5 @@ class MissingMethodException extends Exception
      *
      * @var string
      */
-    protected $_messageTemplate = 'Method `%s` for invoking action `%s` has not been defined in `%s`.';
+    protected string $_messageTemplate = 'Method `%s` for invoking action `%s` has not been defined in `%s`.';
 }

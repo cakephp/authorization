@@ -24,12 +24,12 @@ class ForbiddenException extends Exception
     /**
      * @inheritDoc
      */
-    protected $_defaultCode = 403;
+    protected int $_defaultCode = 403;
 
     /**
      * @inheritDoc
      */
-    protected $_messageTemplate = 'Identity is not authorized to perform `%s` on `%s`.';
+    protected string $_messageTemplate = 'Identity is not authorized to perform `%s` on `%s`.';
 
     /**
      * Policy check result.
