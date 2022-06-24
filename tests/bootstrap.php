@@ -18,6 +18,7 @@ declare(strict_types=1);
 use Cake\Core\Configure;
 use Cake\Core\Plugin as CorePlugin;
 use Cake\Datasource\ConnectionManager;
+use Cake\TestSuite\Fixture\SchemaLoader;
 
 $findRoot = function ($root) {
     do {
@@ -60,3 +61,9 @@ if (!getenv('DB_URL')) {
 ConnectionManager::setConfig('test', ['url' => getenv('DB_URL')]);
 
 CorePlugin::getCollection()->add(new \Authorization\Plugin());
+
+// Create test database schema
+if (env('FIXTURE_SCHEMA_METADATA')) {
+    $loader = new SchemaLoader();
+    $loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));
+}

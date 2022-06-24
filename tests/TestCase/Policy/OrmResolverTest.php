@@ -19,7 +19,7 @@ namespace Authorization\Test\TestCase\Policy;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use OverridePlugin\Policy\TagPolicy as OverrideTagPolicy;
 use TestApp\Model\Entity\Article;
@@ -32,7 +32,9 @@ use TestPlugin\Policy\TagPolicy;
 
 class OrmResolverTest extends TestCase
 {
-    public $fixtures = ['core.Articles'];
+    use LocatorAwareTrait;
+
+    protected array $fixtures = ['plugin.Authorization.Articles'];
 
     public function testGetPolicyUnknownObject()
     {
@@ -94,7 +96,7 @@ class OrmResolverTest extends TestCase
 
     public function testGetPolicyDefinedTable()
     {
-        $articles = TableRegistry::get('Articles');
+        $articles = $this->fetchTable('Articles');
         $resolver = new OrmResolver('TestApp');
         $policy = $resolver->getPolicy($articles);
         $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
@@ -102,7 +104,7 @@ class OrmResolverTest extends TestCase
 
     public function testGetPolicyQueryForDefinedTable()
     {
-        $articles = TableRegistry::get('Articles');
+        $articles = $this->fetchTable('Articles');
         $resolver = new OrmResolver('TestApp');
         $policy = $resolver->getPolicy($articles->find());
         $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
