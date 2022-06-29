@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Command;
 
-use Cake\Console\Command;
+use Cake\Command\Command;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Routing\Router;
 use Cake\TestSuite\StringCompareTrait;
