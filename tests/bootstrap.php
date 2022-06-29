@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -12,11 +13,9 @@ declare(strict_types=1);
  * @link          http://cakephp.org CakePHP(tm) Project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
-// @codingStandardsIgnoreFile
-
+use Authorization\AuthorizationPlugin;
 use Cake\Core\Configure;
-use Cake\Core\Plugin as CorePlugin;
+use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\Fixture\SchemaLoader;
 
@@ -40,7 +39,7 @@ require_once 'vendor/autoload.php';
 define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
 define('APP', ROOT . 'TestApp' . DS);
 define('TMP', sys_get_temp_dir() . DS);
-define('CONFIG', ROOT . DS . 'config'. DS);
+define('CONFIG', ROOT . DS . 'config' . DS);
 define('CACHE', TMP . 'cache' . DS);
 define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
 
@@ -51,7 +50,7 @@ Configure::write('App', [
     'encoding' => 'UTF-8',
     'paths' => [
         'plugins' => [ROOT . 'Plugin' . DS],
-    ]
+    ],
 ]);
 
 if (!getenv('DB_URL')) {
@@ -60,7 +59,7 @@ if (!getenv('DB_URL')) {
 
 ConnectionManager::setConfig('test', ['url' => getenv('DB_URL')]);
 
-CorePlugin::getCollection()->add(new \Authorization\Plugin());
+Plugin::getCollection()->add(new AuthorizationPlugin());
 
 // Create test database schema
 if (env('FIXTURE_SCHEMA_METADATA')) {

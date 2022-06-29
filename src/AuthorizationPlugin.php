@@ -23,7 +23,7 @@ use Cake\Core\BasePlugin;
 /**
  * Plugin definition for Authorization
  */
-class Plugin extends BasePlugin
+class AuthorizationPlugin extends BasePlugin
 {
     /**
      * Add console commands if bake is also available.
