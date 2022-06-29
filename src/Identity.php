@@ -30,7 +30,7 @@ class Identity extends IdentityDecorator implements AuthenIdentityInterface
      *
      * @var \Authentication\IdentityInterface
      */
-    protected $identity;
+    protected ArrayAccess|array $identity;
 
     /**
      * Constructor

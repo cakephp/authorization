@@ -39,7 +39,7 @@ class AuthorizationComponent extends Component
     /**
      * Default config
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $_defaultConfig = [
         'identityAttribute' => 'identity',
@@ -61,7 +61,7 @@ class AuthorizationComponent extends Component
      * @return void
      * @throws \Authorization\Exception\ForbiddenException when policy check fails.
      */
-    public function authorize($resource, ?string $action = null): void
+    public function authorize(mixed $resource, ?string $action = null): void
     {
         if ($action === null) {
             $request = $this->getController()->getRequest();
@@ -94,7 +94,7 @@ class AuthorizationComponent extends Component
      * @return bool
      * @psalm-suppress InvalidReturnType
      */
-    public function can($resource, ?string $action = null): bool
+    public function can(mixed $resource, ?string $action = null): bool
     {
         /** @psalm-suppress InvalidReturnStatement */
         return $this->performCheck($resource, $action);
@@ -111,7 +111,7 @@ class AuthorizationComponent extends Component
      * @return \Authorization\Policy\ResultInterface
      * @psalm-suppress InvalidReturnType
      */
-    public function canResult($resource, ?string $action = null): ResultInterface
+    public function canResult(mixed $resource, ?string $action = null): ResultInterface
     {
         /** @psalm-suppress InvalidReturnStatement */
         return $this->performCheck($resource, $action, 'canResult');
@@ -123,10 +123,13 @@ class AuthorizationComponent extends Component
      * @param mixed $resource The resource to check authorization on.
      * @param string|null $action The action to check authorization for.
      * @param string $method The method to use, either "can" or "canResult".
-     * @return bool|\Authorization\Policy\ResultInterface
+     * @return \Authorization\Policy\ResultInterface|bool
      */
-    protected function performCheck($resource, ?string $action = null, string $method = 'can')
-    {
+    protected function performCheck(
+        mixed $resource,
+        ?string $action = null,
+        string $method = 'can'
+    ): ResultInterface|bool {
         $request = $this->getController()->getRequest();
         if ($action === null) {
             $action = $this->getDefaultAction($request);
@@ -150,7 +153,7 @@ class AuthorizationComponent extends Component
      * @param string|null $action The action to apply a scope for.
      * @return mixed
      */
-    public function applyScope($resource, ?string $action = null)
+    public function applyScope(mixed $resource, ?string $action = null): mixed
     {
         $request = $this->getController()->getRequest();
         if ($action === null) {
@@ -229,7 +232,7 @@ class AuthorizationComponent extends Component
      * @return \Authorization\AuthorizationServiceInterface
      * @throws \InvalidArgumentException When invalid authorization service encountered.
      */
-    protected function getService(ServerRequestInterface $request): \Authorization\AuthorizationServiceInterface
+    protected function getService(ServerRequestInterface $request): AuthorizationServiceInterface
     {
         $serviceAttribute = $this->getConfig('serviceAttribute');
         $service = $request->getAttribute($serviceAttribute);

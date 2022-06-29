@@ -35,5 +35,5 @@ interface BeforePolicyInterface
      * @param string $action The action/operation being performed.
      * @return \Authorization\Policy\ResultInterface|bool|null
      */
-    public function before(?IdentityInterface $identity, $resource, $action);
+    public function before(?IdentityInterface $identity, mixed $resource, string $action): ResultInterface|bool|null;
 }

@@ -22,6 +22,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use OverridePlugin\Policy\TagPolicy as OverrideTagPolicy;
+use stdClass;
 use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\ArticlesTablePolicy;
@@ -40,7 +41,7 @@ class OrmResolverTest extends TestCase
     {
         $this->expectException(MissingPolicyException::class);
 
-        $entity = new \stdClass();
+        $entity = new stdClass();
         $resolver = new OrmResolver('TestApp');
         $resolver->getPolicy($entity);
     }

@@ -34,7 +34,7 @@ interface AuthorizationServiceInterface
      * @param mixed $resource The resource being operated on.
      * @return bool
      */
-    public function can(?IdentityInterface $user, string $action, $resource): bool;
+    public function can(?IdentityInterface $user, string $action, mixed $resource): bool;
 
     /**
      * Check whether the provided user can perform an action on a resource.
@@ -47,7 +47,7 @@ interface AuthorizationServiceInterface
      * @param mixed $resource The resource being operated on.
      * @return \Authorization\Policy\ResultInterface
      */
-    public function canResult(?IdentityInterface $user, string $action, $resource): ResultInterface;
+    public function canResult(?IdentityInterface $user, string $action, mixed $resource): ResultInterface;
 
     /**
      * Apply authorization scope conditions/restrictions.
@@ -62,7 +62,7 @@ interface AuthorizationServiceInterface
      * @param mixed $resource The resource being operated on.
      * @return mixed The modified resource.
      */
-    public function applyScope(?IdentityInterface $user, string $action, $resource);
+    public function applyScope(?IdentityInterface $user, string $action, mixed $resource): mixed;
 
     /**
      * Return a boolean based on whether or not this object

@@ -19,6 +19,7 @@ namespace Authorization\Test\TestCase\Policy\Exception;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Cake\Datasource\QueryInterface;
 use Cake\TestSuite\TestCase;
+use stdClass;
 use TestApp\Model\Table\ArticlesTable;
 
 class MissingPolicyExceptionTest extends TestCase
@@ -38,7 +39,7 @@ class MissingPolicyExceptionTest extends TestCase
 
     public function testConstructAnotherInstance(): void
     {
-        $missingPolicyException = new MissingPolicyException(new \stdClass());
+        $missingPolicyException = new MissingPolicyException(new stdClass());
         $needle = 'Policy for `stdClass` has not been defined.';
         $this->assertSame($needle, $missingPolicyException->getMessage());
     }

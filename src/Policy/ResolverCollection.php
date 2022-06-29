@@ -45,14 +45,14 @@ class ResolverCollection implements ResolverInterface
     /**
      * Policy resolver instances.
      *
-     * @var \Authorization\Policy\ResolverInterface[]
+     * @var array<\Authorization\Policy\ResolverInterface>
      */
-    protected $resolvers = [];
+    protected array $resolvers = [];
 
     /**
      * Constructor. Takes an array of policy resolver instances.
      *
-     * @param \Authorization\Policy\ResolverInterface[] $resolvers An array of policy resolver instances.
+     * @param array<\Authorization\Policy\ResolverInterface> $resolvers An array of policy resolver instances.
      */
     public function __construct(array $resolvers = [])
     {
@@ -77,12 +77,12 @@ class ResolverCollection implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function getPolicy($resource)
+    public function getPolicy(mixed $resource): mixed
     {
         foreach ($this->resolvers as $resolver) {
             try {
                 return $resolver->getPolicy($resource);
-            } catch (MissingPolicyException $e) {
+            } catch (MissingPolicyException) {
             }
         }
 

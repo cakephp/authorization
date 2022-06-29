@@ -73,16 +73,6 @@ class MapResolverTest extends TestCase
         $resolver->map('Foo', 'Bar');
     }
 
-    public function testMapInvalidPolicy()
-    {
-        $resolver = new MapResolver();
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Policy must be a valid class name, an object or a callable, `array` given.');
-
-        $resolver->map(Article::class, []);
-    }
-
     public function testMapMissingPolicy()
     {
         $resolver = new MapResolver();

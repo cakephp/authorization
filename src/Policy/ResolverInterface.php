@@ -31,5 +31,5 @@ interface ResolverInterface
      * @return mixed
      * @throws \Authorization\Policy\Exception\MissingPolicyException If a policy cannot be resolved.
      */
-    public function getPolicy($resource);
+    public function getPolicy(mixed $resource): mixed;
 }

@@ -29,7 +29,7 @@ interface RequestPolicyInterface
      *
      * @param \Authorization\IdentityInterface|null $identity Identity
      * @param \Cake\Http\ServerRequest $request Server Request
-     * @return bool|\Authorization\Policy\ResultInterface
+     * @return \Authorization\Policy\ResultInterface|bool
      */
-    public function canAccess(?IdentityInterface $identity, ServerRequest $request);
+    public function canAccess(?IdentityInterface $identity, ServerRequest $request): bool|ResultInterface;
 }
