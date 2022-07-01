@@ -8,7 +8,6 @@ use Authorization\AuthorizationServiceInterface;
 use Authorization\IdentityDecorator;
 use BadMethodCallException;
 use Cake\TestSuite\TestCase;
-use InvalidArgumentException;
 use stdClass;
 use TestApp\Model\Entity\Article;
 
@@ -40,13 +39,6 @@ class IdentityDecoratorTest extends TestCase
         $auth = $this->createMock(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($auth, $data);
         $this->assertSame($data['id'], $identity['id']);
-    }
-
-    public function testConstructorInvalidData()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $auth = $this->createMock(AuthorizationServiceInterface::class);
-        new IdentityDecorator($auth, 'bad');
     }
 
     public function testCanDelegation()

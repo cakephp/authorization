@@ -33,12 +33,12 @@ class PolicyCommand extends SimpleBakeCommand
      *
      * @var string
      */
-    public $pathFragment = 'Policy/';
+    public string $pathFragment = 'Policy/';
 
     /**
      * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
      * @inheritDoc

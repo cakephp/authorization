@@ -26,7 +26,6 @@ use Authorization\Middleware\AuthorizationMiddleware;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
-use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -100,21 +99,9 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testInvokeInvalid()
-    {
-        $service = $this->createMock(AuthorizationServiceInterface::class);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            'Subject must be an instance of `Authorization\AuthorizationServiceInterface` ' .
-            'or `Authorization\AuthorizationServiceProviderInterface`, `stdClass` given.'
-        );
-
-        $middleware = new AuthorizationMiddleware(new stdClass());
-    }
-
     public function testInvokeServiceWithIdentity()
     {
+        // phpcs:ignore
         $identity = new \Authentication\Identity([
             'id' => 1,
         ]);
@@ -126,6 +113,7 @@ class AuthorizationMiddlewareTest extends TestCase
             $this->assertSame($service, $request->getAttribute('authorization'));
             $identity = $request->getAttribute('identity');
             $this->assertInstanceOf(IdentityInterface::class, $identity);
+            // phpcs:ignore
             $this->assertInstanceOf(\Authentication\IdentityInterface::class, $identity);
             $this->assertSame(1, $identity->getIdentifier());
 

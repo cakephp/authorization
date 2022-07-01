@@ -31,7 +31,7 @@ class CakeRedirectHandler extends RedirectHandler
     /**
      * @inheritDoc
      */
-    protected $defaultOptions = [
+    protected array $defaultOptions = [
         'exceptions' => [
             MissingIdentityException::class,
         ],

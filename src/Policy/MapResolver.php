@@ -30,7 +30,7 @@ class MapResolver implements ResolverInterface
      *
      * @var array
      */
-    protected $map = [];
+    protected array $map = [];
 
     /**
      * Constructor.
@@ -57,24 +57,17 @@ class MapResolver implements ResolverInterface
      * Maps a resource class to the policy class name.
      *
      * @param string $resourceClass A resource class name.
-     * @param string|object|callable $policy A policy class name, an object or a callable factory.
+     * @param callable|object|string $policy A policy class name, an object or a callable factory.
      * @return $this
      * @throws \InvalidArgumentException When a resource class does not exist or policy is invalid.
      */
-    public function map(string $resourceClass, $policy)
+    public function map(string $resourceClass, string|object|callable $policy)
     {
         if (!class_exists($resourceClass)) {
             $message = sprintf('Resource class `%s` does not exist.', $resourceClass);
             throw new InvalidArgumentException($message);
         }
 
-        if (!is_string($policy) && !is_object($policy) && !is_callable($policy)) {
-            $message = sprintf(
-                'Policy must be a valid class name, an object or a callable, `%s` given.',
-                gettype($policy)
-            );
-            throw new InvalidArgumentException($message);
-        }
         if (is_string($policy) && !class_exists($policy)) {
             $message = sprintf('Policy class `%s` does not exist.', $policy);
             throw new InvalidArgumentException($message);
@@ -91,7 +84,7 @@ class MapResolver implements ResolverInterface
      * @throws \InvalidArgumentException When a resource is not an object.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for a resource has not been defined.
      */
-    public function getPolicy($resource)
+    public function getPolicy($resource): mixed
     {
         if (!is_object($resource)) {
             $message = sprintf('Resource must be an object, `%s` given.', gettype($resource));

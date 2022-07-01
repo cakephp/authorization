@@ -34,14 +34,14 @@ class OrmResolver implements ResolverInterface
      *
      * @var string
      */
-    protected $appNamespace = 'App';
+    protected string $appNamespace = 'App';
 
     /**
      * Plugin name overrides.
      *
      * @var array<string, string>
      */
-    protected $overrides = [];
+    protected array $overrides = [];
 
     /**
      * Constructor
@@ -58,13 +58,13 @@ class OrmResolver implements ResolverInterface
     /**
      * Get a policy for an ORM Table, Entity or Query.
      *
-     * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\EntityInterface|\Cake\Datasource\QueryInterface $resource The resource.
+     * @param mixed $resource The resource.
      * @return mixed
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined or cannot be resolved.
      * @psalm-suppress MoreSpecificImplementedParamType
      */
-    public function getPolicy($resource)
+    public function getPolicy(mixed $resource): mixed
     {
         if ($resource instanceof EntityInterface) {
             return $this->getEntityPolicy($resource);
@@ -91,7 +91,7 @@ class OrmResolver implements ResolverInterface
      * @param \Cake\Datasource\EntityInterface $entity The entity to get a policy for
      * @return mixed
      */
-    protected function getEntityPolicy(EntityInterface $entity)
+    protected function getEntityPolicy(EntityInterface $entity): mixed
     {
         $class = get_class($entity);
         $entityNamespace = '\Model\Entity\\';
@@ -108,7 +108,7 @@ class OrmResolver implements ResolverInterface
      * @param \Cake\Datasource\RepositoryInterface $table The table/repository to get a policy for.
      * @return mixed
      */
-    protected function getRepositoryPolicy(RepositoryInterface $table)
+    protected function getRepositoryPolicy(RepositoryInterface $table): mixed
     {
         $class = get_class($table);
         $tableNamespace = '\Model\Table\\';
@@ -129,7 +129,7 @@ class OrmResolver implements ResolverInterface
      *   resource has not been defined.
      * @return mixed
      */
-    protected function findPolicy(string $class, string $name, string $namespace)
+    protected function findPolicy(string $class, string $name, string $namespace): mixed
     {
         $namespace = $this->getNamespace($namespace);
         $policyClass = null;

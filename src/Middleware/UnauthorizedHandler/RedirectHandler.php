@@ -37,7 +37,7 @@ class RedirectHandler implements HandlerInterface
      *
      * @var array
      */
-    protected $defaultOptions = [
+    protected array $defaultOptions = [
         'exceptions' => [
             MissingIdentityException::class,
         ],
@@ -75,7 +75,7 @@ class RedirectHandler implements HandlerInterface
      * Checks if an exception matches one of the classes.
      *
      * @param \Authorization\Exception\Exception $exception Exception instance.
-     * @param \Exception[] $exceptions A list of exception classes.
+     * @param array<\Exception> $exceptions A list of exception classes.
      * @return bool
      */
     protected function checkException(Exception $exception, array $exceptions): bool

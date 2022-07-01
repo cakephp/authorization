@@ -33,7 +33,7 @@ class StringResolver implements ResolverInterface
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined or cannot be resolved.
      */
-    public function getPolicy($resource)
+    public function getPolicy(mixed $resource): mixed
     {
         $policyClass = App::className('TestApp.' . $resource, 'Policy', 'Policy');
 

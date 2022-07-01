@@ -35,7 +35,7 @@ interface IdentityInterface extends ArrayAccess
      * @param mixed $resource The resource being operated on.
      * @return bool
      */
-    public function can(string $action, $resource): bool;
+    public function can(string $action, mixed $resource): bool;
 
     /**
      * Check whether the current identity can perform an action.
@@ -44,7 +44,7 @@ interface IdentityInterface extends ArrayAccess
      * @param mixed $resource The resource being operated on.
      * @return \Authorization\Policy\ResultInterface
      */
-    public function canResult(string $action, $resource): ResultInterface;
+    public function canResult(string $action, mixed $resource): ResultInterface;
 
     /**
      * Apply authorization scope conditions/restrictions.
@@ -53,7 +53,7 @@ interface IdentityInterface extends ArrayAccess
      * @param mixed $resource The resource being operated on.
      * @return mixed The modified resource.
      */
-    public function applyScope(string $action, $resource);
+    public function applyScope(string $action, mixed $resource): mixed;
 
     /**
      * Get the decorated identity
@@ -61,7 +61,7 @@ interface IdentityInterface extends ArrayAccess
      * If the decorated identity implements `getOriginalData()`
      * that method should be invoked to expose the original data.
      *
-     * @return array|\ArrayAccess
+     * @return \ArrayAccess|array
      */
-    public function getOriginalData();
+    public function getOriginalData(): ArrayAccess|array;
 }

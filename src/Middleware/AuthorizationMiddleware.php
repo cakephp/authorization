@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Authorization\Middleware;
 
+use ArrayAccess;
 use Authentication\IdentityInterface as AuthenIdentityInterface;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
@@ -27,7 +28,6 @@ use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
 use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
 use Cake\Core\InstanceConfigTrait;
-use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -57,7 +57,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'identityDecorator' => null,
         'identityAttribute' => 'identity',
         'requireAuthorizationCheck' => true,
@@ -69,7 +69,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
      *
      * @var \Authorization\AuthorizationServiceInterface|\Authorization\AuthorizationServiceProviderInterface
      */
-    protected $subject;
+    protected AuthorizationServiceInterface|AuthorizationServiceProviderInterface $subject;
 
     /**
      * Constructor.
@@ -78,23 +78,10 @@ class AuthorizationMiddleware implements MiddlewareInterface
      * @param array $config Config array.
      * @throws \InvalidArgumentException
      */
-    public function __construct($subject, array $config = [])
-    {
-        /** @psalm-suppress DocblockTypeContradiction */
-        if (
-            !$subject instanceof AuthorizationServiceInterface &&
-            !$subject instanceof AuthorizationServiceProviderInterface
-        ) {
-            $expected = implode('` or `', [
-                AuthorizationServiceInterface::class,
-                AuthorizationServiceProviderInterface::class,
-            ]);
-            $type = is_object($subject) ? get_class($subject) : gettype($subject);
-            $message = sprintf('Subject must be an instance of `%s`, `%s` given.', $expected, $type);
-
-            throw new InvalidArgumentException($message);
-        }
-
+    public function __construct(
+        AuthorizationServiceInterface|AuthorizationServiceProviderInterface $subject,
+        array $config = []
+    ) {
         if ($this->_defaultConfig['identityDecorator'] === null) {
             $this->_defaultConfig['identityDecorator'] = interface_exists(AuthenIdentityInterface::class)
                 ? Identity::class
@@ -181,7 +168,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
         if (!$service instanceof AuthorizationServiceInterface) {
             throw new RuntimeException(sprintf(
                 'Invalid service returned from the provider. `%s` does not implement `%s`.',
-                getTypeName($service),
+                get_debug_type($service),
                 AuthorizationServiceInterface::class
             ));
         }
@@ -196,8 +183,10 @@ class AuthorizationMiddleware implements MiddlewareInterface
      * @param \ArrayAccess|array $identity Identity data
      * @return \Authorization\IdentityInterface
      */
-    protected function buildIdentity(AuthorizationServiceInterface $service, $identity): IdentityInterface
-    {
+    protected function buildIdentity(
+        AuthorizationServiceInterface $service,
+        ArrayAccess|array $identity
+    ): IdentityInterface {
         $class = $this->getConfig('identityDecorator');
 
         if (is_callable($class)) {

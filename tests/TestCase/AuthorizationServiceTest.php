@@ -24,7 +24,6 @@ use Authorization\Policy\MapResolver;
 use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
 use Cake\TestSuite\TestCase;
-use RuntimeException;
 use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\MagicCallPolicy;
@@ -324,38 +323,6 @@ class AuthorizationServiceTest extends TestCase
 
         $result = $service->can($user, 'add', $entity);
         $this->assertFalse($result);
-    }
-
-    public function testBeforeOther()
-    {
-        $entity = new Article();
-
-        $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->setMethods(['before', 'canAdd'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('before')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn('foo');
-
-        $policy->expects($this->never())
-            ->method('canAdd');
-
-        $resolver = new MapResolver([
-            Article::class => $policy,
-        ]);
-
-        $service = new AuthorizationService($resolver);
-
-        $user = new IdentityDecorator($service, [
-            'role' => 'admin',
-        ]);
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Pre-authorization check must return `Authorization\Policy\ResultInterface`, `bool` or `null`.');
-
-        $service->can($user, 'add', $entity);
     }
 
     public function testMissingMethod()

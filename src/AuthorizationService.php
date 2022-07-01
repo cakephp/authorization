@@ -30,14 +30,14 @@ class AuthorizationService implements AuthorizationServiceInterface
      *
      * @var \Authorization\Policy\ResolverInterface
      */
-    protected $resolver;
+    protected ResolverInterface $resolver;
 
     /**
      * Track whether or not authorization was checked.
      *
      * @var bool
      */
-    protected $authorizationChecked = false;
+    protected bool $authorizationChecked = false;
 
     /**
      * @param \Authorization\Policy\ResolverInterface $resolver Authorization policy resolver.
@@ -73,9 +73,9 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @param \Authorization\IdentityInterface|null $user The user to check permissions for.
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
-     * @return bool|\Authorization\Policy\ResultInterface
+     * @return \Authorization\Policy\ResultInterface|bool
      */
-    protected function performCheck(?IdentityInterface $user, string $action, $resource)
+    protected function performCheck(?IdentityInterface $user, string $action, mixed $resource): bool|ResultInterface
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
@@ -98,10 +98,10 @@ class AuthorizationService implements AuthorizationServiceInterface
      * Check result type.
      *
      * @param mixed $result Result from policy class instance.
-     * @return bool|\Authorization\Policy\ResultInterface
+     * @return \Authorization\Policy\ResultInterface|bool
      * @throws \Authorization\Exception\Exception If $result argument is not a boolean or ResultInterface instance.
      */
-    protected function resultTypeCheck($result)
+    protected function resultTypeCheck(mixed $result): ResultInterface|bool
     {
         if (is_bool($result) || $result instanceof ResultInterface) {
             return $result;
@@ -116,7 +116,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @inheritDoc
      */
-    public function applyScope(?IdentityInterface $user, string $action, $resource)
+    public function applyScope(?IdentityInterface $user, string $action, $resource): mixed
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
@@ -133,7 +133,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @return callable
      * @throws \Authorization\Policy\Exception\MissingMethodException
      */
-    protected function getCanHandler($policy, $action): callable
+    protected function getCanHandler(mixed $policy, string $action): callable
     {
         $method = 'can' . ucfirst($action);
 
@@ -152,7 +152,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @return callable
      * @throws \Authorization\Policy\Exception\MissingMethodException
      */
-    protected function getScopeHandler($policy, $action): callable
+    protected function getScopeHandler(mixed $policy, string $action): callable
     {
         $method = 'scope' . ucfirst($action);
 

@@ -26,14 +26,14 @@ class Result implements ResultInterface
      *
      * @var bool
      */
-    protected $status;
+    protected bool $status;
 
     /**
      * Failure reason.
      *
      * @var string|null
      */
-    protected $reason;
+    protected ?string $reason = null;
 
     /**
      * Constructor

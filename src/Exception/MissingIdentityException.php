@@ -22,10 +22,10 @@ class MissingIdentityException extends Exception
     /**
      * @inheritDoc
      */
-    protected $_defaultCode = 403;
+    protected int $_defaultCode = 403;
 
     /**
      * @inheritDoc
      */
-    protected $_messageTemplate = 'Identity is not present in `%s` request attribute.';
+    protected string $_messageTemplate = 'Identity is not present in `%s` request attribute.';
 }

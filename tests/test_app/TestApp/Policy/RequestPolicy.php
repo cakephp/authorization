@@ -6,6 +6,7 @@ namespace TestApp\Policy;
 use Authorization\IdentityInterface;
 use Authorization\Policy\RequestPolicyInterface;
 use Authorization\Policy\Result;
+use Authorization\Policy\ResultInterface;
 use Cake\Http\ServerRequest;
 
 /**
@@ -20,7 +21,7 @@ class RequestPolicy implements RequestPolicyInterface
      * @param \Cake\Http\ServerRequest $request Request
      * @return bool|\Authorization\Policy\ResultInterface
      */
-    public function canAccess(?IdentityInterface $identity, ServerRequest $request)
+    public function canAccess(?IdentityInterface $identity, ServerRequest $request): ResultInterface|bool
     {
         if (
             $request->getParam('controller') === 'Articles'

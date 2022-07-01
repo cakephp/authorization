@@ -19,8 +19,6 @@ namespace Authorization;
 use ArrayAccess;
 use Authorization\Policy\ResultInterface;
 use BadMethodCallException;
-use InvalidArgumentException;
-use ReturnTypeWillChange;
 
 /**
  * An decorator implementing the IdentityInterface.
@@ -35,36 +33,26 @@ class IdentityDecorator implements IdentityInterface
     /**
      * Identity data
      *
-     * @var array|\ArrayAccess
+     * @var \ArrayAccess|array
      */
-    protected $identity;
+    protected ArrayAccess|array $identity;
 
     /**
      * Authorization Service
      *
      * @var \Authorization\AuthorizationServiceInterface
      */
-    protected $authorization;
+    protected AuthorizationServiceInterface $authorization;
 
     /**
      * Constructor
      *
      * @param \Authorization\AuthorizationServiceInterface $service The authorization service.
-     * @param array|\ArrayAccess $identity Identity data
+     * @param \ArrayAccess|array $identity Identity data
      * @throws \InvalidArgumentException When invalid identity data is passed.
      */
-    public function __construct(AuthorizationServiceInterface $service, $identity)
+    public function __construct(AuthorizationServiceInterface $service, ArrayAccess|array $identity)
     {
-        /** @psalm-suppress DocblockTypeContradiction */
-        if (!is_array($identity) && !$identity instanceof ArrayAccess) {
-            $type = is_object($identity) ? get_class($identity) : gettype($identity);
-            $message = sprintf(
-                'Identity data must be an `array` or implement `ArrayAccess` interface, `%s` given.',
-                $type
-            );
-            throw new InvalidArgumentException($message);
-        }
-
         $this->authorization = $service;
         $this->identity = $identity;
     }
@@ -88,7 +76,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * @inheritDoc
      */
-    public function applyScope(string $action, $resource)
+    public function applyScope(string $action, $resource): mixed
     {
         return $this->authorization->applyScope($this, $action, $resource);
     }
@@ -96,7 +84,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * @inheritDoc
      */
-    public function getOriginalData()
+    public function getOriginalData(): ArrayAccess|array
     {
         if (
             $this->identity
@@ -116,7 +104,7 @@ class IdentityDecorator implements IdentityInterface
      * @param array $args The arguments for the method.
      * @return mixed
      */
-    public function __call(string $method, array $args)
+    public function __call(string $method, array $args): mixed
     {
         if (!is_object($this->identity)) {
             throw new BadMethodCallException("Cannot call `{$method}`. Identity data is not an object.");
@@ -132,7 +120,7 @@ class IdentityDecorator implements IdentityInterface
      * @param string $property The property to read.
      * @return mixed
      */
-    public function __get(string $property)
+    public function __get(string $property): mixed
     {
         return $this->identity->{$property};
     }
@@ -141,9 +129,9 @@ class IdentityDecorator implements IdentityInterface
      * Delegate property isset to decorated identity.
      *
      * @param string $property The property to read.
-     * @return mixed
+     * @return bool
      */
-    public function __isset(string $property)
+    public function __isset(string $property): bool
     {
         return isset($this->identity->{$property});
     }
@@ -155,7 +143,7 @@ class IdentityDecorator implements IdentityInterface
      * @param mixed $offset Offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->identity[$offset]);
     }
@@ -167,8 +155,7 @@ class IdentityDecorator implements IdentityInterface
      * @param mixed $offset Offset
      * @return mixed
      */
-    #[ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         if (isset($this->identity[$offset])) {
             return $this->identity[$offset];
@@ -183,13 +170,11 @@ class IdentityDecorator implements IdentityInterface
      * @link https://secure.php.net/manual/en/arrayaccess.offsetset.php
      * @param mixed $offset The offset to assign the value to.
      * @param mixed $value Value
-     * @return mixed
-     * @psalm-suppress LessSpecificImplementedReturnType
+     * @return void
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
-        return $this->identity[$offset] = $value;
+        $this->identity[$offset] = $value;
     }
 
     /**
@@ -199,7 +184,7 @@ class IdentityDecorator implements IdentityInterface
      * @param mixed $offset Offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->identity[$offset]);
     }
