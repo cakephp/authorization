@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,6 +15,7 @@ declare(strict_types=1);
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace Authorization\Middleware;
 
 use Authentication\IdentityInterface as AuthenIdentityInterface;
@@ -24,46 +26,17 @@ use Authorization\Exception\Exception;
 use Authorization\Identity;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
-use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
-use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
-use Cake\Core\InstanceConfigTrait;
-use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use RuntimeException;
 
 /**
  * Authorization Middleware.
  *
  * Injects the authorization service and decorated identity objects into the request object as attributes.
  */
-class AuthorizationMiddleware implements MiddlewareInterface
+class AuthorizationMiddleware extends BaseAuthorizationMiddleware
 {
-    use InstanceConfigTrait;
-
-    /**
-     * Default config.
-     *
-     * - `identityDecorator` Identity decorator class name or a callable.
-     *   Defaults to IdentityDecorator
-     * - `identityAttribute` Attribute name the identity is stored under.
-     *   Defaults to 'identity'
-     * - `requireAuthorizationCheck` When true the middleware will raise an exception
-     *   if no authorization checks were done. This aids in ensuring that all actions
-     *   check authorization. It is intended as a development aid and not to be relied upon
-     *   in production. Defaults to `true`.
-     *
-     * @var array
-     */
-    protected $_defaultConfig = [
-        'identityDecorator' => null,
-        'identityAttribute' => 'identity',
-        'requireAuthorizationCheck' => true,
-        'unauthorizedHandler' => 'Authorization.Exception',
-    ];
-
     /**
      * Authorization service or application instance.
      *
@@ -92,7 +65,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
             $type = is_object($subject) ? get_class($subject) : gettype($subject);
             $message = sprintf('Subject must be an instance of `%s`, `%s` given.', $expected, $type);
 
-            throw new InvalidArgumentException($message);
+            throw new \InvalidArgumentException($message);
         }
 
         if ($this->_defaultConfig['identityDecorator'] === null) {
@@ -144,42 +117,21 @@ class AuthorizationMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Returns unauthorized handler.
-     *
-     * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
-     */
-    protected function getHandler(): HandlerInterface
-    {
-        $handler = $this->getConfig('unauthorizedHandler');
-        if (!is_array($handler)) {
-            $handler = [
-                'className' => $handler,
-            ];
-        }
-        if (!isset($handler['className'])) {
-            throw new RuntimeException('Missing `className` key from handler config.');
-        }
-
-        return HandlerFactory::create($handler['className']);
-    }
-
-    /**
      * Returns AuthorizationServiceInterface instance.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Server request.
      * @return \Authorization\AuthorizationServiceInterface
      * @throws \RuntimeException When authorization method has not been defined.
      */
-    protected function getAuthorizationService(
-        ServerRequestInterface $request
-    ): AuthorizationServiceInterface {
+    protected function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
+    {
         $service = $this->subject;
         if ($this->subject instanceof AuthorizationServiceProviderInterface) {
             $service = $this->subject->getAuthorizationService($request);
         }
 
         if (!$service instanceof AuthorizationServiceInterface) {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 'Invalid service returned from the provider. `%s` does not implement `%s`.',
                 getTypeName($service),
                 AuthorizationServiceInterface::class
@@ -209,7 +161,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
         }
 
         if (!$identity instanceof IdentityInterface) {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 'Invalid identity returned by decorator. `%s` does not implement `%s`.',
                 is_object($identity) ? get_class($identity) : gettype($identity),
                 IdentityInterface::class

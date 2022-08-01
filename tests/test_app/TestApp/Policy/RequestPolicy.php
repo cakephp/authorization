@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace TestApp\Policy;
 
 use Authorization\IdentityInterface;
+use Authorization\Exception\MissingIdentityException;
 use Authorization\Policy\RequestPolicyInterface;
 use Authorization\Policy\Result;
 use Cake\Http\ServerRequest;
@@ -22,6 +24,10 @@ class RequestPolicy implements RequestPolicyInterface
      */
     public function canAccess(?IdentityInterface $identity, ServerRequest $request)
     {
+        if (!$identity) {
+            throw new MissingIdentityException();
+        }
+
         if (
             $request->getParam('controller') === 'Articles'
             && $request->getParam('action') === 'index'

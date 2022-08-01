@@ -1,42 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    colors="true"
-    processIsolation="false"
-    stopOnFailure="false"
-    bootstrap="tests/bootstrap.php"
-    >
-
-    <!-- Add any additional test suites you want to run here -->
-    <testsuites>
-        <testsuite name="authorization">
-            <directory>tests/TestCase/</directory>
-        </testsuite>
-        <!-- Add plugin test suites here. -->
-    </testsuites>
-
-    <!-- Setup a listener for fixtures -->
-    <listeners>
-        <listener
-            class="Cake\TestSuite\Fixture\FixtureInjector">
-            <arguments>
-                <object class="Cake\TestSuite\Fixture\FixtureManager"/>
-            </arguments>
-        </listener>
-    </listeners>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src/</directory>
-        </whitelist>
-    </filter>
-
-    <php>
-        <ini name="memory_limit" value="-1"/>
-        <!-- Postgres
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" processIsolation="false" stopOnFailure="false" bootstrap="tests/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">src/</directory>
+    </include>
+  </coverage>
+  <!-- Add any additional test suites you want to run here -->
+  <testsuites>
+    <testsuite name="authorization">
+      <directory>tests/TestCase/</directory>
+    </testsuite>
+    <!-- Add plugin test suites here. -->
+  </testsuites>
+  <!-- Setup a listener for fixtures -->
+  <listeners>
+    <listener class="Cake\TestSuite\Fixture\FixtureInjector">
+      <arguments>
+        <object class="Cake\TestSuite\Fixture\FixtureManager"/>
+      </arguments>
+    </listener>
+  </listeners>
+  <php>
+    <ini name="memory_limit" value="-1"/>
+    <!-- Postgres
         <env name="db_dsn" value="postgres://root@localhost/cake_test_db"/>
         -->
-        <!-- Mysql
+    <!-- Mysql
         <env name="db_dsn" value="mysql://root@localhost/cake_test_db"/>
         -->
-    </php>
+  </php>
 </phpunit>

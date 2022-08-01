@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,14 +15,14 @@ declare(strict_types=1);
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace Authorization\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
-use Cake\Core\InstanceConfigTrait;
+use Authorization\Exception\MissingIdentityException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
 
@@ -35,21 +36,8 @@ use RuntimeException;
  * each controller and action, against a role based access system or any other
  * kind of authorization process that controls access to certain actions.
  */
-class RequestAuthorizationMiddleware implements MiddlewareInterface
+class RequestAuthorizationMiddleware extends BaseAuthorizationMiddleware
 {
-    use InstanceConfigTrait;
-
-    /**
-     * Default Config
-     *
-     * @var array
-     */
-    protected $_defaultConfig = [
-        'authorizationAttribute' => 'authorization',
-        'identityAttribute' => 'identity',
-        'method' => 'access',
-    ];
-
     /**
      * Constructor
      *
@@ -94,9 +82,18 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
         $service = $this->getServiceFromRequest($request);
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
-        $result = $service->canResult($identity, $this->getConfig('method'), $request);
-        if (!$result->getStatus()) {
-            throw new ForbiddenException($result);
+        try {
+            $result = $service->canResult($identity, $this->getConfig('method'), $request);
+            if (!$result->getStatus()) {
+                throw new ForbiddenException($result);
+            }
+        } catch (MissingIdentityException $exception) {
+            $unauthorizedHandler = $this->getHandler();
+            return $unauthorizedHandler->handle(
+                $exception,
+                $request,
+                (array)$this->getConfig('unauthorizedHandler')
+            );
         }
 
         return $handler->handle($request);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,13 +15,14 @@ declare(strict_types=1);
  * @since 1.0.0
  * @license https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace TestApp\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response;
+use Cake\Http\Response;
 
 class SuppressHandler implements HandlerInterface
 {

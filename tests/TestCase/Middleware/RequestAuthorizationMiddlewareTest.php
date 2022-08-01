@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,19 +15,23 @@ declare(strict_types=1);
  * @since 1.0.0
  * @license https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace Authorization\Test\TestCase\Middleware;
 
 use Authorization\AuthorizationService;
 use Authorization\Exception\ForbiddenException;
+use Authorization\Exception\MissingIdentityException;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Middleware\RequestAuthorizationMiddleware;
 use Authorization\Policy\MapResolver;
+use Authorization\IdentityDecorator;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use RuntimeException;
 use TestApp\Http\TestRequestHandler;
 use TestApp\Policy\RequestPolicy;
-use Zend\Diactoros\Uri;
+use TestApp\Policy\RequestIdentityPolicy;
+use Laminas\Diactoros\Uri;
 
 /**
  * RequestAuthorizationMiddlewareTest
@@ -46,12 +51,6 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
     public function testInvokeService()
     {
-        $request = (new ServerRequest([
-                'uri' => new Uri('/articles/index'),
-            ]))
-            ->withParam('action', 'index')
-            ->withParam('controller', 'Articles');
-
         $handler = new TestRequestHandler();
 
         $resolver = new MapResolver([
@@ -59,6 +58,18 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         ]);
 
         $authService = new AuthorizationService($resolver);
+
+        $identity = new IdentityDecorator($authService, [
+            'id' => 1,
+        ]);
+
+        $request = (new ServerRequest([
+            'uri' => new Uri('/articles/index'),
+        ]))
+            ->withParam('action', 'index')
+            ->withParam('controller', 'Articles')
+            ->withAttribute('identity', $identity);
+
         $request = $request->withAttribute('authorization', $authService);
 
         $middleware = new AuthorizationMiddleware($authService, [
@@ -80,12 +91,6 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
     public function testInvokeServiceWithResult()
     {
-        $request = (new ServerRequest([
-                'uri' => new Uri('/articles/index'),
-            ]))
-            ->withParam('action', 'index')
-            ->withParam('controller', 'Articles');
-
         $handler = new TestRequestHandler();
 
         $resolver = new MapResolver([
@@ -93,6 +98,18 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         ]);
 
         $authService = new AuthorizationService($resolver);
+
+        $identity = new IdentityDecorator($authService, [
+            'id' => 1,
+        ]);
+
+        $request = (new ServerRequest([
+            'uri' => new Uri('/articles/index'),
+        ]))
+            ->withParam('action', 'index')
+            ->withParam('controller', 'Articles')
+            ->withAttribute('identity', $identity);
+
         $request = $request->withAttribute('authorization', $authService);
 
         $middleware = new AuthorizationMiddleware($authService, [
@@ -121,5 +138,28 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
             throw $e;
         }
+    }
+
+    public function testInvokeServiceWithoutEntity()
+    {
+        $request = (new ServerRequest([
+            'uri' => new Uri('/articles/index'),
+        ]))
+            ->withParam('action', 'index')
+            ->withParam('controller', 'Articles')
+            ->withAttribute('identity', null);
+
+        $handler = new TestRequestHandler();
+
+        $resolver = new MapResolver([
+            ServerRequest::class => new RequestPolicy(),
+        ]);
+
+        $authService = new AuthorizationService($resolver);
+        $request = $request->withAttribute('authorization', $authService);
+
+        $this->expectException(MissingIdentityException::class);
+        $middleware = new RequestAuthorizationMiddleware();
+        $middleware->process($request, $handler);
     }
 }
