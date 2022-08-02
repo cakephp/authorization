@@ -28,6 +28,7 @@ use Authorization\IdentityInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 
 /**
  * Authorization Middleware.
@@ -130,7 +131,7 @@ class AuthorizationMiddleware extends BaseAuthorizationMiddleware
         }
 
         if (!$service instanceof AuthorizationServiceInterface) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Invalid service returned from the provider. `%s` does not implement `%s`.',
                 getTypeName($service),
                 AuthorizationServiceInterface::class
@@ -160,7 +161,7 @@ class AuthorizationMiddleware extends BaseAuthorizationMiddleware
         }
 
         if (!$identity instanceof IdentityInterface) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Invalid identity returned by decorator. `%s` does not implement `%s`.',
                 is_object($identity) ? get_class($identity) : gettype($identity),
                 IdentityInterface::class
