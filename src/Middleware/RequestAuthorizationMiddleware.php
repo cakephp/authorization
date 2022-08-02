@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 /**
@@ -89,6 +88,7 @@ class RequestAuthorizationMiddleware extends BaseAuthorizationMiddleware
             }
         } catch (MissingIdentityException $exception) {
             $unauthorizedHandler = $this->getHandler();
+
             return $unauthorizedHandler->handle(
                 $exception,
                 $request,

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 /**
@@ -18,11 +17,6 @@ declare(strict_types=1);
 
 namespace Authorization\Middleware;
 
-use Authorization\AuthorizationServiceInterface;
-use Authorization\AuthorizationServiceProviderInterface;
-use Authorization\Exception\AuthorizationRequiredException;
-use Authorization\Exception\Exception;
-use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
 use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
 use Cake\Core\InstanceConfigTrait;
@@ -53,9 +47,9 @@ abstract class BaseAuthorizationMiddleware implements MiddlewareInterface
      *   check authorization. It is intended as a development aid and not to be relied upon
      *   in production. Defaults to `true`.
      * - `unauthorizedHandler`
-     * 
+     *
      * - `authorizationAttribute`
-     * 
+     *
      * - `method`
      *
      * @var array
