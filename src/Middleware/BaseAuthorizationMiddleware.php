@@ -36,31 +36,17 @@ abstract class BaseAuthorizationMiddleware implements MiddlewareInterface
     use InstanceConfigTrait;
 
     /**
-     * Default config.
+     * Base config shared by all middleware classes
      *
-     * - `identityDecorator` Identity decorator class name or a callable.
-     *   Defaults to IdentityDecorator
      * - `identityAttribute` Attribute name the identity is stored under.
      *   Defaults to 'identity'
-     * - `requireAuthorizationCheck` When true the middleware will raise an exception
-     *   if no authorization checks were done. This aids in ensuring that all actions
-     *   check authorization. It is intended as a development aid and not to be relied upon
-     *   in production. Defaults to `true`.
-     * - `unauthorizedHandler`
-     *
-     * - `authorizationAttribute`
-     *
-     * - `method`
+     * - `unauthorizedHandler` Allows to define a custom behavior when the authorization check fails
      *
      * @var array
      */
     protected $_defaultConfig = [
-        'identityDecorator' => null,
         'identityAttribute' => 'identity',
-        'requireAuthorizationCheck' => true,
         'unauthorizedHandler' => 'Authorization.Exception',
-        'authorizationAttribute' => 'authorization',
-        'method' => 'access',
     ];
 
     /**

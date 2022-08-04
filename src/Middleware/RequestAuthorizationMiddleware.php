@@ -38,6 +38,27 @@ use RuntimeException;
 class RequestAuthorizationMiddleware extends BaseAuthorizationMiddleware
 {
     /**
+     * Default Config
+     *
+     * - `authorizationAttribute` Attribute name the authorization service is stored under.
+     *   Defaults to 'authorization'
+     * - `identityAttribute` Attribute name the identity is stored under.
+     *   Defaults to 'identity'
+     * - `method` Name of the "can" method that will be called on the policy.
+     *   Defaults to 'access'
+     * - `unauthorizedHandler` Allows to define a custom behavior when the authorization check fails
+     *   Defaults to 'Authorization.Exception'
+     *
+     * @var array
+     */
+    protected $_defaultConfig = [
+        'authorizationAttribute' => 'authorization',
+        'identityAttribute' => 'identity',
+        'method' => 'access',
+        'unauthorizedHandler' => 'Authorization.Exception',
+    ];
+
+    /**
      * Constructor
      *
      * @param array $config Configuration options
