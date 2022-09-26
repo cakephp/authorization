@@ -26,7 +26,6 @@ use Cake\TestSuite\TestCase;
 use RuntimeException;
 use TestApp\Http\TestRequestHandler;
 use TestApp\Policy\RequestPolicy;
-use Zend\Diactoros\Uri;
 
 /**
  * RequestAuthorizationMiddlewareTest
@@ -47,7 +46,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
     public function testInvokeService()
     {
         $request = (new ServerRequest([
-                'uri' => new Uri('/articles/index'),
+                'url' => '/articles/index',
             ]))
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
@@ -81,7 +80,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
     public function testInvokeServiceWithResult()
     {
         $request = (new ServerRequest([
-                'uri' => new Uri('/articles/index'),
+                'url' => '/articles/index',
             ]))
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');

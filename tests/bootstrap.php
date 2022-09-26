@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -12,8 +13,6 @@ declare(strict_types=1);
  * @link          http://cakephp.org CakePHP(tm) Project
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
-// @codingStandardsIgnoreFile
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin as CorePlugin;
@@ -33,15 +32,16 @@ $root = $findRoot(__FILE__);
 unset($findRoot);
 chdir($root);
 
-require_once 'vendor/cakephp/cakephp/src/basics.php';
-require_once 'vendor/autoload.php';
-
-define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
-define('APP', ROOT . 'TestApp' . DS);
-define('TMP', sys_get_temp_dir() . DS);
-define('CONFIG', ROOT . DS . 'config'. DS);
+define('ROOT', $root);
+define('APP', ROOT . '/tests/test_app/');
+define('TMP', sys_get_temp_dir() . '/');
+define('CONFIG', ROOT . '/tests/test_app/config/');
 define('CACHE', TMP . 'cache' . DS);
-define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
+define('CORE_PATH', ROOT . '/vendor/cakephp/cakephp/');
+define('CAKE', CORE_PATH . 'src/');
+
+require ROOT . '/vendor/autoload.php';
+require CORE_PATH . 'config/bootstrap.php';
 
 Configure::write('debug', true);
 Configure::write('App', [
@@ -49,8 +49,8 @@ Configure::write('App', [
     'namespace' => 'TestApp',
     'encoding' => 'UTF-8',
     'paths' => [
-        'plugins' => [ROOT . 'Plugin' . DS],
-    ]
+        'plugins' => [ROOT . '/tests/test_app/Plugin/'],
+    ],
 ]);
 
 if (!getenv('DB_URL')) {
@@ -60,3 +60,7 @@ if (!getenv('DB_URL')) {
 ConnectionManager::setConfig('test', ['url' => getenv('DB_URL')]);
 
 CorePlugin::getCollection()->add(new \Authorization\Plugin());
+
+Configure::write('Error.ignoredDeprecationPaths', [
+    'vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php',
+]);
