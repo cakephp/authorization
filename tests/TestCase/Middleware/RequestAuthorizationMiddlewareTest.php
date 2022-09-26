@@ -121,4 +121,29 @@ class RequestAuthorizationMiddlewareTest extends TestCase
             throw $e;
         }
     }
+
+    public function testUnauthorizedHandlerSuppress()
+    {
+        $request = (new ServerRequest([
+                'url' => '/articles/index',
+            ]))
+            ->withParam('action', 'add')
+            ->withParam('controller', 'Articles');
+
+        $handler = new TestRequestHandler();
+
+        $resolver = new MapResolver([
+            ServerRequest::class => new RequestPolicy(),
+        ]);
+
+        $authService = new AuthorizationService($resolver);
+        $request = $request->withAttribute('authorization', $authService);
+
+        $middleware = new RequestAuthorizationMiddleware([
+            'unauthorizedHandler' => 'Suppress',
+        ]);
+        $result = $middleware->process($request, $handler);
+
+        $this->assertSame(200, $result->getStatusCode());
+    }
 }

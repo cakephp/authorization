@@ -24,8 +24,7 @@ use Authorization\Exception\Exception;
 use Authorization\Identity;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
-use Authorization\Middleware\UnauthorizedHandler\HandlerFactory;
-use Authorization\Middleware\UnauthorizedHandler\HandlerInterface;
+use Authorization\Middleware\UnauthorizedHandler\UnauthorizedHandlerTrait;
 use Cake\Core\InstanceConfigTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
@@ -42,6 +41,7 @@ use RuntimeException;
 class AuthorizationMiddleware implements MiddlewareInterface
 {
     use InstanceConfigTrait;
+    use UnauthorizedHandlerTrait;
 
     /**
      * Default config.
@@ -132,35 +132,14 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
             }
         } catch (Exception $exception) {
-            $unauthorizedHandler = $this->getHandler();
-            $response = $unauthorizedHandler->handle(
+            $response = $this->handleException(
                 $exception,
                 $request,
-                (array)$this->getConfig('unauthorizedHandler')
+                $this->getConfig('unauthorizedHandler')
             );
         }
 
         return $response;
-    }
-
-    /**
-     * Returns unauthorized handler.
-     *
-     * @return \Authorization\Middleware\UnauthorizedHandler\HandlerInterface
-     */
-    protected function getHandler(): HandlerInterface
-    {
-        $handler = $this->getConfig('unauthorizedHandler');
-        if (!is_array($handler)) {
-            $handler = [
-                'className' => $handler,
-            ];
-        }
-        if (!isset($handler['className'])) {
-            throw new RuntimeException('Missing `className` key from handler config.');
-        }
-
-        return HandlerFactory::create($handler['className']);
     }
 
     /**
