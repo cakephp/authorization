@@ -28,6 +28,7 @@ class Identity extends IdentityDecorator implements AuthenIdentityInterface
      * Identity data
      *
      * @var \Authentication\IdentityInterface
+     * @psalm-suppress NonInvariantDocblockPropertyType
      */
     protected $identity;
 

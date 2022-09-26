@@ -112,7 +112,7 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
 
     public function testMainPluginEntity()
     {
-        $this->generatedFile = ROOT . 'Plugin/TestPlugin/src/Policy/UserPolicy.php';
+        $this->generatedFile = APP . 'Plugin/TestPlugin/src/Policy/UserPolicy.php';
 
         $this->exec('bake policy TestPlugin.User');
         $this->assertExitCode(Command::CODE_SUCCESS);
@@ -126,7 +126,7 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
 
     public function testMainPluginTable()
     {
-        $this->generatedFile = ROOT . 'Plugin/TestPlugin/src/Policy/UsersTablePolicy.php';
+        $this->generatedFile = APP . 'Plugin/TestPlugin/src/Policy/UsersTablePolicy.php';
 
         $this->exec('bake policy --type table TestPlugin.Users');
         $this->assertExitCode(Command::CODE_SUCCESS);
