@@ -23,7 +23,6 @@ use Authorization\Middleware\RequestAuthorizationMiddleware;
 use Authorization\Policy\MapResolver;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
-use Laminas\Diactoros\Uri;
 use RuntimeException;
 use TestApp\Http\TestRequestHandler;
 use TestApp\Policy\RequestPolicy;
@@ -47,7 +46,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
     public function testInvokeService()
     {
         $request = (new ServerRequest([
-                'uri' => new Uri('/articles/index'),
+                'url' => '/articles/index',
             ]))
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
@@ -81,7 +80,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
     public function testInvokeServiceWithResult()
     {
         $request = (new ServerRequest([
-                'uri' => new Uri('/articles/index'),
+                'url' => '/articles/index',
             ]))
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
