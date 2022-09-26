@@ -23,10 +23,10 @@ use Authorization\Middleware\RequestAuthorizationMiddleware;
 use Authorization\Policy\MapResolver;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
+use Laminas\Diactoros\Uri;
 use RuntimeException;
 use TestApp\Http\TestRequestHandler;
 use TestApp\Policy\RequestPolicy;
-use Zend\Diactoros\Uri;
 
 /**
  * RequestAuthorizationMiddlewareTest
