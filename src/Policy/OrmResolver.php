@@ -81,7 +81,7 @@ class OrmResolver implements ResolverInterface
             return $this->getRepositoryPolicy($repo);
         }
 
-        $name = is_object($resource) ? get_class($resource) : gettype($resource);
+        $name = getTypeName($resource);
         throw new MissingPolicyException([$name]);
     }
 
