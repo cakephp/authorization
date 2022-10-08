@@ -43,9 +43,9 @@ class Result implements ResultInterface
      */
     public function __construct(bool $status, ?string $reason = null)
     {
-        $this->status = (bool)$status;
+        $this->status = $status;
         if ($reason !== null) {
-            $this->reason = (string)$reason;
+            $this->reason = $reason;
         }
     }
 
