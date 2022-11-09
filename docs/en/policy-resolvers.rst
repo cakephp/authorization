@@ -111,9 +111,12 @@ our controller method::
 
     class ControllerHookPolicy
     {
-        public function __call($user, $controller)
+        public function __call(string $name, array $arguments)
         {
-            return $controller->isAuthorized($user);
+            /** @var ?\Authorization\Identity $user */
+            [$user, $controller] = $arguments;
+
+            return $controller->isAuthorized($user?->getOriginalData());
         }
     }
 
@@ -136,6 +139,7 @@ a policy resolver that will resolve controllers to our custom policy::
             if ($resource instanceof Controller) {
                 return new ControllerHookPolicy();
             }
+
             throw new MissingPolicyException([get_class($resource)]);
         }
     }
