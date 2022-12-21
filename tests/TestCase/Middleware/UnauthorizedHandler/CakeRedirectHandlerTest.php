@@ -18,7 +18,6 @@ namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
 use Authorization\Middleware\UnauthorizedHandler\CakeRedirectHandler;
-use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
@@ -129,10 +128,10 @@ class CakeRedirectHandlerTest extends TestCase
         $handler = new CakeRedirectHandler();
         $exception = new Exception();
 
-        Configure::write('App.base', '/basedir');
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/admin/dashboard']
         );
+        $request = $request->withAttribute('base', '/basedir');
 
         $response = $handler->handle($exception, $request, [
             'exceptions' => [

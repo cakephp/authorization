@@ -77,6 +77,11 @@ class CakeRedirectHandler extends RedirectHandler
             $url['?'][$options['queryParam']] = $redirect;
         }
 
+        $requestBase = $request->getAttribute('base');
+        if ($requestBase) {
+            $url['_base'] = $requestBase;
+        }
+
         return Router::url($url);
     }
 }
