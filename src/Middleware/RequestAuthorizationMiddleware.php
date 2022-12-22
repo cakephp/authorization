@@ -101,7 +101,7 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
         $result = $service->canResult($identity, $this->getConfig('method'), $request);
         try {
             if (!$result->getStatus()) {
-                throw new ForbiddenException($result);
+                throw new ForbiddenException($result, [$this->getConfig('method'), $request->getRequestTarget()]);
             }
         } catch (Exception $exception) {
             return $this->handleException($exception, $request, $this->getConfig('unauthorizedHandler'));
