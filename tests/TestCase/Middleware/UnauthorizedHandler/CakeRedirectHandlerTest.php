@@ -133,6 +133,7 @@ class CakeRedirectHandlerTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/admin/dashboard']
         );
+        Router::setRequest($request);
 
         $response = $handler->handle($exception, $request, [
             'exceptions' => [

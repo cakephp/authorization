@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace Authorization\Middleware;
 
 use Authorization\AuthorizationServiceInterface;
+use Authorization\Exception\Exception;
 use Authorization\Exception\ForbiddenException;
+use Authorization\Middleware\UnauthorizedHandler\UnauthorizedHandlerTrait;
 use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,6 +40,7 @@ use RuntimeException;
 class RequestAuthorizationMiddleware implements MiddlewareInterface
 {
     use InstanceConfigTrait;
+    use UnauthorizedHandlerTrait;
 
     /**
      * Default Config
@@ -48,6 +51,7 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
         'authorizationAttribute' => 'authorization',
         'identityAttribute' => 'identity',
         'method' => 'access',
+        'unauthorizedHandler' => 'Authorization.Exception',
     ];
 
     /**
@@ -95,8 +99,12 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
         $result = $service->canResult($identity, $this->getConfig('method'), $request);
-        if (!$result->getStatus()) {
-            throw new ForbiddenException($result);
+        try {
+            if (!$result->getStatus()) {
+                throw new ForbiddenException($result, [$this->getConfig('method'), $request->getRequestTarget()]);
+            }
+        } catch (Exception $exception) {
+            return $this->handleException($exception, $request, $this->getConfig('unauthorizedHandler'));
         }
 
         return $handler->handle($request);

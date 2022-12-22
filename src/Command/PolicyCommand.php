@@ -90,9 +90,9 @@ class PolicyCommand extends SimpleBakeCommand
 
         $className = $data['namespace'] . '\\' . $name;
         if ($type === 'table') {
-            $className = "{$data['namespace']}\Model\\Table\\${name}${suffix}";
+            $className = "{$data['namespace']}\Model\\Table\\{$name}{$suffix}";
         } elseif ($type === 'entity') {
-            $className = "{$data['namespace']}\Model\\Entity\\${name}";
+            $className = "{$data['namespace']}\Model\\Entity\\{$name}";
         }
 
         $variable = Inflector::variable($name);
