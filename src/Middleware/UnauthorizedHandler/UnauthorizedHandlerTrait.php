@@ -34,7 +34,7 @@ trait UnauthorizedHandlerTrait
     protected function handleException(
         Exception $exception,
         ServerRequestInterface $request,
-        $handler
+        string|array $handler
     ): ResponseInterface {
         if (is_string($handler)) {
             $handler = [
