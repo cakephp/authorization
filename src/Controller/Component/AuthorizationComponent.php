@@ -295,7 +295,8 @@ class AuthorizationComponent extends Component
 
         $authorizeModel = $this->checkAction($action, 'authorizeModel');
         if ($authorizeModel) {
-            $this->authorize($this->getController()->loadModel());
+            $method = method_exists($this->getController(), 'fetchTable') ? 'fetchTable' : 'loadModel';
+            $this->authorize($this->getController()->{$method}());
         }
     }
 
