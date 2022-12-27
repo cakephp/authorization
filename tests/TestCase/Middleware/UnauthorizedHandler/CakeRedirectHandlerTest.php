@@ -29,7 +29,6 @@ class CakeRedirectHandlerTest extends TestCase
     {
         parent::setUp();
 
-        Router::reload();
         Router::fullBaseUrl('http://localhost');
         $builder = Router::createRouteBuilder('/');
         $builder->connect(
@@ -37,7 +36,7 @@ class CakeRedirectHandlerTest extends TestCase
             ['controller' => 'Users', 'action' => 'login'],
             ['_name' => 'login']
         );
-        $builder->connect('/:controller/:action');
+        $builder->connect('/{controller}/{action}');
     }
 
     public function testHandleRedirectionDefault()
