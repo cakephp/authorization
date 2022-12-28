@@ -1,13 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.x-dev@">
-  <file src="src/Identity.php">
-    <NonInvariantDocblockPropertyType occurrences="1">
-      <code>$identity</code>
-    </NonInvariantDocblockPropertyType>
-  </file>
-  <file src="src/IdentityInterface.php">
-    <MissingTemplateParam occurrences="1">
-      <code>ArrayAccess</code>
-    </MissingTemplateParam>
-  </file>
-</files>
+<files psalm-version="5.x-dev@"/>

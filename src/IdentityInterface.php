@@ -25,6 +25,8 @@ use Authorization\Policy\ResultInterface;
  * This interface is similar to the interface defined in cakephp/authentication
  * and uses ArrayAccess to expose public properties of the wrapped identity
  * implementation.
+ *
+ * @extends \ArrayAccess<array-key, mixed>
  */
 interface IdentityInterface extends ArrayAccess
 {
