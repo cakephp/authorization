@@ -85,33 +85,22 @@ class AuthorizationService implements AuthorizationServiceInterface
             $result = $policy->before($user, $resource, $action);
 
             if ($result !== null) {
-                return $this->resultTypeCheck($result);
+                return $result;
             }
         }
 
         $handler = $this->getCanHandler($policy, $action);
         $result = $handler($user, $resource);
 
-        return $this->resultTypeCheck($result);
-    }
+        assert(
+            is_bool($result) || $result instanceof ResultInterface,
+            new Exception(sprintf(
+                'Authorization check method must return `%s` or `bool`.',
+                ResultInterface::class
+            ))
+        );
 
-    /**
-     * Check result type.
-     *
-     * @param mixed $result Result from policy class instance.
-     * @return \Authorization\Policy\ResultInterface|bool
-     * @throws \Authorization\Exception\Exception If $result argument is not a boolean or ResultInterface instance.
-     */
-    protected function resultTypeCheck(mixed $result): ResultInterface|bool
-    {
-        if (is_bool($result) || $result instanceof ResultInterface) {
-            return $result;
-        }
-
-        throw new Exception(sprintf(
-            'Pre-authorization check must return `%s`, `bool` or `null`.',
-            ResultInterface::class
-        ));
+        return $result;
     }
 
     /**
@@ -138,9 +127,10 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $method = 'can' . ucfirst($action);
 
-        if (!method_exists($policy, $method) && !method_exists($policy, '__call')) {
-            throw new MissingMethodException([$method, $action, get_class($policy)]);
-        }
+        assert(
+            method_exists($policy, $method) || method_exists($policy, '__call'),
+            new MissingMethodException([$method, $action, get_class($policy)])
+        );
 
         return [$policy, $method](...);
     }
@@ -157,9 +147,10 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $method = 'scope' . ucfirst($action);
 
-        if (!method_exists($policy, $method)) {
-            throw new MissingMethodException([$method, $action, get_class($policy)]);
-        }
+        assert(
+            method_exists($policy, $method) || method_exists($policy, '__call'),
+            new MissingMethodException([$method, $action, get_class($policy)])
+        );
 
         return [$policy, $method](...);
     }
