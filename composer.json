@@ -17,8 +17,8 @@
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
-        "cakephp/authentication": "dev-cake5",
-        "cakephp/bake": "dev-cake5",
+        "cakephp/authentication": "3.x-dev",
+        "cakephp/bake": "3.x-dev",
         "cakephp/cakephp": "5.x-dev",
         "cakephp/cakephp-codesniffer": "^5.0",
         "cakephp/plugin-installer": "^1.3",
