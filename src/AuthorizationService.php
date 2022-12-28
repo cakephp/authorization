@@ -22,6 +22,7 @@ use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\ResolverInterface;
 use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
+use Closure;
 
 class AuthorizationService implements AuthorizationServiceInterface
 {
@@ -130,10 +131,10 @@ class AuthorizationService implements AuthorizationServiceInterface
      *
      * @param mixed $policy Policy object.
      * @param string $action Action name.
-     * @return callable
+     * @return \Closure
      * @throws \Authorization\Policy\Exception\MissingMethodException
      */
-    protected function getCanHandler(mixed $policy, string $action): callable
+    protected function getCanHandler(mixed $policy, string $action): Closure
     {
         $method = 'can' . ucfirst($action);
 
@@ -141,7 +142,7 @@ class AuthorizationService implements AuthorizationServiceInterface
             throw new MissingMethodException([$method, $action, get_class($policy)]);
         }
 
-        return [$policy, $method];
+        return [$policy, $method](...);
     }
 
     /**
@@ -149,10 +150,10 @@ class AuthorizationService implements AuthorizationServiceInterface
      *
      * @param mixed $policy Policy object.
      * @param string $action Action name.
-     * @return callable
+     * @return \Closure
      * @throws \Authorization\Policy\Exception\MissingMethodException
      */
-    protected function getScopeHandler(mixed $policy, string $action): callable
+    protected function getScopeHandler(mixed $policy, string $action): Closure
     {
         $method = 'scope' . ucfirst($action);
 
@@ -160,7 +161,7 @@ class AuthorizationService implements AuthorizationServiceInterface
             throw new MissingMethodException([$method, $action, get_class($policy)]);
         }
 
-        return [$policy, $method];
+        return [$policy, $method](...);
     }
 
     /**
