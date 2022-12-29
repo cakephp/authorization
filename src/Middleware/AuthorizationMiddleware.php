@@ -179,7 +179,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
         if (!$identity instanceof IdentityInterface) {
             throw new RuntimeException(sprintf(
                 'Invalid identity returned by decorator. `%s` does not implement `%s`.',
-                is_object($identity) ? get_class($identity) : gettype($identity),
+                get_debug_type($identity),
                 IdentityInterface::class
             ));
         }
