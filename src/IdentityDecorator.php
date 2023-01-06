@@ -76,7 +76,7 @@ class IdentityDecorator implements IdentityInterface
     /**
      * @inheritDoc
      */
-    public function applyScope(string $action, mixed $resource): mixed
+    public function applyScope(string $action, $resource): mixed
     {
         return $this->authorization->applyScope($this, $action, $resource);
     }
