@@ -67,6 +67,19 @@ class IdentityDecoratorTest extends TestCase
         $this->assertTrue($identity->applyScope('update', $resource));
     }
 
+    public function testApplyScopeAdditionalParams()
+    {
+        $resource = new stdClass();
+        $auth = $this->createMock(AuthorizationServiceInterface::class);
+        $identity = new IdentityDecorator($auth, ['id' => 1]);
+
+        $auth->expects($this->once())
+            ->method('applyScope')
+            ->with($identity, 'update', $resource, 'first argument', false)
+            ->will($this->returnValue(true));
+        $this->assertTrue($identity->applyScope('update', $resource, 'first argument', false));
+    }
+
     public function testCall()
     {
         $data = new Article(['id' => 1]);

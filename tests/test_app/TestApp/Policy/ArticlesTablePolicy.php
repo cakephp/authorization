@@ -36,4 +36,13 @@ class ArticlesTablePolicy
             'identity_id' => $user['id'],
         ]);
     }
+
+    public function scopeAdditionalArguments(IdentityInterface $user, QueryInterface $query, $firstArg, $secondArg)
+    {
+        return $query->where([
+            'identity_id' => $user['id'],
+            'firstArg' => $firstArg,
+            'secondArg' => $secondArg,
+        ]);
+    }
 }

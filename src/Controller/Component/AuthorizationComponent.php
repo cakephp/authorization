@@ -151,9 +151,10 @@ class AuthorizationComponent extends Component
      *
      * @param mixed $resource The resource to apply a scope to.
      * @param string|null $action The action to apply a scope for.
+     * @param mixed $optionalArgs Multiple additional arguments which are passed to the scope
      * @return mixed
      */
-    public function applyScope(mixed $resource, ?string $action = null): mixed
+    public function applyScope(mixed $resource, ?string $action = null, mixed ...$optionalArgs): mixed
     {
         $request = $this->getController()->getRequest();
         if ($action === null) {
@@ -164,7 +165,7 @@ class AuthorizationComponent extends Component
             throw new MissingIdentityException('Identity must exist for applyScope() call.');
         }
 
-        return $identity->applyScope($action, $resource);
+        return $identity->applyScope($action, $resource, ...$optionalArgs);
     }
 
     /**
