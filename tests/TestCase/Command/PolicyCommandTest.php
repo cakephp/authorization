@@ -24,10 +24,14 @@ use Cake\TestSuite\StringCompareTrait;
 /**
  * PolicyCommand test class
  */
-#[\AllowDynamicProperties]
 class PolicyCommandTest extends ConsoleIntegrationTestCase
 {
     use StringCompareTrait;
+
+    /**
+     * @var string
+     */
+    protected $comparisonDir = '';
 
     /**
      * @var string

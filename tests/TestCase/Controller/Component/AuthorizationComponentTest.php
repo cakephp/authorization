@@ -41,9 +41,18 @@ use UnexpectedValueException;
 /**
  * AuthorizationComponentTest class
  */
-#[\AllowDynamicProperties]
 class AuthorizationComponentTest extends TestCase
 {
+    /**
+     * @var \Cake\Controller\Controller
+     */
+    protected $Controller;   
+
+    /**
+     * @var \Cake\Controller\ComponentRegistry
+     */
+    protected $ComponentRegistry;   
+
     /**
      * @var \Authorization\Controller\Component\AuthorizationComponent
      */
