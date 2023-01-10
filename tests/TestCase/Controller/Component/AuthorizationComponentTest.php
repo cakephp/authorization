@@ -41,6 +41,7 @@ use UnexpectedValueException;
 /**
  * AuthorizationComponentTest class
  */
+#[\AllowDynamicProperties]
 class AuthorizationComponentTest extends TestCase
 {
     /**
