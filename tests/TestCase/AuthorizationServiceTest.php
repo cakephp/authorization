@@ -189,7 +189,7 @@ class AuthorizationServiceTest extends TestCase
         $query->method('getRepository')
             ->willReturn($articles);
 
-        $query->expects($this->once())
+        $query->expects($this->exactly(2))
             ->method('where')
             ->with([
                 'identity_id' => 9,
@@ -197,8 +197,13 @@ class AuthorizationServiceTest extends TestCase
                 'secondArg' => false,
             ])
             ->willReturn($query);
-        $result = $service->applyScope($user, 'additionalArguments', $query, 'first argument', false);
 
+        $result = $service->applyScope($user, 'additionalArguments', $query, 'first argument', false);
+        $this->assertInstanceOf(QueryInterface::class, $result);
+        $this->assertSame($query, $result);
+
+        // Test with named args as well
+        $result = $service->applyScope($user, 'additionalArguments', $query, firstArg: 'first argument', secondArg: false);
         $this->assertInstanceOf(QueryInterface::class, $result);
         $this->assertSame($query, $result);
     }
