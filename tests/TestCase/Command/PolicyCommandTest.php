@@ -31,6 +31,11 @@ class PolicyCommandTest extends ConsoleIntegrationTestCase
     /**
      * @var string
      */
+    protected $comparisonDir = '';
+
+    /**
+     * @var string
+     */
     protected $generatedFile = '';
 
     /**
