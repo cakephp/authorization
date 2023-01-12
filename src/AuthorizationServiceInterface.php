@@ -60,9 +60,15 @@ interface AuthorizationServiceInterface
      * @param \Authorization\IdentityInterface|null $user The user to check permissions for.
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
+     * @param mixed $optionalArgs Multiple additional arguments which are passed to the scope
      * @return mixed The modified resource.
      */
-    public function applyScope(?IdentityInterface $user, string $action, mixed $resource): mixed;
+    public function applyScope(
+        ?IdentityInterface $user,
+        string $action,
+        mixed $resource,
+        mixed ...$optionalArgs
+    ): mixed;
 
     /**
      * Return a boolean based on whether or not this object

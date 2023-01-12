@@ -53,9 +53,10 @@ interface IdentityInterface extends ArrayAccess
      *
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
+     * @param mixed $optionalArgs Multiple additional arguments which are passed to the scope
      * @return mixed The modified resource.
      */
-    public function applyScope(string $action, mixed $resource): mixed;
+    public function applyScope(string $action, mixed $resource, mixed ...$optionalArgs): mixed;
 
     /**
      * Get the decorated identity

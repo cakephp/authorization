@@ -21,10 +21,13 @@ use Authorization\IdentityDecorator;
 use Authorization\Policy\BeforePolicyInterface;
 use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\MapResolver;
+use Authorization\Policy\OrmResolver;
 use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
+use Cake\Datasource\QueryInterface;
 use Cake\TestSuite\TestCase;
 use TestApp\Model\Entity\Article;
+use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\MagicCallPolicy;
 
@@ -171,6 +174,38 @@ class AuthorizationServiceTest extends TestCase
 
         $article = new Article();
         $result = $service->applyScope($user, 'nope', $article);
+    }
+
+    public function testApplyScopeAdditionalArguments()
+    {
+        $service = new AuthorizationService(new OrmResolver());
+        $user = new IdentityDecorator($service, [
+            'id' => 9,
+            'role' => 'admin',
+        ]);
+
+        $articles = new ArticlesTable();
+        $query = $this->createMock(QueryInterface::class);
+        $query->method('getRepository')
+            ->willReturn($articles);
+
+        $query->expects($this->exactly(2))
+            ->method('where')
+            ->with([
+                'identity_id' => 9,
+                'firstArg' => 'first argument',
+                'secondArg' => false,
+            ])
+            ->willReturn($query);
+
+        $result = $service->applyScope($user, 'additionalArguments', $query, 'first argument', false);
+        $this->assertInstanceOf(QueryInterface::class, $result);
+        $this->assertSame($query, $result);
+
+        // Test with named args as well
+        $result = $service->applyScope($user, 'additionalArguments', $query, firstArg: 'first argument', secondArg: false);
+        $this->assertInstanceOf(QueryInterface::class, $result);
+        $this->assertSame($query, $result);
     }
 
     public function testBeforeFalse()
