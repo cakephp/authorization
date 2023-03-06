@@ -85,7 +85,7 @@ Any return value that is not ``true`` or a ``ResultInterface`` object will be
 considered a failure.
 
 Policy Scopes
--------------
+=============
 
 In addition to policies being able to define pass/fail authorization checks,
 they can also define 'scopes'. Scope methods allow you to modify another object
@@ -103,7 +103,7 @@ a list view to the current user::
     }
 
 Policy Pre-conditions
----------------------
+=====================
 
 In some policies you may wish to apply common checks across all operations in
 a policy. This is useful when you need to deny all actions to the provided
