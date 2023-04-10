@@ -50,7 +50,7 @@ Then make your application's ``middleware()`` method look like::
             ->add(new BodyParserMiddleware())
 
             // If you are using Authentication it should be *before* Authorization.
-            ->add(new AuthenticationMiddleware($this));
+            ->add(new AuthenticationMiddleware($this))
 
             // Add the AuthorizationMiddleware *after* routing, body parser
             // and authentication middleware.
