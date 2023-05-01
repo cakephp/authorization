@@ -66,6 +66,50 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function testCanWithAdditionalParams()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class,
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $innerService = function () {
+            return true;
+        };
+
+        $result = $service->can($user, 'withService', new Article(), $innerService);
+        $this->assertTrue($result);
+    }
+
+    public function testCanWithAdditionalNamedParams()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class,
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $innerService1 = function () {
+            return true;
+        };
+
+        $innerService2 = function () {
+            return false;
+        };
+
+        $result = $service->can(user: $user, action: 'witMultipleServices', resource: new Article(), service2: $innerService2, service1: $innerService1);
+        $this->assertFalse($result);
+    }
+
     public function testCanWithResult()
     {
         $resolver = new MapResolver([
@@ -79,6 +123,50 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $result = $service->canResult($user, 'publish', new Article());
+        $this->assertInstanceOf(ResultInterface::class, $result);
+    }
+
+    public function testCanWithResultAndAdditionalParams()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class,
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $innerService = function () {
+            return true;
+        };
+
+        $result = $service->canResult($user, 'withService', new Article(), $innerService);
+        $this->assertInstanceOf(ResultInterface::class, $result);
+    }
+
+    public function testCanWithResultAndAdditionalNamedParams()
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class,
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $innerService1 = function () {
+            return true;
+        };
+
+        $innerService2 = function () {
+            return false;
+        };
+
+        $result = $service->canResult(user: $user, action: 'witMultipleServices', resource: new Article(), service2: $innerService2, service1: $innerService1);
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
@@ -173,7 +261,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $article = new Article();
-        $result = $service->applyScope($user, 'nope', $article);
+        $service->applyScope($user, 'nope', $article);
     }
 
     public function testApplyScopeAdditionalArguments()

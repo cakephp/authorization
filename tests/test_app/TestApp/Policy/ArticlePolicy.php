@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace TestApp\Policy;
 
 use Authorization\Policy\Result;
+use Closure;
 use TestApp\Model\Entity\Article;
 
 class ArticlePolicy
@@ -115,5 +116,15 @@ class ArticlePolicy
         }
 
         return new Result($article->get('user_id') === $user['id']);
+    }
+
+    public function canWithService($user, Article $article, Closure $service)
+    {
+        return $service();
+    }
+
+    public function canWitMultipleServices($user, Article $article, Closure $service1, Closure $service2)
+    {
+        return $service1() && $service2();
     }
 }

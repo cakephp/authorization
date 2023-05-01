@@ -117,6 +117,6 @@ class OrmResolverTest extends TestCase
 
         $articles = $this->createMock('Cake\Datasource\RepositoryInterface');
         $resolver = new OrmResolver('TestApp');
-        $policy = $resolver->getPolicy($articles);
+        $resolver->getPolicy($articles);
     }
 }
