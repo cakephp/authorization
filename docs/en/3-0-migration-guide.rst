@@ -14,11 +14,14 @@ The following interfaces now have appropriate parameter and return types added:
 - ``RequestPolicyInterface.php``
 - ``ResolverInterface``
 
-Multiple optional arguments for ``applyScope``
-----------------------------------------------
+Multiple optional arguments for ``applyScope``, ``can`` and ``canResult``
+-------------------------------------------------------------------------
 
-``IdentityInterface::applyScope`` as well as ``AuthorizationServiceInterface::applyScope``
-allow multiple optional arguments to be added.
+The following interface methods have been adjusted to pass on multiple optional arguments.
+- ``IdentityInterface::applyScope``
+- ``AuthorizationServiceInterface::applyScope``
+- ``AuthorizationServiceInterface::can``
+- ``AuthorizationServiceInterface::canResult``
 
 Removed methods
 ---------------
