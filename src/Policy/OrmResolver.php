@@ -62,7 +62,6 @@ class OrmResolver implements ResolverInterface
      * @return mixed
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for the
      *   resource has not been defined or cannot be resolved.
-     * @psalm-suppress MoreSpecificImplementedParamType
      */
     public function getPolicy(mixed $resource): mixed
     {

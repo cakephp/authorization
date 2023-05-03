@@ -173,7 +173,7 @@ class AuthorizationServiceTest extends TestCase
         ]);
 
         $article = new Article();
-        $result = $service->applyScope($user, 'nope', $article);
+        $service->applyScope($user, 'nope', $article);
     }
 
     public function testApplyScopeAdditionalArguments()
