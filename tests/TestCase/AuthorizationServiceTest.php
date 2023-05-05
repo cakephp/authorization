@@ -106,7 +106,7 @@ class AuthorizationServiceTest extends TestCase
             return false;
         };
 
-        $result = $service->can(user: $user, action: 'witMultipleServices', resource: new Article(), service2: $innerService2, service1: $innerService1);
+        $result = $service->can(user: $user, action: 'withMultipleServices', resource: new Article(), service2: $innerService2, service1: $innerService1);
         $this->assertFalse($result);
     }
 
@@ -166,7 +166,7 @@ class AuthorizationServiceTest extends TestCase
             return false;
         };
 
-        $result = $service->canResult(user: $user, action: 'witMultipleServices', resource: new Article(), service2: $innerService2, service1: $innerService1);
+        $result = $service->canResult(user: $user, action: 'withMultipleServices', resource: new Article(), service2: $innerService2, service1: $innerService1);
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 

@@ -123,7 +123,7 @@ class ArticlePolicy
         return $service();
     }
 
-    public function canWitMultipleServices($user, Article $article, Closure $service1, Closure $service2)
+    public function canWithMultipleServices($user, Article $article, Closure $service1, Closure $service2)
     {
         return $service1() && $service2();
     }
