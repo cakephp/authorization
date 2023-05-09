@@ -51,9 +51,9 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @inheritDoc
      */
-    public function can(?IdentityInterface $user, string $action, $resource): bool
+    public function can(?IdentityInterface $user, string $action, $resource, ...$optionalArgs): bool
     {
-        $result = $this->performCheck($user, $action, $resource);
+        $result = $this->performCheck($user, $action, $resource, ...$optionalArgs);
 
         return is_bool($result) ? $result : $result->getStatus();
     }
@@ -61,9 +61,9 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @inheritDoc
      */
-    public function canResult(?IdentityInterface $user, string $action, $resource): ResultInterface
+    public function canResult(?IdentityInterface $user, string $action, $resource, ...$optionalArgs): ResultInterface
     {
-        $result = $this->performCheck($user, $action, $resource);
+        $result = $this->performCheck($user, $action, $resource, ...$optionalArgs);
 
         return is_bool($result) ? new Result($result) : $result;
     }
@@ -74,10 +74,15 @@ class AuthorizationService implements AuthorizationServiceInterface
      * @param \Authorization\IdentityInterface|null $user The user to check permissions for.
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
+     * @param mixed $optionalArgs Multiple additional arguments which are passed on
      * @return \Authorization\Policy\ResultInterface|bool
      */
-    protected function performCheck(?IdentityInterface $user, string $action, mixed $resource): bool|ResultInterface
-    {
+    protected function performCheck(
+        ?IdentityInterface $user,
+        string $action,
+        mixed $resource,
+        mixed ...$optionalArgs
+    ): bool|ResultInterface {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
 
@@ -90,7 +95,7 @@ class AuthorizationService implements AuthorizationServiceInterface
         }
 
         $handler = $this->getCanHandler($policy, $action);
-        $result = $handler($user, $resource);
+        $result = $handler($user, $resource, ...$optionalArgs);
 
         assert(
             is_bool($result) || $result instanceof ResultInterface,

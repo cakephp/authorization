@@ -32,9 +32,10 @@ interface AuthorizationServiceInterface
      * @param \Authorization\IdentityInterface|null $user The user to check permissions for.
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
+     * @param mixed $optionalArgs Multiple additional arguments which are passed to the scope
      * @return bool
      */
-    public function can(?IdentityInterface $user, string $action, mixed $resource): bool;
+    public function can(?IdentityInterface $user, string $action, mixed $resource, mixed ...$optionalArgs): bool;
 
     /**
      * Check whether the provided user can perform an action on a resource.
@@ -45,9 +46,15 @@ interface AuthorizationServiceInterface
      * @param \Authorization\IdentityInterface|null $user The user to check permissions for.
      * @param string $action The action/operation being performed.
      * @param mixed $resource The resource being operated on.
+     * @param mixed $optionalArgs Multiple additional arguments which are passed to the scope
      * @return \Authorization\Policy\ResultInterface
      */
-    public function canResult(?IdentityInterface $user, string $action, mixed $resource): ResultInterface;
+    public function canResult(
+        ?IdentityInterface $user,
+        string $action,
+        mixed $resource,
+        mixed ...$optionalArgs
+    ): ResultInterface;
 
     /**
      * Apply authorization scope conditions/restrictions.
