@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    colors="true"
-    bootstrap="tests/bootstrap.php"
-    backupGlobals="true"
-    convertDeprecationsToExceptions="true"
-    >
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         colors="true"
+         backupGlobals="true"
+         cacheDirectory=".phpunit.cache"
+         bootstrap="tests/bootstrap.php"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
+>
 
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
@@ -15,14 +16,14 @@
     </testsuites>
 
     <extensions>
-        <extension class="Cake\TestSuite\Fixture\PHPUnitExtension"/>
+        <bootstrap class="Cake\TestSuite\Fixture\Extension\PHPUnitExtension"/>
     </extensions>
 
-    <coverage>
+    <source>
         <include>
             <directory suffix=".php">src/</directory>
         </include>
-    </coverage>
+    </source>
 
     <php>
         <ini name="memory_limit" value="-1"/>
