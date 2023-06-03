@@ -88,7 +88,7 @@ class RedirectHandlerTest extends TestCase
         $this->assertSame('/users/login', $response->getHeaderLine('Location'));
     }
 
-    public function httpMethodProvider()
+    public static function httpMethodProvider()
     {
         return [
             ['POST'],

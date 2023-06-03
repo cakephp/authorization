@@ -301,7 +301,8 @@ class AuthorizationServiceTest extends TestCase
         $entity = new Article();
 
         $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->setMethods(['before', 'canAdd'])
+            ->onlyMethods(['before'])
+            ->addMethods(['canAdd'])
             ->getMock();
 
         $policy->expects($this->once())
@@ -331,7 +332,8 @@ class AuthorizationServiceTest extends TestCase
         $entity = new Article();
 
         $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->setMethods(['before', 'canAdd'])
+            ->onlyMethods(['before'])
+            ->addMethods(['canAdd'])
             ->getMock();
 
         $policy->expects($this->once())
@@ -361,7 +363,8 @@ class AuthorizationServiceTest extends TestCase
         $entity = new Article();
 
         $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->setMethods(['before', 'canAdd'])
+            ->onlyMethods(['before'])
+            ->addMethods(['canAdd'])
             ->getMock();
 
         $policy->expects($this->once())
@@ -393,7 +396,8 @@ class AuthorizationServiceTest extends TestCase
         $entity = new Article();
 
         $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->setMethods(['before', 'canAdd'])
+            ->onlyMethods(['before'])
+            ->addMethods(['canAdd'])
             ->getMock();
 
         $policy->expects($this->once())
@@ -423,7 +427,8 @@ class AuthorizationServiceTest extends TestCase
         $entity = new Article();
 
         $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->setMethods(['before', 'canAdd'])
+            ->onlyMethods(['before'])
+            ->addMethods(['canAdd'])
             ->getMock();
 
         $policy->expects($this->once())

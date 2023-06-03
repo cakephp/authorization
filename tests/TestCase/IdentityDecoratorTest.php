@@ -16,7 +16,7 @@ use TestApp\Model\Entity\Article;
  */
 class IdentityDecoratorTest extends TestCase
 {
-    public function constructorDataProvider()
+    public static function constructorDataProvider()
     {
         return [
             'array' => [
