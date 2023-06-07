@@ -96,7 +96,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($service->authorizationChecked());
     }
 
-    public function testCallingMagicCallPolicy()
+    public function testCallingMagicCanCallPolicy()
     {
         $resolver = new MapResolver([
             Article::class => MagicCallPolicy::class,
@@ -111,6 +111,23 @@ class AuthorizationServiceTest extends TestCase
         $article = new Article();
         $this->assertTrue($service->can($user, 'doThat', $article));
         $this->assertFalse($service->can($user, 'cantDoThis', $article));
+    }
+
+    public function testCallingMagicScopeCallPolicy()
+    {
+        $resolver = new MapResolver([
+            Article::class => MagicCallPolicy::class,
+        ]);
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'id' => 9,
+            'role' => 'admin',
+        ]);
+
+        $article = new Article();
+        $this->assertTrue($service->applyScope($user, 'this', $article));
+        $this->assertFalse($service->applyScope($user, 'somethingElse', $article));
     }
 
     public function testAuthorizationCheckedWithApplyScope()

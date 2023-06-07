@@ -156,7 +156,7 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $method = 'scope' . ucfirst($action);
 
-        if (!method_exists($policy, $method)) {
+        if (!method_exists($policy, $method) && !method_exists($policy, '__call')) {
             throw new MissingMethodException([$method, $action, get_class($policy)]);
         }
 
