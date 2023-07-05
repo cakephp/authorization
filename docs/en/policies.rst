@@ -134,4 +134,4 @@ Before hooks are expected to return one of three values:
   
 Applying Policies
 -----------------
-https://book.cakephp.org/authorization/2/en/component.html#applying-policy-scopes
+See :ref:`applying-policy-scopes` for how to apply policies in your controller actions.
