@@ -33,6 +33,11 @@ class PolicyCommandTest extends TestCase
     /**
      * @var string
      */
+    protected $comparisonDir = '';
+
+    /**
+     * @var string
+     */
     protected $generatedFile = '';
 
     /**
