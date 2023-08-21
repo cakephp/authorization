@@ -18,7 +18,6 @@ namespace Authorization\Controller\Component;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
-use Authorization\Exception\MissingIdentityException;
 use Authorization\IdentityInterface;
 use Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
