@@ -133,7 +133,7 @@ class AuthorizationComponent extends Component
         }
 
         $identity = $this->getIdentity($request);
-        if (empty($identity)) {
+        if ($identity === null) {
             return $this->getService($request)->{$method}(null, $action, $resource);
         }
 
