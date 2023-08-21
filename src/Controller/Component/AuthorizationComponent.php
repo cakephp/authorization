@@ -158,7 +158,7 @@ class AuthorizationComponent extends Component
         }
         $identity = $this->getIdentity($request);
         if ($identity === null) {
-            throw new MissingIdentityException('Identity must exist for applyScope() call.');
+            return $this->getService($request)->applyScope(null, $action, $resource);
         }
 
         return $identity->applyScope($action, $resource);
