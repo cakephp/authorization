@@ -253,6 +253,33 @@ class AuthorizationComponentTest extends TestCase
         $this->assertSame($query, $result);
     }
 
+    public function testApplyScopeNoUser()
+    {
+        $this->request = $this->request
+            ->withoutAttribute('identity');
+
+        $controller = new Controller($this->request);
+        $componentRegistry = new ComponentRegistry($controller);
+        $auth = new AuthorizationComponent($componentRegistry);
+
+        $articles = new ArticlesTable();
+        $query = $this->createMock(QueryInterface::class);
+        $query->method('getRepository')
+            ->willReturn($articles);
+
+        $query->expects($this->once())
+            ->method('where')
+            ->with([
+                'visibility' => 'public',
+            ])
+            ->willReturn($query);
+
+        $result = $auth->applyScope($query);
+
+        $this->assertInstanceOf(QueryInterface::class, $result);
+        $this->assertSame($query, $result);
+    }
+
     public function testApplyScopeMappedAction()
     {
         $articles = new ArticlesTable();
@@ -468,6 +495,20 @@ class AuthorizationComponentTest extends TestCase
         $article = new Article(['user_id' => 2]);
         $this->assertFalse($this->Auth->can($article));
         $this->assertFalse($this->Auth->can($article, 'delete'));
+    }
+
+    public function testCanWithoutUser()
+    {
+        $this->request = $this->request
+            ->withoutAttribute('identity');
+
+        $controller = new Controller($this->request);
+        $componentRegistry = new ComponentRegistry($controller);
+        $auth = new AuthorizationComponent($componentRegistry);
+
+        $article = new Article(['user_id' => 1, 'visibility' => 'public']);
+        $this->assertFalse($auth->can($article, 'edit'));
+        $this->assertTrue($auth->can($article, 'view'));
     }
 
     public function testCanWithResult()
