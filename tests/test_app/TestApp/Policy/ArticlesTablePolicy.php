@@ -23,8 +23,14 @@ class ArticlesTablePolicy
         return $identity['can_edit'];
     }
 
-    public function scopeEdit(IdentityInterface $user, QueryInterface $query)
+    public function scopeEdit(?IdentityInterface $user, QueryInterface $query)
     {
+        if ($user === null) {
+            return $query->where([
+                'visibility' => 'public',
+            ]);
+        }
+
         return $query->where([
             'user_id' => $user['id'],
         ]);

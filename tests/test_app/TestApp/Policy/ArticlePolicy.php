@@ -29,6 +29,10 @@ class ArticlePolicy
      */
     public function canEdit($user, Article $article)
     {
+        if ($user === null) {
+            return false;
+        }
+
         if (in_array($user['role'], ['admin', 'author'])) {
             return true;
         }
