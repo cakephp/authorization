@@ -21,6 +21,10 @@ class MagicCallPolicy
             return true;
         }
 
+        if ($name === 'scopeThis') {
+            return true;
+        }
+
         return false;
     }
 }
