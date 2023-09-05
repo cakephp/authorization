@@ -49,9 +49,9 @@ class Identity extends IdentityDecorator implements AuthenIdentityInterface
     /**
      * Get the primary key/id field for the identity.
      *
-     * @return string|int|null|array
+     * @return array|string|int|null
      */
-    public function getIdentifier(): string|int|null|array
+    public function getIdentifier(): string|int|array|null
     {
         return $this->identity->getIdentifier();
     }
