@@ -134,4 +134,4 @@ Before hooks are expected to return one of three values:
   
 Applying Policies
 -----------------
-See :ref:`applying-policy-scopes` for how to apply policies in your controller actions.
+See `Applying Policy Scopes <component.html#applying-policy-scopes>`_ for how to apply policies in your controller actions.
