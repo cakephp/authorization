@@ -49,7 +49,7 @@ the component::
         // Rest of the edit method.
     }
 
-Above we see an article being authorized for the current user. Since we haven't 
+Above we see an article being authorized for the current user. Since we haven't
 specified the action to check the request's ``action`` is used. You can specify
 a policy action with the second parameter::
 
@@ -74,6 +74,8 @@ authorization for anonymous users. Both the ``can()`` and ``authorize()`` suppor
 anonymous users. Your policies can expect to get ``null`` for the 'user' parameter
 when the user is not logged in.
 
+.. _applying-policy-scopes:
+
 Applying Policy Scopes
 ======================
 
@@ -84,7 +86,7 @@ $query = $this->Authorization->applyScope($this->Articles->find());
 If the current action has no logged in user a ``MissingIdentityException`` will
 be raised.
 
-If you want to map actions to different authorization methods use the 
+If you want to map actions to different authorization methods use the
 ``actionMap`` option::
 
    // In your controller initialize() method:
@@ -109,7 +111,7 @@ Example::
         $query = $this->Articles->find();
 
         //this will apply `list` scope while being called in `index` controller action.
-        $this->Authorization->applyScope($query); 
+        $this->Authorization->applyScope($query);
         ...
     }
 
@@ -118,14 +120,14 @@ Example::
         $article = $this->Articles->get($id);
 
         //this will authorize against `remove` entity action while being called in `delete` controller action.
-        $this->Authorization->authorize($article); 
+        $this->Authorization->authorize($article);
         ...
     }
 
     public function add()
     {
         //this will authorize against `insert` model action while being called in `add` controller action.
-        $this->Authorization->authorizeModel(); 
+        $this->Authorization->authorizeModel();
         ...
     }
 

@@ -131,7 +131,9 @@ Before hooks are expected to return one of three values:
 - ``false`` The user is not allowed to proceed with the action.
 - ``null`` The before hook did not make a decision, and the authorization method
   will be invoked.
-  
+
 Applying Policies
 -----------------
-See `Applying Policy Scopes <component.html#applying-policy-scopes>`_ for how to apply policies in your controller actions.
+
+See :ref:`applying-policy-scopes` for how to apply policies in your controller
+actions.
