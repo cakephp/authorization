@@ -19,6 +19,7 @@ namespace Authorization\Test\TestCase;
 use Authorization\AuthorizationService;
 use Authorization\IdentityDecorator;
 use Authorization\Policy\BeforePolicyInterface;
+use Authorization\Policy\BeforeScopeInterface;
 use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\MapResolver;
 use Authorization\Policy\Result;
@@ -373,6 +374,70 @@ class AuthorizationServiceTest extends TestCase
         $this->expectExceptionMessage('Pre-authorization check must return `Authorization\Policy\ResultInterface`, `bool` or `null`.');
 
         $service->can($user, 'add', $entity);
+    }
+
+    public function testBeforeScopeNonNull()
+    {
+        $entity = new Article();
+
+        $policy = $this->getMockBuilder(BeforeScopeInterface::class)
+            ->onlyMethods(['beforeScope'])
+            ->addMethods(['scopeIndex'])
+            ->getMock();
+
+        $policy->expects($this->once())
+            ->method('beforeScope')
+            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'index')
+            ->willReturn('foo');
+
+        $policy->expects($this->never())
+            ->method('scopeIndex');
+
+        $resolver = new MapResolver([
+            Article::class => $policy,
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $result = $service->applyScope($user, 'index', $entity);
+        $this->assertEquals('foo', $result);
+    }
+
+    public function testBeforeScopeNull()
+    {
+        $entity = new Article();
+
+        $policy = $this->getMockBuilder(BeforeScopeInterface::class)
+            ->onlyMethods(['beforeScope'])
+            ->addMethods(['scopeIndex'])
+            ->getMock();
+
+        $policy->expects($this->once())
+            ->method('beforeScope')
+            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'index')
+            ->willReturn(null);
+
+        $policy->expects($this->once())
+            ->method('scopeIndex')
+            ->with($this->isInstanceOf(IdentityDecorator::class), $entity)
+            ->willReturn('bar');
+
+        $resolver = new MapResolver([
+            Article::class => $policy,
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $result = $service->applyScope($user, 'index', $entity);
+        $this->assertEquals('bar', $result);
     }
 
     public function testMissingMethod()
