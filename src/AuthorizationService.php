@@ -121,7 +121,7 @@ class AuthorizationService implements AuthorizationServiceInterface
             $result = $policy->beforeScope($user, $resource, $action);
 
             if ($result !== null) {
-                return $resource;
+                return $result;
             }
         }
 
