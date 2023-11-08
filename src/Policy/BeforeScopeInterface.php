@@ -27,13 +27,13 @@ interface BeforeScopeInterface
     /**
      * Defines a pre-scope check.
      *
-     * If a boolean value is returned, the scope application will be skipped and the unmodified
-     * resource will be returned. In case of `null`, the scope will be applied.
+     * If a non-null value is returned, the scope application will be skipped and the un-scoped resource
+     * will be returned. In case of `null`, the scope will be applied.
      *
      * @param \Authorization\IdentityInterface|null $identity Identity object.
      * @param mixed $resource The resource being operated on.
      * @param string $action The action/operation being performed.
-     * @return \Authorization\Policy\ResultInterface|bool|null
+     * @return mixed
      */
-    public function beforeScope(?IdentityInterface $identity, mixed $resource, string $action): ResultInterface|bool|null;
+    public function beforeScope(?IdentityInterface $identity, mixed $resource, string $action): mixed;
 }
