@@ -132,6 +132,31 @@ Before hooks are expected to return one of three values:
 - ``null`` The before hook did not make a decision, and the authorization method
   will be invoked.
 
+Scope Pre-conditions
+====================
+
+Like policies, scopes can also define pre-conditions. These are useful when you
+want to apply common conditions to all scopes in a policy. To use pre-conditions
+on scopes you need to implement the ``BeforeScopeInterface`` in your scope policy::
+
+    namespace App\Policy;
+
+    use Authorization\Policy\BeforeScopeInterface;
+
+    class ArticlesTablePolicy implements BeforeScopeInterface
+    {
+        public function beforeScope($user, $query, $action)
+        {
+            if ($user->getOriginalData()->is_trial_user) {
+                return $query->where(['Articles.is_paid_only' => false]);
+            }
+            // fall through
+        }
+    }
+
+Before scope hooks are expected to return the modified resource object, or if
+``null`` is returned then the scope method will be invoked as normal.
+
 Applying Policies
 -----------------
 
