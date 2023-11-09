@@ -154,6 +154,9 @@ on scopes you need to implement the ``BeforeScopeInterface`` in your scope polic
         }
     }
 
+Before scope hooks are expected to return the modified resource object, or if
+``null`` is returned then the scope method will be invoked as normal.
+
 Applying Policies
 -----------------
 See :ref:`applying-policy-scopes` for how to apply policies in your controller actions.
