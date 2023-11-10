@@ -23,6 +23,7 @@ and add::
 
     use Authorization\Policy\RequestPolicyInterface;
     use Cake\Http\ServerRequest;
+    use Authorization\Policy\ResultInterface
 
     class RequestPolicy implements RequestPolicyInterface
     {
@@ -31,9 +32,9 @@ and add::
          *
          * @param \Authorization\IdentityInterface|null $identity Identity
          * @param \Cake\Http\ServerRequest $request Server Request
-         * @return bool
+         * @return \Authorization\Policy\ResultInterface|bool
          */
-        public function canAccess($identity, ServerRequest $request): ResultInterface
+        public function canAccess($identity, ServerRequest $request): bool|ResultInterface
         {
             if ($request->getParam('controller') === 'Articles'
                 && $request->getParam('action') === 'index'
