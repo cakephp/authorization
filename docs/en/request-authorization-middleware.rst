@@ -33,7 +33,7 @@ and add::
          * @param \Cake\Http\ServerRequest $request Server Request
          * @return bool
          */
-        public function canAccess($identity, ServerRequest $request)
+        public function canAccess($identity, ServerRequest $request): bool|\Authorization\Policy\ResultInterface
         {
             if ($request->getParam('controller') === 'Articles'
                 && $request->getParam('action') === 'index'
