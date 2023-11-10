@@ -18,6 +18,7 @@ namespace Authorization\Policy;
 
 use Authorization\IdentityInterface;
 use Cake\Http\ServerRequest;
+use Authorization\Policy\ResultInterface;
 
 /**
  * This interface should be implemented by your request policy class.
