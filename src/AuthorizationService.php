@@ -18,6 +18,7 @@ namespace Authorization;
 
 use Authorization\Exception\Exception;
 use Authorization\Policy\BeforePolicyInterface;
+use Authorization\Policy\BeforeScopeInterface;
 use Authorization\Policy\Exception\MissingMethodException;
 use Authorization\Policy\ResolverInterface;
 use Authorization\Policy\Result;
@@ -120,6 +121,15 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $this->authorizationChecked = true;
         $policy = $this->resolver->getPolicy($resource);
+
+        if ($policy instanceof BeforeScopeInterface) {
+            $result = $policy->beforeScope($user, $resource, $action);
+
+            if ($result !== null) {
+                return $result;
+            }
+        }
+
         $handler = $this->getScopeHandler($policy, $action);
 
         return $handler($user, $resource);
