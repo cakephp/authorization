@@ -18,6 +18,7 @@ namespace Authorization\Middleware;
 
 use ArrayAccess;
 use Authentication\IdentityInterface as AuthenIdentityInterface;
+use Authorization\AuthorizationService;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Exception\AuthorizationRequiredException;
@@ -26,6 +27,7 @@ use Authorization\Identity;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\UnauthorizedHandlerTrait;
+use Cake\Core\ContainerApplicationInterface;
 use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -103,6 +105,11 @@ class AuthorizationMiddleware implements MiddlewareInterface
     {
         $service = $this->getAuthorizationService($request);
         $request = $request->withAttribute('authorization', $service);
+
+        if ($this->subject instanceof ContainerApplicationInterface) {
+            $container = $this->subject->getContainer();
+            $container->add(AuthorizationService::class, $service);
+        }
 
         $attribute = $this->getConfig('identityAttribute');
         $identity = $request->getAttribute($attribute);
