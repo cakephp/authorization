@@ -35,5 +35,5 @@ interface BeforeScopeInterface
      * @param string $action The action/operation being performed.
      * @return mixed
      */
-    public function beforeScope(?IdentityInterface $identity, $resource, string $action);
+    public function beforeScope(?IdentityInterface $identity, mixed $resource, string $action): mixed;
 }
