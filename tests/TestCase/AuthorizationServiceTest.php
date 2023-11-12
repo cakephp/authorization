@@ -31,7 +31,6 @@ use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\MagicCallPolicy;
-use TypeError;
 
 class AuthorizationServiceTest extends TestCase
 {
