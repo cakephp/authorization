@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Middleware;
 
+use Authorization\AuthorizationService;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Exception\AuthorizationRequiredException;
@@ -25,6 +26,7 @@ use Authorization\IdentityInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
@@ -32,6 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use stdClass;
+use TestApp\Application;
 use TestApp\Http\TestRequestHandler;
 use TestApp\Identity;
 
@@ -281,5 +284,22 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $result = $middleware->process($request, $handler);
         $this->assertSame(200, $result->getStatusCode());
+    }
+
+    public function testMiddlewareInjectsServiceIntoDIC()
+    {
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'mariano', 'password' => 'password']
+        );
+        $handler = new TestRequestHandler();
+        $application = new Application('config');
+
+        $middleware = new AuthorizationMiddleware($application, ['requireAuthorizationCheck' => false]);
+        $middleware->process($request, $handler);
+
+        $container = $application->getContainer();
+        $this->assertInstanceOf(AuthorizationService::class, $container->get(AuthorizationService::class));
     }
 }
