@@ -1,13 +1,27 @@
 {
     "name": "cakephp/authorization",
     "description": "Authorization abstraction layer plugin for CakePHP",
+    "license": "MIT",
+    "type": "cakephp-plugin",
     "keywords": [
         "auth",
         "authorization",
         "access",
         "cakephp"
     ],
-    "type": "cakephp-plugin",
+    "authors": [
+        {
+            "name": "CakePHP Community",
+            "homepage": "https://github.com/cakephp/authorization/graphs/contributors"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/cakephp/authorization/issues",
+        "forum": "https://stackoverflow.com/tags/cakephp",
+        "irc": "irc://irc.freenode.org/cakephp",
+        "source": "https://github.com/cakephp/authorization",
+        "docs": "https://cakephp.org/authorization/2/en/"
+    },
     "require": {
         "php": ">=8.1",
         "cakephp/http": "^5.0",
@@ -27,7 +41,6 @@
         "cakephp/http": "To use \"RequestPolicyInterface\" (Not needed separately if using full CakePHP framework).",
         "cakephp/orm": "To use \"OrmResolver\" (Not needed separately if using full CakePHP framework)."
     },
-    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Authorization\\": "src/"
@@ -41,18 +54,12 @@
             "TestPlugin\\": "tests/test_app/Plugin/TestPlugin/src/"
         }
     },
-    "authors": [
-        {
-            "name": "CakePHP Community",
-            "homepage": "https://github.com/cakephp/authorization/graphs/contributors"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/cakephp/authorization/issues",
-        "forum": "https://stackoverflow.com/tags/cakephp",
-        "irc": "irc://irc.freenode.org/cakephp",
-        "source": "https://github.com/cakephp/authorization",
-        "docs": "https://cakephp.org/authorization/2/en/"
+    "config": {
+        "allow-plugins": {
+            "cakephp/plugin-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "sort-packages": true
     },
     "scripts": {
         "check": [
@@ -60,25 +67,18 @@
             "@stan",
             "@test"
         ],
+        "cs-check": "phpcs --colors -p src/ tests/",
+        "cs-fix": "phpcbf --colors -p src/ tests/",
         "phpstan": "tools/phpstan analyse",
         "psalm": "tools/psalm --show-info=false",
+        "psalm-baseline": "tools/psalm  --set-baseline=psalm-baseline.xml",
         "stan": [
             "@phpstan",
             "@psalm"
         ],
         "stan-baseline": "tools/phpstan --generate-baseline",
-        "psalm-baseline": "tools/psalm  --set-baseline=psalm-baseline.xml",
         "stan-setup": "phive install",
-        "cs-check": "phpcs --colors -p src/ tests/",
-        "cs-fix": "phpcbf --colors -p src/ tests/",
         "test": "phpunit",
         "test-coverage": "phpunit --coverage-clover=clover.xml"
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "cakephp/plugin-installer": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
     }
 }

@@ -49,7 +49,7 @@ class Identity extends IdentityDecorator implements AuthenIdentityInterface
     /**
      * Get the primary key/id field for the identity.
      *
-     * @return array|string|int|null
+     * @return array<array-key, mixed>|string|int|null
      */
     public function getIdentifier(): string|int|array|null
     {
