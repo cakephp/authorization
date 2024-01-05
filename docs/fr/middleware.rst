@@ -84,39 +84,39 @@ utilisant l'option ``identityDecorator`` du middleware. Pour commencer, mettons
     class User extends Entity implements IdentityInterface
     {
         /**
-         * Méthode Authorization\IdentityInterface
+         * @inheritDoc
          */
-        public function can($action, $resource): bool
+        public function can(string $action, mixed $resource): bool
         {
             return $this->authorization->can($this, $action, $resource);
         }
 
         /**
-         * Méthode Authorization\IdentityInterface
+         * @inheritDoc
          */
-        public function canResult($action, $resource): ResultInterface
+        public function canResult(string $action, mixed $resource): ResultInterface
         {
             return $this->authorization->canResult($this, $action, $resource);
         }
 
         /**
-         * Méthode Authorization\IdentityInterface
+         * @inheritDoc
          */
-        public function applyScope($action, $resource)
+        public function applyScope(string $action, mixed $resource, mixed ...$optionalArgs): mixed
         {
-            return $this->authorization->applyScope($this, $action, $resource);
+            return $this->authorization->applyScope($this, $action, $resource, ...$optionalArgs);
         }
 
         /**
-         * Méthode Authorization\IdentityInterface
+         * @inheritDoc
          */
-        public function getOriginalData()
+        public function getOriginalData(): \ArrayAccess|array
         {
             return $this;
         }
 
         /**
-         * Setter utilisé par le middleware.
+         * Setter to be used by the middleware.
          */
         public function setAuthorization(AuthorizationServiceInterface $service)
         {
@@ -152,7 +152,7 @@ deux interfaces.::
     class User extends Entity implements AuthorizationIdentity, AuthenticationIdentity
     {
         ...
-        
+
         /**
          * Méthode Authentication\IdentityInterface
          *
@@ -162,7 +162,7 @@ deux interfaces.::
         {
             return $this->id;
         }
-        
+
         ...
     }
 
@@ -209,7 +209,7 @@ configuration:
   à un paramètre query de l'URL de redirection (par défaut ``redirect``).
 * ``statusCode`` - le code de statut HTTP d'une redirection, par défaut ``302``.
 
-Par exemple:: 
+Par exemple::
 
     use Authorization\Exception\MissingIdentityException;
 
@@ -235,7 +235,7 @@ Ainsi, dans cet exemple où nous utilisons le gestionnaire
 ``Authorization.Redirect``, nous pouvons ajouter au tableau ``exceptions``
 d'autres exceptions basées sur ``Authorization\Exception\Exception`` si nous
 voulons qu'elles soient traitées convenablement::
- 
+
     'exceptions' => [
         MissingIdentityException::class,
         ForbiddenException::class
@@ -286,7 +286,7 @@ Comment créer un UnauthorizedHandler personnalisé
 
     use Authorization\Exception\MissingIdentityException;
     use Authorization\Exception\ForbiddenException;
-    
+
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
             'className' => 'CustomRedirect', // <--- c'est ici !
@@ -312,5 +312,5 @@ dans la fonction ``handle()`` à l'intérieur de votre ``CustomRedirectHandler``
 si vous souhaitez ajouter quelques paramètres de configuration supplémentaires à
 vos fonctionnalités personnalisées.
 
-Vous pouvez consulter les classes `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ ou `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
+Vous pouvez consulter les classes `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ ou `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__
 pour voir à quoi un Handler pourrait/devrait ressembler.
