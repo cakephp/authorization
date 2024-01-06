@@ -67,33 +67,37 @@ Userクラスを識別子として使用する
     class User extends Entity implements IdentityInterface
     {
         /**
-         * Authorization\IdentityInterface method
+         * @inheritDoc
          */
-        public function can($action, $resource): bool
+        public function can(string $action, mixed $resource): bool
         {
             return $this->authorization->can($this, $action, $resource);
         }
+
         /**
-         * Authorization\IdentityInterface method
+         * @inheritDoc
          */
-        public function canResult($action, $resource): ResultInterface
+        public function canResult(string $action, mixed $resource): ResultInterface
         {
             return $this->authorization->canResult($this, $action, $resource);
         }
+
         /**
-         * Authorization\IdentityInterface method
+         * @inheritDoc
          */
-        public function applyScope($action, $resource)
+        public function applyScope(string $action, mixed $resource, mixed ...$optionalArgs): mixed
         {
-            return $this->authorization->applyScope($this, $action, $resource);
+            return $this->authorization->applyScope($this, $action, $resource, ...$optionalArgs);
         }
+
         /**
-         * Authorization\IdentityInterface method
+         * @inheritDoc
          */
-        public function getOriginalData()
+        public function getOriginalData(): \ArrayAccess|array
         {
             return $this;
         }
+
         /**
          * Setter to be used by the middleware.
          */
@@ -123,7 +127,7 @@ Authentication(認証)プラグインを使っているなら、両方のイン�
     class User extends Entity implements AuthorizationIdentity, AuthenticationIdentity
     {
         ...
-        
+
         /**
          * Authentication\IdentityInterface method
          *
@@ -249,4 +253,4 @@ Authentication(認証)プラグインを使っているなら、両方のイン�
 これは、プラグインに存在する RedirectHandler をベースに私たちのハンドラを拡張しているからです。したがって、すべての機能は ``handle()`` 関数内に存在し、私たち自身の機能は ``handle()`` 内に存在します。
 
 カスタムパラメータを追加したい場合は、 ``CustomRedirectHandler`` 内の ``handle()`` 関数で指定した ``$options`` 配列に ``custom_param`` が含まれます。
-こちらもご覧ください `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
+こちらもご覧ください `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__
