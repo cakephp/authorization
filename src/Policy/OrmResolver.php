@@ -18,6 +18,7 @@ namespace Authorization\Policy;
 
 use Authorization\Policy\Exception\MissingPolicyException;
 use Cake\Core\App;
+use Cake\Core\ContainerInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\RepositoryInterface;
@@ -44,15 +45,27 @@ class OrmResolver implements ResolverInterface
     protected array $overrides = [];
 
     /**
+     * The DIC instance from the application
+     *
+     * @var \Cake\Core\ContainerInterface|null
+     */
+    protected ?ContainerInterface $container;
+
+    /**
      * Constructor
      *
      * @param string $appNamespace The application namespace
      * @param array<string, string> $overrides A list of plugin name overrides.
+     * @param \Cake\Core\ContainerInterface|null $container The DIC instance from the application
      */
-    public function __construct(string $appNamespace = 'App', array $overrides = [])
-    {
+    public function __construct(
+        string $appNamespace = 'App',
+        array $overrides = [],
+        ?ContainerInterface $container = null
+    ) {
         $this->appNamespace = $appNamespace;
         $this->overrides = $overrides;
+        $this->container = $container;
     }
 
     /**
@@ -146,7 +159,13 @@ class OrmResolver implements ResolverInterface
             throw new MissingPolicyException([$class]);
         }
 
-        return new $policyClass();
+        if ($this->container && $this->container->has($policyClass)) {
+            $policy = $this->container->get($policyClass);
+        } else {
+            $policy = new $policyClass();
+        }
+
+        return $policy;
     }
 
     /**

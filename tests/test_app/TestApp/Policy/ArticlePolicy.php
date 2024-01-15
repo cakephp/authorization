@@ -6,9 +6,22 @@ namespace TestApp\Policy;
 use Authorization\Policy\Result;
 use Closure;
 use TestApp\Model\Entity\Article;
+use TestApp\Service\TestService;
 
 class ArticlePolicy
 {
+    /**
+     * A service class injected via DIC
+     *
+     * @var \TestApp\Service\TestService|null
+     */
+    protected ?TestService $service;
+
+    public function __construct(?TestService $service = null)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Create articles if you're an admin or author
      *
@@ -130,5 +143,10 @@ class ArticlePolicy
     public function canWithMultipleServices($user, Article $article, Closure $service1, Closure $service2)
     {
         return $service1() && $service2();
+    }
+
+    public function canWithInjectedService($user, Article $article)
+    {
+        return $this->service->serviceLogic();
     }
 }
