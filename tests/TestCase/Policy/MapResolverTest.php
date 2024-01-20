@@ -16,12 +16,16 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Policy;
 
+use Authorization\AuthorizationService;
+use Authorization\IdentityDecorator;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\MapResolver;
+use Cake\Core\Container;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
+use TestApp\Service\TestService;
 
 class MapResolverTest extends TestCase
 {
@@ -101,5 +105,26 @@ class MapResolverTest extends TestCase
         $this->expectExceptionMessage('Policy for `TestApp\Model\Entity\Article` has not been defined.');
 
         $resolver->getPolicy(new Article());
+    }
+
+    public function testGetPolicyViaDIC()
+    {
+        $container = new Container();
+        $container->add(TestService::class);
+        $container->add(ArticlePolicy::class)
+            ->addArgument(TestService::class);
+
+        $article = new Article();
+        $resolver = new MapResolver([], $container);
+        $resolver->map(Article::class, ArticlePolicy::class);
+
+        $service = new AuthorizationService($resolver);
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $policy = $resolver->getPolicy($article);
+        $this->assertInstanceOf(ArticlePolicy::class, $policy);
+        $this->assertTrue($policy->canWithInjectedService($user, $article));
     }
 }
