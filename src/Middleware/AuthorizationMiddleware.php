@@ -27,6 +27,7 @@ use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\UnauthorizedHandlerTrait;
 use Cake\Core\ContainerApplicationInterface;
+use Cake\Core\ContainerInterface;
 use Cake\Core\InstanceConfigTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
@@ -74,14 +75,25 @@ class AuthorizationMiddleware implements MiddlewareInterface
     protected $subject;
 
     /**
+     * The container instance from the application
+     *
+     * @var \Cake\Core\ContainerInterface|null
+     */
+    protected $container;
+
+    /**
      * Constructor.
      *
      * @param \Authorization\AuthorizationServiceInterface|\Authorization\AuthorizationServiceProviderInterface $subject Authorization service or provider instance.
      * @param array $config Config array.
+     * @param \Cake\Core\ContainerInterface|null $container The container instance from the application
      * @throws \InvalidArgumentException
      */
-    public function __construct($subject, array $config = [])
-    {
+    public function __construct(
+        $subject,
+        array $config = [],
+        ?ContainerInterface $container = null
+    ) {
         /** @psalm-suppress DocblockTypeContradiction */
         if (
             !$subject instanceof AuthorizationServiceInterface &&
@@ -104,6 +116,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
         }
 
         $this->subject = $subject;
+        $this->container = $container;
         $this->setConfig($config);
     }
 
@@ -122,6 +135,8 @@ class AuthorizationMiddleware implements MiddlewareInterface
         if ($this->subject instanceof ContainerApplicationInterface) {
             $container = $this->subject->getContainer();
             $container->add(AuthorizationService::class, $service);
+        } elseif ($this->container) {
+            $this->container->add(AuthorizationService::class, $service);
         }
 
         $attribute = $this->getConfig('identityAttribute');
