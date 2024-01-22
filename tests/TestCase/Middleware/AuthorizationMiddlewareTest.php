@@ -24,6 +24,7 @@ use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
+use Cake\Core\Container;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
@@ -289,5 +290,30 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $container = $application->getContainer();
         $this->assertInstanceOf(AuthorizationService::class, $container->get(AuthorizationService::class));
+    }
+
+    public function testMiddlewareInjectsServiceIntoDICViaCustomContainerInstance()
+    {
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'mariano', 'password' => 'password']
+        );
+        $handler = new TestRequestHandler();
+
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $provider = $this->createMock(AuthorizationServiceProviderInterface::class);
+        $provider
+            ->expects($this->once())
+            ->method('getAuthorizationService')
+            ->with($this->isInstanceOf(ServerRequestInterface::class))
+            ->willReturn($service);
+
+        $container = new Container();
+
+        $middleware = new AuthorizationMiddleware($provider, ['requireAuthorizationCheck' => false], $container);
+        $middleware->process($request, $handler);
+
+        $this->assertEquals($service, $container->get(AuthorizationService::class));
     }
 }
