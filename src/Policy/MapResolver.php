@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization\Policy;
 
 use Authorization\Policy\Exception\MissingPolicyException;
+use Cake\Core\ContainerInterface;
 use InvalidArgumentException;
 
 /**
@@ -33,6 +34,13 @@ class MapResolver implements ResolverInterface
     protected array $map = [];
 
     /**
+     * The DIC instance from the application
+     *
+     * @var \Cake\Core\ContainerInterface|null
+     */
+    protected ?ContainerInterface $container;
+
+    /**
      * Constructor.
      *
      * Takes a resource class name as a key and a policy as a value, for example:
@@ -45,9 +53,11 @@ class MapResolver implements ResolverInterface
      * ```
      *
      * @param array $map Resource class name to policy map.
+     * @param \Cake\Core\ContainerInterface|null $container The DIC instance from the application
      */
-    public function __construct(array $map = [])
+    public function __construct(array $map = [], ?ContainerInterface $container = null)
     {
+        $this->container = $container;
         foreach ($map as $resourceClass => $policy) {
             $this->map($resourceClass, $policy);
         }
@@ -105,6 +115,10 @@ class MapResolver implements ResolverInterface
 
         if (is_object($policy)) {
             return $policy;
+        }
+
+        if ($this->container && $this->container->has($policy)) {
+            return $this->container->get($policy);
         }
 
         return new $policy();
