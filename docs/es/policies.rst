@@ -14,7 +14,7 @@ Las clases de la aplicación se 'resuelven' en una clase policy coincidente.
 Consulte la sección :doc:`policy-resolvers` para saber cómo se pueden resolver las policy.
 
 Por lo general, querrá poner sus policy en **src/Policy** y usar el sufijo de clase
-``Policy``. Por ahora crearemos una clase policy para la entidad `Article` en nuestra 
+``Policy``. Por ahora crearemos una clase policy para la entidad `Article` en nuestra
 aplicación. En **src/Policy/ArticlePolicy.php** ponga el siguiente contenido::
 
     <?php
@@ -111,11 +111,13 @@ en su policy::
 
     namespace App\Policy;
 
+    use Authorization\IdentityInterface;
     use Authorization\Policy\BeforePolicyInterface;
+    use Authorization\Policy\ResultInterface;
 
     class ArticlesPolicy implements BeforePolicyInterface
     {
-        public function before($user, $resource, $action)
+        public function before(?IdentityInterface $identity, mixed $resource, string $action): ResultInterface|bool|null {
         {
             if ($user->getOriginalData()->is_admin) {
                 return true;

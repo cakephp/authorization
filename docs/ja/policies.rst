@@ -82,7 +82,7 @@ ORMオブジェクトのポリシーを作成するには ``bake`` コマンド�
 ポリシーのスコープ
 ------------------
 
-ポリシーは認可の可否だけでなく、「スコープ」を定義することもできます。 
+ポリシーは認可の可否だけでなく、「スコープ」を定義することもできます。
 スコープメソッドは認可の条件を適用して他のオブジェクトを変更することができます。
 リストの取得を現在のユーザーに限定するときに最適です。::
 
@@ -105,11 +105,13 @@ ORMオブジェクトのポリシーを作成するには ``bake`` コマンド�
 
     namespace App\Policy;
 
+    use Authorization\IdentityInterface;
     use Authorization\Policy\BeforePolicyInterface;
+    use Authorization\Policy\ResultInterface;
 
     class ArticlesPolicy implements BeforePolicyInterface
     {
-        public function before($user, $resource, $action)
+        public function before(?IdentityInterface $identity, mixed $resource, string $action): ResultInterface|bool|null {
         {
             if ($user->getOriginalData()->is_admin) {
                 return true;
