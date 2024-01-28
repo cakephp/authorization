@@ -112,11 +112,13 @@ in your policy::
 
     namespace App\Policy;
 
+    use Authorization\IdentityInterface;
     use Authorization\Policy\BeforePolicyInterface;
+    use Authorization\Policy\ResultInterface;
 
     class ArticlesPolicy implements BeforePolicyInterface
     {
-        public function before($user, $resource, $action)
+        public function before(?IdentityInterface $identity, mixed $resource, string $action): ResultInterface|bool|null {
         {
             if ($user->getOriginalData()->is_admin) {
                 return true;
