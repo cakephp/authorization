@@ -125,9 +125,9 @@ policy doit implémenter ``BeforePolicyInterface``::
 
     class ArticlesPolicy implements BeforePolicyInterface
     {
-        public function before(?IdentityInterface $identity, mixed $resource, string $action): ResultInterface|bool|null {
+        public function before(?IdentityInterface $identity, mixed $resource, string $action): ResultInterface|bool|null
         {
-            if ($user->getOriginalData()->is_admin) {
+            if ($identity->getOriginalData()->is_admin) {
                 return true;
             }
             // continuer
