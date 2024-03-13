@@ -80,33 +80,33 @@ implementing the ``Authorization\IdentityInterface`` and using the
     class User extends Entity implements IdentityInterface
     {
         /**
-         * Authorization\IdentityInterface method
+         * @inheritDoc
          */
-        public function can($action, $resource): bool
+        public function can(string $action, mixed $resource): bool
         {
             return $this->authorization->can($this, $action, $resource);
         }
 
         /**
-         * Authorization\IdentityInterface method
+         * @inheritDoc
          */
-        public function canResult($action, $resource): ResultInterface
+        public function canResult(string $action, mixed $resource): ResultInterface
         {
             return $this->authorization->canResult($this, $action, $resource);
         }
 
         /**
-         * Authorization\IdentityInterface method
+         * @inheritDoc
          */
-        public function applyScope($action, $resource)
+        public function applyScope(string $action, mixed $resource, mixed ...$optionalArgs): mixed
         {
-            return $this->authorization->applyScope($this, $action, $resource);
+            return $this->authorization->applyScope($this, $action, $resource, ...$optionalArgs);
         }
 
         /**
-         * Authorization\IdentityInterface method
+         * @inheritDoc
          */
-        public function getOriginalData()
+        public function getOriginalData(): \ArrayAccess|array
         {
             return $this;
         }
@@ -147,7 +147,7 @@ If you also use the Authentication plugin make sure to implement both interfaces
     class User extends Entity implements AuthorizationIdentity, AuthenticationIdentity
     {
         ...
-        
+
         /**
          * Authentication\IdentityInterface method
          *
@@ -157,7 +157,7 @@ If you also use the Authentication plugin make sure to implement both interfaces
         {
             return $this->id;
         }
-        
+
         ...
     }
 
@@ -202,7 +202,7 @@ Both redirect handlers share the same configuration options:
 For example::
 
     use Authorization\Exception\MissingIdentityException;
-    
+
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
             'className' => 'Authorization.Redirect',
@@ -214,14 +214,14 @@ For example::
             ],
         ],
     ]));
-    
+
 All handlers get the thrown exception object given as a parameter.
 This exception will always be an instance of ``Authorization\Exception\Exception``.
-In this example the ``Authorization.Redirect`` handler just gives you the option to 
+In this example the ``Authorization.Redirect`` handler just gives you the option to
 specify which exceptions you want to listen to.
 
 So in this example where we use the ``Authorization.Redirect`` handler we can
-add other ``Authorization\Exception\Exception`` based exceptions to the 
+add other ``Authorization\Exception\Exception`` based exceptions to the
 ``execeptions`` array if we want to handle them gracefully::
 
     'exceptions' => [
@@ -239,7 +239,7 @@ Add a flash message after being redirected by an unauthorized request
 
 Currently there is no straightforward way to add a flash message to the unauthorized redirect.
 
-Therefore you need to create your own Handler which adds the flash message (or any 
+Therefore you need to create your own Handler which adds the flash message (or any
 other logic you want to happen on redirect)
 
 How to create a custom UnauthorizedHandler
@@ -268,10 +268,10 @@ How to create a custom UnauthorizedHandler
 #. Tell the AuthorizationMiddleware that it should use your new custom Handler::
 
     // in your src/Application.php
-    
+
     use Authorization\Exception\MissingIdentityException;
     use Authorization\Exception\ForbiddenException;
-    
+
     $middlewareQueue->add(new AuthorizationMiddleware($this, [
         'unauthorizedHandler' => [
             'className' => 'CustomRedirect', // <--- see here
@@ -284,12 +284,12 @@ How to create a custom UnauthorizedHandler
             'custom_param' => true,
         ],
     ]));
-    
+
 As you can see you still have the same config parameters as if we are using ``Authorization.Redirect`` as a className.
 
 This is, because we extend our handler based on the RedirectHandler present in the plugin. Therefore all that functionality is present + our own funtionality in the ``handle()`` function.
-    
+
 The ``custom_param`` appears in the ``$options`` array given to you in the ``handle()`` function inside your ``CustomRedirectHandler`` if you wish to add some more config parameters to your functionality.
 
-You can look at `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__ 
+You can look at `CakeRedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/CakeRedirectHandler.php>`__ or `RedirectHandler <https://github.com/cakephp/authorization/blob/2.next/src/Middleware/UnauthorizedHandler/RedirectHandler.php>`__
 how such a Handler can/should look like.

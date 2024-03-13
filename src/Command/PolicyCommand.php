@@ -76,7 +76,7 @@ class PolicyCommand extends SimpleBakeCommand
         $data = parent::templateData($arguments);
 
         $name = $arguments->getArgument('name');
-        if (empty($name)) {
+        if (!$name) {
             throw new RuntimeException('You must specify name of policy to create.');
         }
 
