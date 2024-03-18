@@ -18,6 +18,7 @@ namespace Authorization\Middleware;
 
 use ArrayAccess;
 use Authentication\IdentityInterface as AuthenIdentityInterface;
+use Authorization\AuthorizationService;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Exception\AuthorizationRequiredException;
@@ -26,6 +27,8 @@ use Authorization\Identity;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\UnauthorizedHandler\UnauthorizedHandlerTrait;
+use Cake\Core\ContainerApplicationInterface;
+use Cake\Core\ContainerInterface;
 use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -72,15 +75,24 @@ class AuthorizationMiddleware implements MiddlewareInterface
     protected AuthorizationServiceInterface|AuthorizationServiceProviderInterface $subject;
 
     /**
+     * The container instance from the application
+     *
+     * @var \Cake\Core\ContainerInterface|null
+     */
+    protected ?ContainerInterface $container = null;
+
+    /**
      * Constructor.
      *
      * @param \Authorization\AuthorizationServiceInterface|\Authorization\AuthorizationServiceProviderInterface $subject Authorization service or provider instance.
      * @param array $config Config array.
+     * @param \Cake\Core\ContainerInterface|null $container The container instance from the application
      * @throws \InvalidArgumentException
      */
     public function __construct(
         AuthorizationServiceInterface|AuthorizationServiceProviderInterface $subject,
-        array $config = []
+        array $config = [],
+        ?ContainerInterface $container = null
     ) {
         if ($this->_defaultConfig['identityDecorator'] === null) {
             $this->_defaultConfig['identityDecorator'] = interface_exists(AuthenIdentityInterface::class)
@@ -89,6 +101,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
         }
 
         $this->subject = $subject;
+        $this->container = $container;
         $this->setConfig($config);
     }
 
@@ -103,6 +116,13 @@ class AuthorizationMiddleware implements MiddlewareInterface
     {
         $service = $this->getAuthorizationService($request);
         $request = $request->withAttribute('authorization', $service);
+
+        if ($this->subject instanceof ContainerApplicationInterface) {
+            $container = $this->subject->getContainer();
+            $container->add(AuthorizationService::class, $service);
+        } elseif ($this->container) {
+            $this->container->add(AuthorizationService::class, $service);
+        }
 
         $attribute = $this->getConfig('identityAttribute');
         $identity = $request->getAttribute($attribute);
