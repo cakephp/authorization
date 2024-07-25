@@ -16,8 +16,11 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Policy;
 
+use Authorization\AuthorizationService;
+use Authorization\IdentityDecorator;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
+use Cake\Core\Container;
 use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
@@ -27,6 +30,7 @@ use TestApp\Model\Entity\Article;
 use TestApp\Policy\ArticlePolicy;
 use TestApp\Policy\ArticlesTablePolicy;
 use TestApp\Policy\TestPlugin\BookmarkPolicy;
+use TestApp\Service\TestService;
 use TestPlugin\Model\Entity\Bookmark;
 use TestPlugin\Model\Entity\Tag;
 use TestPlugin\Policy\TagPolicy;
@@ -118,5 +122,25 @@ class OrmResolverTest extends TestCase
         $articles = $this->createMock('Cake\Datasource\RepositoryInterface');
         $resolver = new OrmResolver('TestApp');
         $resolver->getPolicy($articles);
+    }
+
+    public function testGetPolicyViaDIC()
+    {
+        $container = new Container();
+        $container->add(TestService::class);
+        $container->add(ArticlePolicy::class)
+            ->addArgument(TestService::class);
+
+        $article = new Article();
+        $resolver = new OrmResolver('TestApp', [], $container);
+
+        $service = new AuthorizationService($resolver);
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $policy = $resolver->getPolicy($article);
+        $this->assertInstanceOf(ArticlePolicy::class, $policy);
+        $this->assertTrue($policy->canWithInjectedService($user, $article));
     }
 }

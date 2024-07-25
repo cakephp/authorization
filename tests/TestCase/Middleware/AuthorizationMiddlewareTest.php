@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Authorization\Test\TestCase\Middleware;
 
+use Authorization\AuthorizationService;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\AuthorizationServiceProviderInterface;
 use Authorization\Exception\AuthorizationRequiredException;
@@ -23,14 +24,17 @@ use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
+use Cake\Core\Container;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use stdClass;
+use TestApp\Application;
 use TestApp\Http\TestRequestHandler;
 use TestApp\Identity;
 
@@ -269,5 +273,47 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $result = $middleware->process($request, $handler);
         $this->assertSame(200, $result->getStatusCode());
+    }
+
+    public function testMiddlewareInjectsServiceIntoDIC()
+    {
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'mariano', 'password' => 'password']
+        );
+        $handler = new TestRequestHandler();
+        $application = new Application('config');
+
+        $middleware = new AuthorizationMiddleware($application, ['requireAuthorizationCheck' => false]);
+        $middleware->process($request, $handler);
+
+        $container = $application->getContainer();
+        $this->assertInstanceOf(AuthorizationService::class, $container->get(AuthorizationService::class));
+    }
+
+    public function testMiddlewareInjectsServiceIntoDICViaCustomContainerInstance()
+    {
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'mariano', 'password' => 'password']
+        );
+        $handler = new TestRequestHandler();
+
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $provider = $this->createMock(AuthorizationServiceProviderInterface::class);
+        $provider
+            ->expects($this->once())
+            ->method('getAuthorizationService')
+            ->with($this->isInstanceOf(ServerRequestInterface::class))
+            ->willReturn($service);
+
+        $container = new Container();
+
+        $middleware = new AuthorizationMiddleware($provider, ['requireAuthorizationCheck' => false], $container);
+        $middleware->process($request, $handler);
+
+        $this->assertEquals($service, $container->get(AuthorizationService::class));
     }
 }
