@@ -8,6 +8,7 @@ use Authorization\AuthorizationServiceInterface;
 use Authorization\IdentityDecorator;
 use BadMethodCallException;
 use Cake\TestSuite\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 use TestApp\Model\Entity\Article;
 
@@ -31,9 +32,7 @@ class IdentityDecoratorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider constructorDataProvider
-     */
+    #[DataProvider('constructorDataProvider')]
     public function testConstructorAccepted($data)
     {
         $auth = $this->createMock(AuthorizationServiceInterface::class);
@@ -50,7 +49,7 @@ class IdentityDecoratorTest extends TestCase
         $auth->expects($this->once())
             ->method('can')
             ->with($identity, 'update', $resource)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->assertTrue($identity->can('update', $resource));
     }
 
@@ -63,7 +62,7 @@ class IdentityDecoratorTest extends TestCase
         $auth->expects($this->once())
             ->method('applyScope')
             ->with($identity, 'update', $resource)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->assertTrue($identity->applyScope('update', $resource));
     }
 
@@ -76,7 +75,7 @@ class IdentityDecoratorTest extends TestCase
         $auth->expects($this->once())
             ->method('applyScope')
             ->with($identity, 'update', $resource, 'first argument', false)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->assertTrue($identity->applyScope('update', $resource, 'first argument', false));
     }
 
