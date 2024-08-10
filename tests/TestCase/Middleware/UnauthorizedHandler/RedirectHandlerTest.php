@@ -21,6 +21,7 @@ use Authorization\Middleware\UnauthorizedHandler\RedirectHandler;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RedirectHandlerTest extends TestCase
 {
@@ -100,9 +101,7 @@ class RedirectHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider httpMethodProvider
-     */
+    #[DataProvider('httpMethodProvider')]
     public function testHandleRedirectionIgnoreNonIdempotentMethods($method)
     {
         $handler = new RedirectHandler();

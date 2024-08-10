@@ -32,10 +32,10 @@
     },
     "require-dev": {
         "cakephp/authentication": "^3.0",
-        "cakephp/bake": "^3.0",
-        "cakephp/cakephp": "^5.0",
+        "cakephp/bake": "dev-3.next",
+        "cakephp/cakephp": "dev-5.next as 5.1.0",
         "cakephp/cakephp-codesniffer": "^5.0",
-        "phpunit/phpunit": "^10.1.0"
+        "phpunit/phpunit": "^10.5.5 || ^11.1.3"
     },
     "suggest": {
         "cakephp/http": "To use \"RequestPolicyInterface\" (Not needed separately if using full CakePHP framework).",
@@ -80,5 +80,7 @@
         "stan-setup": "phive install",
         "test": "phpunit",
         "test-coverage": "phpunit --coverage-clover=clover.xml"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

@@ -18,6 +18,7 @@ namespace Authorization\Test\TestCase;
 
 use Authorization\AuthorizationService;
 use Authorization\IdentityDecorator;
+use Authorization\IdentityInterface;
 use Authorization\Policy\BeforePolicyInterface;
 use Authorization\Policy\BeforeScopeInterface;
 use Authorization\Policy\Exception\MissingMethodException;
@@ -25,8 +26,10 @@ use Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
 use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
+use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\TestSuite\TestCase;
+use PHPUnit\Framework\ExpectationFailedException;
 use TestApp\Model\Entity\Article;
 use TestApp\Model\Table\ArticlesTable;
 use TestApp\Policy\ArticlePolicy;
@@ -317,23 +320,21 @@ class AuthorizationServiceTest extends TestCase
     public function testBeforeFalse()
     {
         $entity = new Article();
+        $policy = new class implements BeforePolicyInterface {
+            public function before($identity, $resource, $action): bool|ResultInterface|null
+            {
+                return false;
+            }
 
-        $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->onlyMethods(['before'])
-            ->addMethods(['canAdd'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('before')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn(false);
+            public function canAdd($user, $entity)
+            {
+                throw new ExpectationFailedException('This method should not be called');
+            }
+        };
 
         $resolver = new MapResolver([
             Article::class => $policy,
         ]);
-
-        $policy->expects($this->never())
-            ->method('canAdd');
 
         $service = new AuthorizationService($resolver);
 
@@ -348,19 +349,17 @@ class AuthorizationServiceTest extends TestCase
     public function testBeforeTrue()
     {
         $entity = new Article();
+        $policy = new class implements BeforePolicyInterface {
+            public function before($identity, $resource, $action): bool|ResultInterface|null
+            {
+                return true;
+            }
 
-        $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->onlyMethods(['before'])
-            ->addMethods(['canAdd'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('before')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn(true);
-
-        $policy->expects($this->never())
-            ->method('canAdd');
+            public function canAdd($user, $entity)
+            {
+                throw new ExpectationFailedException('This method should not be called');
+            }
+        };
 
         $resolver = new MapResolver([
             Article::class => $policy,
@@ -379,21 +378,17 @@ class AuthorizationServiceTest extends TestCase
     public function testBeforeNull()
     {
         $entity = new Article();
+        $policy = new class implements BeforePolicyInterface {
+            public function before($identity, $resource, $action): bool|ResultInterface|null
+            {
+                return null;
+            }
 
-        $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->onlyMethods(['before'])
-            ->addMethods(['canAdd'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('before')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn(null);
-
-        $policy->expects($this->once())
-            ->method('canAdd')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity)
-            ->willReturn(true);
+            public function canAdd($user, $entity): bool
+            {
+                return true;
+            }
+        };
 
         $resolver = new MapResolver([
             Article::class => $policy,
@@ -412,19 +407,17 @@ class AuthorizationServiceTest extends TestCase
     public function testBeforeResultTrue()
     {
         $entity = new Article();
+        $policy = new class implements BeforePolicyInterface {
+            public function before($identity, $resource, $action): bool|ResultInterface|null
+            {
+                return new Result(true);
+            }
 
-        $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->onlyMethods(['before'])
-            ->addMethods(['canAdd'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('before')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn(new Result(true));
-
-        $policy->expects($this->never())
-            ->method('canAdd');
+            public function canAdd($user, $entity)
+            {
+                throw new ExpectationFailedException('This method should not be called');
+            }
+        };
 
         $resolver = new MapResolver([
             Article::class => $policy,
@@ -443,19 +436,17 @@ class AuthorizationServiceTest extends TestCase
     public function testBeforeResultFalse()
     {
         $entity = new Article();
+        $policy = new class implements BeforePolicyInterface {
+            public function before($identity, $resource, $action): bool|ResultInterface|null
+            {
+                return new Result(false);
+            }
 
-        $policy = $this->getMockBuilder(BeforePolicyInterface::class)
-            ->onlyMethods(['before'])
-            ->addMethods(['canAdd'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('before')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'add')
-            ->willReturn(new Result(false));
-
-        $policy->expects($this->never())
-            ->method('canAdd');
+            public function canAdd($user, $entity)
+            {
+                throw new ExpectationFailedException('This method should not be called');
+            }
+        };
 
         $resolver = new MapResolver([
             Article::class => $policy,
@@ -474,19 +465,17 @@ class AuthorizationServiceTest extends TestCase
     public function testBeforeScopeNonNull()
     {
         $entity = new Article();
+        $policy = new class implements BeforeScopeInterface {
+            public function beforeScope(?IdentityInterface $identity, mixed $resource, string $action): mixed
+            {
+                return 'foo';
+            }
 
-        $policy = $this->getMockBuilder(BeforeScopeInterface::class)
-            ->onlyMethods(['beforeScope'])
-            ->addMethods(['scopeIndex'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('beforeScope')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'index')
-            ->willReturn('foo');
-
-        $policy->expects($this->never())
-            ->method('scopeIndex');
+            public function scopeIndex(IdentityInterface $user, QueryInterface $query)
+            {
+                throw new ExpectationFailedException('This method should not be called');
+            }
+        };
 
         $resolver = new MapResolver([
             Article::class => $policy,
@@ -505,21 +494,17 @@ class AuthorizationServiceTest extends TestCase
     public function testBeforeScopeNull()
     {
         $entity = new Article();
+        $policy = new class implements BeforeScopeInterface {
+            public function beforeScope(?IdentityInterface $identity, mixed $resource, string $action): mixed
+            {
+                return null;
+            }
 
-        $policy = $this->getMockBuilder(BeforeScopeInterface::class)
-            ->onlyMethods(['beforeScope'])
-            ->addMethods(['scopeIndex'])
-            ->getMock();
-
-        $policy->expects($this->once())
-            ->method('beforeScope')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity, 'index')
-            ->willReturn(null);
-
-        $policy->expects($this->once())
-            ->method('scopeIndex')
-            ->with($this->isInstanceOf(IdentityDecorator::class), $entity)
-            ->willReturn('bar');
+            public function scopeIndex(IdentityInterface $user, EntityInterface $entity)
+            {
+                return 'bar';
+            }
+        };
 
         $resolver = new MapResolver([
             Article::class => $policy,
