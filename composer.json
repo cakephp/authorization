@@ -35,7 +35,7 @@
         "cakephp/bake": "^3.0",
         "cakephp/cakephp": "^5.0",
         "cakephp/cakephp-codesniffer": "^5.0",
-        "phpunit/phpunit": "^10.1.0"
+        "phpunit/phpunit": "^11.4.0"
     },
     "suggest": {
         "cakephp/http": "To use \"RequestPolicyInterface\" (Not needed separately if using full CakePHP framework).",
