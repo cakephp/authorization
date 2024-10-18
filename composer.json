@@ -10,7 +10,7 @@
     "type": "cakephp-plugin",
     "require": {
         "php": ">=7.2",
-        "cakephp/http": "^4.0",
+        "cakephp/http": "^4.2",
         "psr/http-client": "^1.0",
         "psr/http-message": "^1.0",
         "psr/http-server-handler": "^1.0",
