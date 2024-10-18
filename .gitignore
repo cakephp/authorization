@@ -6,6 +6,7 @@
 /tools
 /vendor
 .phpunit.cache
+.phpunit.result.cache
 
 # OS generated files #
 ######################
