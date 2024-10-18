@@ -63,7 +63,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $service = $this->createMock(AuthorizationServiceInterface::class);
         $service->expects($this->once())
             ->method('authorizationChecked')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
         $handler = new TestRequestHandler();
