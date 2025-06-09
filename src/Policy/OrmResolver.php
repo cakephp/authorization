@@ -121,11 +121,10 @@ class OrmResolver implements ResolverInterface
      */
     protected function getRepositoryPolicy(RepositoryInterface $table): mixed
     {
-        $class = get_class($table);
         $tableNamespace = '\Model\Table\\';
+        $class = get_class($table);
+        $name = $table->getAlias() . 'Table';
         $namespace = str_replace('\\', '/', substr($class, 0, (int)strpos($class, $tableNamespace)));
-        /** @psalm-suppress PossiblyFalseOperand */
-        $name = substr($class, strpos($class, $tableNamespace) + strlen($tableNamespace));
 
         return $this->findPolicy($class, $name, $namespace);
     }

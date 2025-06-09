@@ -115,6 +115,14 @@ class OrmResolverTest extends TestCase
         $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
     }
 
+    public function testGetPolicyMockModel()
+    {
+        $articles = $this->getMockForModel('Articles');
+        $resolver = new OrmResolver('TestApp');
+        $policy = $resolver->getPolicy($articles->find());
+        $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
+    }
+
     public function testGetPolicyUnknownTable()
     {
         $this->expectException(MissingPolicyException::class);
