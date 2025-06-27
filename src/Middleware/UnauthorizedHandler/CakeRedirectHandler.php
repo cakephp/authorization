@@ -41,6 +41,7 @@ class CakeRedirectHandler extends RedirectHandler
         ],
         'queryParam' => 'redirect',
         'statusCode' => 302,
+        'allowedRedirectExtensions' => false,
     ];
 
     /**

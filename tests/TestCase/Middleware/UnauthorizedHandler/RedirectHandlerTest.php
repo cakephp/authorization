@@ -160,4 +160,47 @@ class RedirectHandlerTest extends TestCase
         $this->expectException(Exception::class);
         $handler->handle($exception, $request);
     }
+
+    public function testHandleRedirectionWithExtension(): void
+    {
+        $handler = new RedirectHandler();
+
+        $exception = new Exception();
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_METHOD' => 'GET'],
+        );
+
+        $this->expectException(Exception::class);
+
+        $handler->handle($exception, $request, [
+            'exceptions' => [
+                Exception::class,
+            ],
+            'url' => '/users/login',
+            'allowedRedirectExtensions' => [],
+        ]);
+    }
+
+    public function testHandleRedirectionWithExtensionWhitelisted(): void
+    {
+        $handler = new RedirectHandler();
+
+        $exception = new Exception();
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_METHOD' => 'GET'],
+        );
+        $request = $request->withParam('_ext', 'csv');
+
+        $response = $handler->handle($exception, $request, [
+            'exceptions' => [
+                Exception::class,
+            ],
+            'url' => '/users/login',
+            'queryParam' => null,
+            'allowedRedirectExtensions' => ['csv'],
+        ]);
+
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('/users/login', $response->getHeaderLine('Location'));
+    }
 }

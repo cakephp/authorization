@@ -44,6 +44,7 @@ class RedirectHandler implements HandlerInterface
         'url' => '/login',
         'queryParam' => 'redirect',
         'statusCode' => 302,
+        'allowedRedirectExtensions' => false,
     ];
 
     /**
@@ -58,7 +59,7 @@ class RedirectHandler implements HandlerInterface
     ): ResponseInterface {
         $options += $this->defaultOptions;
 
-        if (!$this->checkException($exception, $options['exceptions'])) {
+        if (!$this->redirectAllowed($request, $options) || !$this->checkException($exception, $options['exceptions'])) {
             throw $exception;
         }
 
@@ -106,7 +107,7 @@ class RedirectHandler implements HandlerInterface
                 $redirect .= '?' . $uri->getQuery();
             }
             $query = urlencode($options['queryParam']) . '=' . urlencode($redirect);
-            if (strpos($url, '?') !== false) {
+            if (str_contains($url, '?')) {
                 $query = '&' . $query;
             } else {
                 $query = '?' . $query;
@@ -116,5 +117,29 @@ class RedirectHandler implements HandlerInterface
         }
 
         return $url;
+    }
+
+    /**
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param array $options
+     * @return bool
+     */
+    protected function redirectAllowed(ServerRequestInterface $request, array $options): bool
+    {
+        $extensions = $options['allowedRedirectExtensions'] ?? false;
+        // BC: false disables it.
+        if ($extensions === false) {
+            return true;
+        }
+
+        $extensions = (array)$extensions;
+        /** @var \Cake\Http\ServerRequest $request */
+        $currentExtension = $request->getParam('_ext');
+
+        if (!$currentExtension || in_array($currentExtension, $extensions, true)) {
+            return true;
+        }
+
+        return false;
     }
 }
