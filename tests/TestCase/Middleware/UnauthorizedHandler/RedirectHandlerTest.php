@@ -169,6 +169,7 @@ class RedirectHandlerTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_METHOD' => 'GET'],
         );
+        $request = $request->withParam('_ext', 'csv');
 
         $this->expectException(Exception::class);
 
