@@ -132,11 +132,13 @@ class RedirectHandler implements HandlerInterface
             return true;
         }
 
-        $extensions = (array)$extensions;
         /** @var \Cake\Http\ServerRequest $request */
         $currentExtension = $request->getParam('_ext');
+        if (!$currentExtension || $extensions === true) {
+            return true;
+        }
 
-        if (!$currentExtension || in_array($currentExtension, $extensions, true)) {
+        if (in_array($currentExtension, (array)$extensions, true)) {
             return true;
         }
 
