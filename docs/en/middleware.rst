@@ -200,8 +200,9 @@ Both redirect handlers share the same configuration options:
 * ``statusCode`` - HTTP status code of a redirect, ``302`` by default.
 * ``allowedRedirectExtensions`` - an array of allowed file extensions for redirecting.
   If the request URL has a file extension that is not in this list, the redirect will not
-  happen and the exception will be rethrown. This is useful to prevent unauthorized access
-  to API based responses, that should not be redirecting in any case. `false` by default and not enabled then.
+  happen and the exception will be rethrown. Can also be a boolean to toggle on/off
+  redirects entirely. This is useful to prevent unauthorized access to API based 
+  responses, that should not be redirecting in any case. `false` by default and not enabled then.
 
 For example::
 
