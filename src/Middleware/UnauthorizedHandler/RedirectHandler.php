@@ -34,6 +34,8 @@ class RedirectHandler implements HandlerInterface
      *  - `url` - Url to redirect to.
      *  - `queryParam` - Query parameter name for the target url.
      *  - `statusCode` - Redirection status code.
+     *  - `allowedRedirectExtensions` - If true, redirects are allowed for all extensions.
+     *       Pass specific ones to allow list, or false to disallow redirects for any extension.
      *
      * @var array
      */
@@ -44,7 +46,7 @@ class RedirectHandler implements HandlerInterface
         'url' => '/login',
         'queryParam' => 'redirect',
         'statusCode' => 302,
-        'allowedRedirectExtensions' => false,
+        'allowedRedirectExtensions' => true,
     ];
 
     /**
@@ -126,15 +128,17 @@ class RedirectHandler implements HandlerInterface
      */
     protected function redirectAllowed(ServerRequestInterface $request, array $options): bool
     {
-        $extensions = $options['allowedRedirectExtensions'] ?? false;
-        // BC: false disables it.
+        $extensions = $options['allowedRedirectExtensions'] ?? true;
         if ($extensions === false) {
+            return false;
+        }
+        if ($extensions === true) {
             return true;
         }
 
         /** @var \Cake\Http\ServerRequest $request */
         $currentExtension = $request->getParam('_ext');
-        if (!$currentExtension || $extensions === true) {
+        if (!$currentExtension) {
             return true;
         }
 

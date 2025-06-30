@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
+use Authorization\Exception\LogicException;
 use Authorization\Middleware\UnauthorizedHandler\RedirectHandler;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
