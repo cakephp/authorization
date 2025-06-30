@@ -182,7 +182,7 @@ class RedirectHandlerTest extends TestCase
         ]);
     }
 
-    public function testHandleRedirectionWithExtensionWhitelisted(): void
+    public function testHandleRedirectionWithExtensionAllowlisted(): void
     {
         $handler = new RedirectHandler();
 
