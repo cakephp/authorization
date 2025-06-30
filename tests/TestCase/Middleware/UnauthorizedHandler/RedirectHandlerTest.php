@@ -165,17 +165,17 @@ class RedirectHandlerTest extends TestCase
     {
         $handler = new RedirectHandler();
 
-        $exception = new Exception();
+        $exception = new LogicException();
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_METHOD' => 'GET'],
         );
         $request = $request->withParam('_ext', 'csv');
 
-        $this->expectException(Exception::class);
+        $this->expectException(LogicException::class);
 
         $handler->handle($exception, $request, [
             'exceptions' => [
-                Exception::class,
+                LogicException::class,
             ],
             'url' => '/users/login',
             'allowedRedirectExtensions' => [],
