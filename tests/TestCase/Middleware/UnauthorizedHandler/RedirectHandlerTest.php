@@ -17,11 +17,12 @@ declare(strict_types=1);
 namespace Authorization\Test\TestCase\Middleware\UnauthorizedHandler;
 
 use Authorization\Exception\Exception;
-use Authorization\Exception\LogicException;
+use Authorization\Exception\MissingIdentityException;
 use Authorization\Middleware\UnauthorizedHandler\RedirectHandler;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class RedirectHandlerTest extends TestCase
@@ -162,21 +163,42 @@ class RedirectHandlerTest extends TestCase
         $handler->handle($exception, $request);
     }
 
-    public function testHandleRedirectionWithExtension(): void
+    public function testHandleRedirectionWithExtensionsFalse(): void
     {
         $handler = new RedirectHandler();
 
-        $exception = new LogicException();
+        $exception = new MissingIdentityException();
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_METHOD' => 'GET'],
         );
         $request = $request->withParam('_ext', 'csv');
 
-        $this->expectException(LogicException::class);
+        $this->expectException(MissingIdentityException::class);
 
         $handler->handle($exception, $request, [
             'exceptions' => [
                 LogicException::class,
+            ],
+            'url' => '/users/login',
+            'allowedRedirectExtensions' => false,
+        ]);
+    }
+
+    public function testHandleRedirectionWithExtension(): void
+    {
+        $handler = new RedirectHandler();
+
+        $exception = new MissingIdentityException();
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_METHOD' => 'GET'],
+        );
+        $request = $request->withParam('_ext', 'csv');
+
+        $this->expectException(MissingIdentityException::class);
+
+        $handler->handle($exception, $request, [
+            'exceptions' => [
+                MissingIdentityException::class,
             ],
             'url' => '/users/login',
             'allowedRedirectExtensions' => [],
@@ -187,11 +209,33 @@ class RedirectHandlerTest extends TestCase
     {
         $handler = new RedirectHandler();
 
-        $exception = new Exception();
+        $exception = new MissingIdentityException();
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_METHOD' => 'GET'],
         );
         $request = $request->withParam('_ext', 'csv');
+
+        $response = $handler->handle($exception, $request, [
+            'exceptions' => [
+                Exception::class,
+            ],
+            'url' => '/users/login',
+            'queryParam' => null,
+            'allowedRedirectExtensions' => ['csv'],
+        ]);
+
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('/users/login', $response->getHeaderLine('Location'));
+    }
+
+    public function testHandleRedirectionWithExtensionAllowedNoExtensionInRequest(): void
+    {
+        $handler = new RedirectHandler();
+
+        $exception = new Exception();
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_METHOD' => 'GET'],
+        );
 
         $response = $handler->handle($exception, $request, [
             'exceptions' => [

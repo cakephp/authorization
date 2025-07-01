@@ -142,10 +142,6 @@ class RedirectHandler implements HandlerInterface
             return true;
         }
 
-        if (in_array($currentExtension, (array)$extensions, true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($currentExtension, (array)$extensions, true);
     }
 }
