@@ -31,7 +31,7 @@
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
-        "cakephp/authentication": "^3.0",
+        "cakephp/authentication": "^4.0",
         "cakephp/bake": "^3.2",
         "cakephp/cakephp": "^5.1",
         "cakephp/cakephp-codesniffer": "^5.1",
