@@ -316,4 +316,68 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $this->assertEquals($service, $container->get(AuthorizationService::class));
     }
+
+    public function testRequireAuthorizationCheckCallableReturnsTrue(): void
+    {
+        $this->expectException(AuthorizationRequiredException::class);
+
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $service->expects($this->once())
+            ->method('authorizationChecked')
+            ->willReturn(false);
+
+        $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
+        $handler = new TestRequestHandler();
+
+        $middleware = new AuthorizationMiddleware($service, [
+            'requireAuthorizationCheck' => function (ServerRequestInterface $request): bool {
+                return true;
+            },
+            'identityDecorator' => IdentityDecorator::class,
+        ]);
+        $middleware->process($request, $handler);
+    }
+
+    public function testRequireAuthorizationCheckCallableReturnsFalse(): void
+    {
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $service->expects($this->never())
+            ->method('authorizationChecked');
+
+        $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
+        $handler = new TestRequestHandler();
+
+        $middleware = new AuthorizationMiddleware($service, [
+            'requireAuthorizationCheck' => function (ServerRequestInterface $request): bool {
+                return false;
+            },
+            'identityDecorator' => IdentityDecorator::class,
+        ]);
+        $result = $middleware->process($request, $handler);
+
+        $this->assertInstanceOf(ResponseInterface::class, $result);
+    }
+
+    public function testRequireAuthorizationCheckCallableWithRouteBasedLogic(): void
+    {
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $service->expects($this->never())
+            ->method('authorizationChecked');
+
+        $request = ServerRequestFactory::fromGlobals(['REQUEST_URI' => '/admin/queue']);
+        $handler = new TestRequestHandler();
+
+        $middleware = new AuthorizationMiddleware($service, [
+            'requireAuthorizationCheck' => function (ServerRequestInterface $request): bool {
+                // Skip authorization check for admin/queue routes
+                $path = $request->getUri()->getPath();
+
+                return !str_contains($path, '/admin/queue');
+            },
+            'identityDecorator' => IdentityDecorator::class,
+        ]);
+        $result = $middleware->process($request, $handler);
+
+        $this->assertInstanceOf(ResponseInterface::class, $result);
+    }
 }

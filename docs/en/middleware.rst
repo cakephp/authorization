@@ -176,6 +176,26 @@ option::
         'requireAuthorizationCheck' => false
     ]));
 
+You can also use a Closure to conditionally skip the authorization check based
+on the request. This is useful when you need to bypass authorization for specific
+routes (e.g., plugin admin panels that manage their own authorization)::
+
+    $middlewareQueue->add(new AuthorizationMiddleware($this, [
+        'requireAuthorizationCheck' => function ($request) {
+            // Skip authorization check for specific routes
+            $path = $request->getUri()->getPath();
+            if (str_contains($path, '/admin/queue')) {
+                return false;
+            }
+
+            return true;
+        }
+    ]));
+
+The Closure receives the ``ServerRequestInterface`` and should return a boolean.
+Return ``true`` to require authorization check (default behavior), or ``false``
+to skip the check for that request.
+
 Handling Unauthorized Requests
 ------------------------------
 

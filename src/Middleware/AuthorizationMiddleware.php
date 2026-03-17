@@ -30,6 +30,7 @@ use Authorization\Middleware\UnauthorizedHandler\UnauthorizedHandlerTrait;
 use Cake\Core\ContainerApplicationInterface;
 use Cake\Core\ContainerInterface;
 use Cake\Core\InstanceConfigTrait;
+use Closure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -56,7 +57,8 @@ class AuthorizationMiddleware implements MiddlewareInterface
      * - `requireAuthorizationCheck` When true the middleware will raise an exception
      *   if no authorization checks were done. This aids in ensuring that all actions
      *   check authorization. It is intended as a development aid and not to be relied upon
-     *   in production. Defaults to `true`.
+     *   in production. Defaults to `true`. Can also be a Closure that receives the
+     *   ServerRequestInterface and returns a boolean, allowing route-based control.
      *
      * @var array<string, mixed>
      */
@@ -135,7 +137,11 @@ class AuthorizationMiddleware implements MiddlewareInterface
         try {
             $response = $handler->handle($request);
 
-            if ($this->getConfig('requireAuthorizationCheck') && !$service->authorizationChecked()) {
+            $requireCheck = $this->getConfig('requireAuthorizationCheck');
+            if ($requireCheck instanceof Closure) {
+                $requireCheck = $requireCheck($request);
+            }
+            if ($requireCheck && !$service->authorizationChecked()) {
                 throw new AuthorizationRequiredException(['url' => $request->getRequestTarget()]);
             }
         } catch (Exception $exception) {
