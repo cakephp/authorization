@@ -24,8 +24,6 @@ class MissingPolicyException extends Exception
 {
     /**
      * Template string that has attributes sprintf()'ed into it.
-     *
-     * @var string
      */
     protected string $_messageTemplate = 'Policy for `%s` has not been defined.';
 
@@ -38,13 +36,13 @@ class MissingPolicyException extends Exception
     public function __construct(object|string|array $resource, ?int $code = null, ?Throwable $previous = null)
     {
         if (is_object($resource)) {
-            $resourceClass = get_class($resource);
+            $resourceClass = $resource::class;
             if (
                 method_exists($resource, 'getRepository') &&
                 $resource->getRepository() &&
                 $resource->getRepository() instanceof RepositoryInterface
             ) {
-                $repositoryClass = get_class($resource->getRepository());
+                $repositoryClass = $resource->getRepository()::class;
                 $resource = sprintf($this->_messageTemplate, $resourceClass);
                 $queryMessage = ' This resource looks like a `Query`. If you are using `OrmResolver`, ' .
                     'you should create a new policy class for your `%s` class in `src/Policy/`.';

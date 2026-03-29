@@ -13,12 +13,12 @@ class Identity extends IdentityDecorator
         $this->identity = $identity;
     }
 
-    public function setService(AuthorizationServiceInterface $service)
+    public function setService(AuthorizationServiceInterface $service): void
     {
         $this->authorization = $service;
     }
 
-    public function getService()
+    public function getService(): AuthorizationServiceInterface
     {
         return $this->authorization;
     }

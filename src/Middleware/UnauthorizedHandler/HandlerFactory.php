@@ -44,7 +44,7 @@ class HandlerFactory
             $message = sprintf(
                 'Handler should implement `%s`, got `%s`.',
                 HandlerInterface::class,
-                get_class($instance),
+                $instance::class,
             );
             throw new RuntimeException($message);
         }

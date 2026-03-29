@@ -25,7 +25,7 @@ use Cake\TestSuite\TestCase;
 
 class CakeRedirectHandlerTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -39,7 +39,7 @@ class CakeRedirectHandlerTest extends TestCase
         $builder->connect('/{controller}/{action}');
     }
 
-    public function testHandleRedirectionDefault()
+    public function testHandleRedirectionDefault(): void
     {
         $handler = new CakeRedirectHandler();
 
@@ -57,7 +57,7 @@ class CakeRedirectHandlerTest extends TestCase
         $this->assertSame('/login?redirect=%2Fadmin%2Fdashboard', $response->getHeaderLine('Location'));
     }
 
-    public function testHandleRedirectionNamed()
+    public function testHandleRedirectionNamed(): void
     {
         $handler = new CakeRedirectHandler();
 
@@ -79,7 +79,7 @@ class CakeRedirectHandlerTest extends TestCase
         $this->assertSame('/login?redirect=%2Fadmin%2Fdashboard', $response->getHeaderLine('Location'));
     }
 
-    public function testHandleRedirectionWithQuery()
+    public function testHandleRedirectionWithQuery(): void
     {
         $handler = new CakeRedirectHandler();
 
@@ -104,7 +104,7 @@ class CakeRedirectHandlerTest extends TestCase
         $this->assertSame('/login?foo=bar&redirect=%2F', $response->getHeaderLine('Location'));
     }
 
-    public function testHandleRedirectionNoQuery()
+    public function testHandleRedirectionNoQuery(): void
     {
         $handler = new CakeRedirectHandler();
 
@@ -124,7 +124,7 @@ class CakeRedirectHandlerTest extends TestCase
         $this->assertSame('/login', $response->getHeaderLine('Location'));
     }
 
-    public function testHandleRedirectWithBasePath()
+    public function testHandleRedirectWithBasePath(): void
     {
         $handler = new CakeRedirectHandler();
         $exception = new Exception();

@@ -23,15 +23,11 @@ class Result implements ResultInterface
 {
     /**
      * Check status.
-     *
-     * @var bool
      */
     protected bool $status;
 
     /**
      * Failure reason.
-     *
-     * @var string|null
      */
     protected ?string $reason = null;
 

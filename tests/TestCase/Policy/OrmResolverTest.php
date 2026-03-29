@@ -21,6 +21,7 @@ use Authorization\IdentityDecorator;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
 use Cake\Core\Container;
+use Cake\Datasource\RepositoryInterface;
 use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
@@ -41,7 +42,7 @@ class OrmResolverTest extends TestCase
 
     protected array $fixtures = ['plugin.Authorization.Articles'];
 
-    public function testGetPolicyUnknownObject()
+    public function testGetPolicyUnknownObject(): void
     {
         $this->expectException(MissingPolicyException::class);
 
@@ -50,7 +51,7 @@ class OrmResolverTest extends TestCase
         $resolver->getPolicy($entity);
     }
 
-    public function testGetPolicyUnknownEntity()
+    public function testGetPolicyUnknownEntity(): void
     {
         $this->expectException(MissingPolicyException::class);
 
@@ -59,7 +60,7 @@ class OrmResolverTest extends TestCase
         $resolver->getPolicy($entity);
     }
 
-    public function testGetPolicyDefinedEntity()
+    public function testGetPolicyDefinedEntity(): void
     {
         $article = new Article();
         $resolver = new OrmResolver('TestApp');
@@ -67,7 +68,7 @@ class OrmResolverTest extends TestCase
         $this->assertInstanceOf(ArticlePolicy::class, $policy);
     }
 
-    public function testGetPolicyDefinedPluginEntityAppOveride()
+    public function testGetPolicyDefinedPluginEntityAppOveride(): void
     {
         $bookmark = new Bookmark();
         $resolver = new OrmResolver('TestApp');
@@ -76,7 +77,7 @@ class OrmResolverTest extends TestCase
         $this->assertStringContainsString('TestApp\Policy\TestPlugin', BookmarkPolicy::class, 'class has moved');
     }
 
-    public function testGetPolicyDefinedPluginEntityPluginOveride()
+    public function testGetPolicyDefinedPluginEntityPluginOveride(): void
     {
         $bookmark = new Tag();
         $resolver = new OrmResolver('TestApp', [
@@ -89,7 +90,7 @@ class OrmResolverTest extends TestCase
         $this->assertStringNotContainsString('TestPlugin', OverrideTagPolicy::class, 'class has moved');
     }
 
-    public function testGetPolicyDefinedPluginEntity()
+    public function testGetPolicyDefinedPluginEntity(): void
     {
         $bookmark = new Tag();
         $resolver = new OrmResolver('TestApp');
@@ -99,7 +100,7 @@ class OrmResolverTest extends TestCase
         $this->assertStringNotContainsString('TestApp', TagPolicy::class, 'class has moved');
     }
 
-    public function testGetPolicyDefinedTable()
+    public function testGetPolicyDefinedTable(): void
     {
         $articles = $this->fetchTable('Articles');
         $resolver = new OrmResolver('TestApp');
@@ -107,7 +108,7 @@ class OrmResolverTest extends TestCase
         $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
     }
 
-    public function testGetPolicyQueryForDefinedTable()
+    public function testGetPolicyQueryForDefinedTable(): void
     {
         $articles = $this->fetchTable('Articles');
         $resolver = new OrmResolver('TestApp');
@@ -115,16 +116,16 @@ class OrmResolverTest extends TestCase
         $this->assertInstanceOf(ArticlesTablePolicy::class, $policy);
     }
 
-    public function testGetPolicyUnknownTable()
+    public function testGetPolicyUnknownTable(): void
     {
         $this->expectException(MissingPolicyException::class);
 
-        $articles = $this->createStub('Cake\Datasource\RepositoryInterface');
+        $articles = $this->createStub(RepositoryInterface::class);
         $resolver = new OrmResolver('TestApp');
         $resolver->getPolicy($articles);
     }
 
-    public function testGetPolicyViaDIC()
+    public function testGetPolicyViaDIC(): void
     {
         $container = new Container();
         $container->add(TestService::class);

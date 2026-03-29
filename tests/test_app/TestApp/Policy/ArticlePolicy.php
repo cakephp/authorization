@@ -12,8 +12,6 @@ class ArticlePolicy
 {
     /**
      * A service class injected via DIC
-     *
-     * @var \TestApp\Service\TestService|null
      */
     protected ?TestService $service;
 
@@ -28,7 +26,7 @@ class ArticlePolicy
      * @param \Authorization\IdentityInterface $user
      * @return bool
      */
-    public function canAdd($user)
+    public function canAdd($user): bool
     {
         return in_array($user['role'], ['admin', 'author']);
     }
@@ -37,7 +35,6 @@ class ArticlePolicy
      * Edit articles if you're an admin or author
      *
      * @param \Authorization\IdentityInterface $user
-     * @param \TestApp\Model\Entity\Article $article
      * @return bool
      */
     public function canEdit($user, Article $article)
@@ -57,7 +54,6 @@ class ArticlePolicy
      * Modify articles if you're an admin or author
      *
      * @param \Authorization\IdentityInterface $user
-     * @param \TestApp\Model\Entity\Article $article
      * @return bool
      */
     public function canModify($user, Article $article)
@@ -73,7 +69,6 @@ class ArticlePolicy
      * Delete only own articles or any if you're an admin
      *
      * @param \Authorization\IdentityInterface $user
-     * @param \TestApp\Model\Entity\Article $article
      * @return bool
      */
     public function canDelete($user, Article $article)
@@ -89,10 +84,9 @@ class ArticlePolicy
      * Scope method for index
      *
      * @param \Authorization\IdentityInterface $user
-     * @param \TestApp\Model\Entity\Article $article
      * @return bool
      */
-    public function scopeIndex($user, Article $article)
+    public function scopeIndex($user, Article $article): Article
     {
         $article->user_id = $user->getOriginalData()['id'];
 
@@ -105,10 +99,9 @@ class ArticlePolicy
      * This test "null" user cases
      *
      * @param \Authorization\IdentityInterface|null $user
-     * @param \TestApp\Model\Entity\Article $article
      * @return bool
      */
-    public function canView($user, Article $article)
+    public function canView($user, Article $article): bool
     {
         if ($article->get('visibility') !== 'public' && empty($user)) {
             return false;
@@ -123,10 +116,9 @@ class ArticlePolicy
      * This tests Result objects.
      *
      * @param \Authorization\IdentityInterface|null $user
-     * @param Article $article
      * @return Result
      */
-    public function canPublish($user, Article $article)
+    public function canPublish($user, Article $article): Result
     {
         if ($article->get('visibility') === 'public') {
             return new Result(false, 'public');
@@ -140,7 +132,7 @@ class ArticlePolicy
         return $service();
     }
 
-    public function canWithMultipleServices($user, Article $article, Closure $service1, Closure $service2)
+    public function canWithMultipleServices($user, Article $article, Closure $service1, Closure $service2): bool
     {
         return $service1() && $service2();
     }

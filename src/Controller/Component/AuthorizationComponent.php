@@ -73,7 +73,7 @@ class AuthorizationComponent extends Component
         }
 
         if (is_object($resource)) {
-            $name = get_class($resource);
+            $name = $resource::class;
         } elseif (is_string($resource)) {
             $name = $resource;
         } else {
@@ -131,7 +131,7 @@ class AuthorizationComponent extends Component
         }
 
         $identity = $this->getIdentity($request);
-        if ($identity === null) {
+        if (!$identity instanceof IdentityInterface) {
             return $this->getService($request)->{$method}(null, $action, $resource);
         }
 
@@ -156,7 +156,7 @@ class AuthorizationComponent extends Component
             $action = $this->getDefaultAction($request);
         }
         $identity = $this->getIdentity($request);
-        if ($identity === null) {
+        if (!$identity instanceof IdentityInterface) {
             return $this->getService($request)->applyScope(null, $action, $resource);
         }
 
@@ -233,7 +233,7 @@ class AuthorizationComponent extends Component
         $serviceAttribute = $this->getConfig('serviceAttribute');
         $service = $request->getAttribute($serviceAttribute);
         if (!$service instanceof AuthorizationServiceInterface) {
-            $type = is_object($service) ? get_class($service) : gettype($service);
+            $type = get_debug_type($service);
             throw new InvalidArgumentException(sprintf(
                 'Expected that `%s` would be an instance of %s, but got %s',
                 $serviceAttribute,
@@ -261,7 +261,7 @@ class AuthorizationComponent extends Component
             return $identity;
         }
         if (!$identity instanceof IdentityInterface) {
-            $type = is_object($identity) ? get_class($identity) : gettype($identity);
+            $type = get_debug_type($identity);
             throw new InvalidArgumentException(sprintf(
                 'Expected that `%s` would be an instance of %s, but got %s',
                 $identityAttribute,
@@ -328,7 +328,7 @@ class AuthorizationComponent extends Component
             return $action;
         }
         if (!is_string($name)) {
-            $type = is_object($name) ? get_class($name) : gettype($name);
+            $type = get_debug_type($name);
             $message = sprintf('Invalid action type for `%s`. Expected `string` or `null`, got `%s`.', $action, $type);
             throw new UnexpectedValueException($message);
         }

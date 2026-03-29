@@ -29,15 +29,11 @@ class AuthorizationService implements AuthorizationServiceInterface
 {
     /**
      * Authorization policy resolver.
-     *
-     * @var \Authorization\Policy\ResolverInterface
      */
     protected ResolverInterface $resolver;
 
     /**
      * Track whether authorization was checked.
-     *
-     * @var bool
      */
     protected bool $authorizationChecked = false;
 
@@ -144,7 +140,7 @@ class AuthorizationService implements AuthorizationServiceInterface
 
         assert(
             method_exists($policy, $method) || method_exists($policy, '__call'),
-            new MissingMethodException([$method, $action, get_class($policy)]),
+            new MissingMethodException([$method, $action, $policy::class]),
         );
 
         /** @phpstan-ignore callable.nonCallable */
@@ -165,7 +161,7 @@ class AuthorizationService implements AuthorizationServiceInterface
 
         assert(
             method_exists($policy, $method) || method_exists($policy, '__call'),
-            new MissingMethodException([$method, $action, get_class($policy)]),
+            new MissingMethodException([$method, $action, $policy::class]),
         );
 
         /** @phpstan-ignore callable.nonCallable */

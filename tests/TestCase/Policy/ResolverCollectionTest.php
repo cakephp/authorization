@@ -26,7 +26,7 @@ use TestApp\Policy\ArticlePolicy;
 
 class ResolverCollectionTest extends TestCase
 {
-    public function testEmptyCollection()
+    public function testEmptyCollection(): void
     {
         $collection = new ResolverCollection();
 
@@ -35,7 +35,7 @@ class ResolverCollectionTest extends TestCase
         $collection->getPolicy(new Article());
     }
 
-    public function testMissingPolicy()
+    public function testMissingPolicy(): void
     {
         $resource = new Article();
 
@@ -54,7 +54,7 @@ class ResolverCollectionTest extends TestCase
         $collection->getPolicy($resource);
     }
 
-    public function testGetPolicy()
+    public function testGetPolicy(): void
     {
         $resource = new Article();
         $policy = new ArticlePolicy();

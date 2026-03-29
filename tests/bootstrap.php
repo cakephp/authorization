@@ -21,10 +21,10 @@ use Cake\Datasource\ConnectionManager;
 use Cake\TestSuite\Fixture\SchemaLoader;
 use function Cake\Core\env;
 
-$findRoot = function ($root) {
+$findRoot = function ($root): string {
     do {
         $lastRoot = $root;
-        $root = dirname($root);
+        $root = dirname((string)$root);
         if (is_dir($root . '/vendor/cakephp/cakephp')) {
             return $root;
         }
@@ -35,7 +35,7 @@ $root = $findRoot(__FILE__);
 unset($findRoot);
 chdir($root);
 
-require_once 'vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 define('ROOT', $root . DS . 'tests' . DS . 'test_app' . DS);
 define('APP', ROOT . 'TestApp' . DS);

@@ -29,7 +29,7 @@ use TestApp\Service\TestService;
 
 class MapResolverTest extends TestCase
 {
-    public function testGetPolicyClassName()
+    public function testGetPolicyClassName(): void
     {
         $resolver = new MapResolver();
 
@@ -39,7 +39,7 @@ class MapResolverTest extends TestCase
         $this->assertInstanceOf(ArticlePolicy::class, $result);
     }
 
-    public function testGetPolicyObject()
+    public function testGetPolicyObject(): void
     {
         $resolver = new MapResolver();
         $policy = new ArticlePolicy();
@@ -50,13 +50,13 @@ class MapResolverTest extends TestCase
         $this->assertSame($policy, $result);
     }
 
-    public function testGetPolicyCallable()
+    public function testGetPolicyCallable(): void
     {
         $resolver = new MapResolver();
         $resource = new Article();
         $policy = new ArticlePolicy();
 
-        $resolver->map(Article::class, function ($arg1, $arg2) use ($policy, $resolver, $resource) {
+        $resolver->map(Article::class, function ($arg1, $arg2) use ($policy, $resolver, $resource): ArticlePolicy {
             $this->assertSame($resource, $arg1);
             $this->assertSame($resolver, $arg2);
 
@@ -67,7 +67,7 @@ class MapResolverTest extends TestCase
         $this->assertSame($policy, $result);
     }
 
-    public function testMapMissingResource()
+    public function testMapMissingResource(): void
     {
         $resolver = new MapResolver();
 
@@ -77,7 +77,7 @@ class MapResolverTest extends TestCase
         $resolver->map('Foo', 'Bar');
     }
 
-    public function testMapMissingPolicy()
+    public function testMapMissingPolicy(): void
     {
         $resolver = new MapResolver();
 
@@ -87,7 +87,7 @@ class MapResolverTest extends TestCase
         $resolver->map(Article::class, 'Foo');
     }
 
-    public function testGetPolicyPrimitive()
+    public function testGetPolicyPrimitive(): void
     {
         $resolver = new MapResolver();
 
@@ -97,7 +97,7 @@ class MapResolverTest extends TestCase
         $resolver->getPolicy('Foo');
     }
 
-    public function testGetPolicyMissing()
+    public function testGetPolicyMissing(): void
     {
         $resolver = new MapResolver();
 
@@ -107,7 +107,7 @@ class MapResolverTest extends TestCase
         $resolver->getPolicy(new Article());
     }
 
-    public function testGetPolicyViaDIC()
+    public function testGetPolicyViaDIC(): void
     {
         $container = new Container();
         $container->add(TestService::class);

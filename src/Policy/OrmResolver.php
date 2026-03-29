@@ -32,8 +32,6 @@ class OrmResolver implements ResolverInterface
 {
     /**
      * Application namespace.
-     *
-     * @var string
      */
     protected string $appNamespace = 'App';
 
@@ -46,8 +44,6 @@ class OrmResolver implements ResolverInterface
 
     /**
      * The DIC instance from the application
-     *
-     * @var \Cake\Core\ContainerInterface|null
      */
     protected ?ContainerInterface $container;
 
@@ -86,7 +82,7 @@ class OrmResolver implements ResolverInterface
         }
         if ($resource instanceof QueryInterface) {
             $repo = $resource->getRepository();
-            if ($repo === null) {
+            if (!$repo instanceof RepositoryInterface) {
                 throw new RuntimeException('No repository set for the query.');
             }
 
@@ -104,7 +100,7 @@ class OrmResolver implements ResolverInterface
      */
     protected function getEntityPolicy(EntityInterface $entity): mixed
     {
-        $class = get_class($entity);
+        $class = $entity::class;
         $entityNamespace = '\Model\Entity\\';
         $namespace = str_replace('\\', '/', substr($class, 0, (int)strpos($class, $entityNamespace)));
         $name = substr($class, strpos($class, $entityNamespace) + strlen($entityNamespace));
@@ -120,7 +116,7 @@ class OrmResolver implements ResolverInterface
      */
     protected function getRepositoryPolicy(RepositoryInterface $table): mixed
     {
-        $class = get_class($table);
+        $class = $table::class;
         $tableNamespace = '\Model\Table\\';
         $namespace = str_replace('\\', '/', substr($class, 0, (int)strpos($class, $tableNamespace)));
         $name = substr($class, strpos($class, $tableNamespace) + strlen($tableNamespace));
@@ -157,13 +153,11 @@ class OrmResolver implements ResolverInterface
             throw new MissingPolicyException([$class]);
         }
 
-        if ($this->container && $this->container->has($policyClass)) {
-            $policy = $this->container->get($policyClass);
-        } else {
-            $policy = new $policyClass();
+        if ($this->container instanceof ContainerInterface && $this->container->has($policyClass)) {
+            return $this->container->get($policyClass);
         }
 
-        return $policy;
+        return new $policyClass();
     }
 
     /**
@@ -174,10 +168,6 @@ class OrmResolver implements ResolverInterface
      */
     protected function getNamespace(string $namespace): string
     {
-        if (isset($this->overrides[$namespace])) {
-            return $this->overrides[$namespace];
-        }
-
-        return $namespace;
+        return $this->overrides[$namespace] ?? $namespace;
     }
 }

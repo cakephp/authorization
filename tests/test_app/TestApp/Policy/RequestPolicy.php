@@ -23,16 +23,9 @@ class RequestPolicy implements RequestPolicyInterface
      */
     public function canAccess(?IdentityInterface $identity, ServerRequest $request): ResultInterface|bool
     {
-        if (
-            $request->getParam('controller') === 'Articles'
-            && $request->getParam('action') === 'index'
-        ) {
-            return true;
-        }
-
         // More checks here
-
-        return false;
+        return $request->getParam('controller') === 'Articles'
+        && $request->getParam('action') === 'index';
     }
 
     /**
@@ -42,7 +35,7 @@ class RequestPolicy implements RequestPolicyInterface
      * @param \Cake\Http\ServerRequest $request Request
      * @return \Authorization\Policy\ResultInterface|bool
      */
-    public function canEnter(?IdentityInterface $identity, ServerRequest $request)
+    public function canEnter(?IdentityInterface $identity, ServerRequest $request): Result
     {
         if (
             $request->getParam('controller') === 'Articles'

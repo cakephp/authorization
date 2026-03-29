@@ -32,7 +32,7 @@ use TestApp\Policy\RequestPolicy;
  */
 class RequestAuthorizationMiddlewareTest extends TestCase
 {
-    public function testRuntimeExceptionWhenServiceIsMissing()
+    public function testRuntimeExceptionWhenServiceIsMissing(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Authorization\Middleware\RequestAuthorizationMiddleware could not find the authorization service in the request attribute. Make sure you added the AuthorizationMiddleware before this middleware or that you somehow else added the service to the requests `authorization` attribute.');
@@ -43,7 +43,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testInvokeService()
+    public function testInvokeService(): void
     {
         $request = (new ServerRequest([
                 'url' => '/articles/index',
@@ -77,7 +77,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testInvokeServiceWithResult()
+    public function testInvokeServiceWithResult(): void
     {
         $request = (new ServerRequest([
                 'url' => '/articles/index',
@@ -122,7 +122,7 @@ class RequestAuthorizationMiddlewareTest extends TestCase
         }
     }
 
-    public function testUnauthorizedHandlerSuppress()
+    public function testUnauthorizedHandlerSuppress(): void
     {
         $request = (new ServerRequest([
                 'url' => '/articles/index',

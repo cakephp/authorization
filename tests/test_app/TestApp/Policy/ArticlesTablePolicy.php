@@ -25,7 +25,7 @@ class ArticlesTablePolicy
 
     public function scopeEdit(?IdentityInterface $user, QueryInterface $query)
     {
-        if ($user === null) {
+        if (!$user instanceof IdentityInterface) {
             return $query->where([
                 'visibility' => 'public',
             ]);

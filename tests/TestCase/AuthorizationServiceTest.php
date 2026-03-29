@@ -37,7 +37,7 @@ use TestApp\Policy\MagicCallPolicy;
 
 class AuthorizationServiceTest extends TestCase
 {
-    public function testNullUserCan()
+    public function testNullUserCan(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -54,7 +54,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testCan()
+    public function testCan(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -70,7 +70,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testCanWithAdditionalParams()
+    public function testCanWithAdditionalParams(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -82,7 +82,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $innerService = function () {
+        $innerService = function (): bool {
             return true;
         };
 
@@ -90,7 +90,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testCanWithAdditionalNamedParams()
+    public function testCanWithAdditionalNamedParams(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -102,11 +102,11 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $innerService1 = function () {
+        $innerService1 = function (): bool {
             return true;
         };
 
-        $innerService2 = function () {
+        $innerService2 = function (): bool {
             return false;
         };
 
@@ -114,7 +114,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testCanWithResult()
+    public function testCanWithResult(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -130,7 +130,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
-    public function testCanWithResultAndAdditionalParams()
+    public function testCanWithResultAndAdditionalParams(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -142,7 +142,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $innerService = function () {
+        $innerService = function (): bool {
             return true;
         };
 
@@ -150,7 +150,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
-    public function testCanWithResultAndAdditionalNamedParams()
+    public function testCanWithResultAndAdditionalNamedParams(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -162,11 +162,11 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $innerService1 = function () {
+        $innerService1 = function (): bool {
             return true;
         };
 
-        $innerService2 = function () {
+        $innerService2 = function (): bool {
             return false;
         };
 
@@ -174,7 +174,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
-    public function testAuthorizationCheckedWithCan()
+    public function testAuthorizationCheckedWithCan(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -190,7 +190,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($service->authorizationChecked());
     }
 
-    public function testCallingMagicCanCallPolicy()
+    public function testCallingMagicCanCallPolicy(): void
     {
         $resolver = new MapResolver([
             Article::class => MagicCallPolicy::class,
@@ -207,7 +207,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertFalse($service->can($user, 'cantDoThis', $article));
     }
 
-    public function testCallingMagicScopeCallPolicy()
+    public function testCallingMagicScopeCallPolicy(): void
     {
         $resolver = new MapResolver([
             Article::class => MagicCallPolicy::class,
@@ -224,7 +224,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertFalse($service->applyScope($user, 'somethingElse', $article));
     }
 
-    public function testAuthorizationCheckedWithApplyScope()
+    public function testAuthorizationCheckedWithApplyScope(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -241,7 +241,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($service->authorizationChecked());
     }
 
-    public function testSkipAuthorization()
+    public function testSkipAuthorization(): void
     {
         $resolver = new MapResolver([]);
         $service = new AuthorizationService($resolver);
@@ -251,7 +251,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($service->authorizationChecked());
     }
 
-    public function testApplyScope()
+    public function testApplyScope(): void
     {
         $resolver = new MapResolver([
             Article::class => ArticlePolicy::class,
@@ -268,7 +268,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertSame($article->user_id, $user->getOriginalData()['id']);
     }
 
-    public function testApplyScopeMethodMissing()
+    public function testApplyScopeMethodMissing(): void
     {
         $this->expectException(MissingMethodException::class);
 
@@ -285,7 +285,7 @@ class AuthorizationServiceTest extends TestCase
         $service->applyScope($user, 'nope', $article);
     }
 
-    public function testApplyScopeAdditionalArguments()
+    public function testApplyScopeAdditionalArguments(): void
     {
         $service = new AuthorizationService(new OrmResolver());
         $user = new IdentityDecorator($service, [
@@ -317,16 +317,16 @@ class AuthorizationServiceTest extends TestCase
         $this->assertSame($query, $result);
     }
 
-    public function testBeforeFalse()
+    public function testBeforeFalse(): void
     {
         $entity = new Article();
         $policy = new class implements BeforePolicyInterface {
-            public function before($identity, $resource, $action): bool|ResultInterface|null
+            public function before($identity, $resource, $action): bool
             {
                 return false;
             }
 
-            public function canAdd($user, $entity)
+            public function canAdd($user, $entity): never
             {
                 throw new ExpectationFailedException('This method should not be called');
             }
@@ -346,16 +346,16 @@ class AuthorizationServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testBeforeTrue()
+    public function testBeforeTrue(): void
     {
         $entity = new Article();
         $policy = new class implements BeforePolicyInterface {
-            public function before($identity, $resource, $action): bool|ResultInterface|null
+            public function before($identity, $resource, $action): bool
             {
                 return true;
             }
 
-            public function canAdd($user, $entity)
+            public function canAdd($user, $entity): never
             {
                 throw new ExpectationFailedException('This method should not be called');
             }
@@ -375,7 +375,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testBeforeNull()
+    public function testBeforeNull(): void
     {
         $entity = new Article();
         $policy = new class implements BeforePolicyInterface {
@@ -404,16 +404,16 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testBeforeResultTrue()
+    public function testBeforeResultTrue(): void
     {
         $entity = new Article();
         $policy = new class implements BeforePolicyInterface {
-            public function before($identity, $resource, $action): bool|ResultInterface|null
+            public function before($identity, $resource, $action): ResultInterface
             {
                 return new Result(true);
             }
 
-            public function canAdd($user, $entity)
+            public function canAdd($user, $entity): never
             {
                 throw new ExpectationFailedException('This method should not be called');
             }
@@ -433,16 +433,16 @@ class AuthorizationServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testBeforeResultFalse()
+    public function testBeforeResultFalse(): void
     {
         $entity = new Article();
         $policy = new class implements BeforePolicyInterface {
-            public function before($identity, $resource, $action): bool|ResultInterface|null
+            public function before($identity, $resource, $action): ResultInterface
             {
                 return new Result(false);
             }
 
-            public function canAdd($user, $entity)
+            public function canAdd($user, $entity): never
             {
                 throw new ExpectationFailedException('This method should not be called');
             }
@@ -462,7 +462,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testBeforeScopeNonNull()
+    public function testBeforeScopeNonNull(): void
     {
         $entity = new Article();
         $policy = new class implements BeforeScopeInterface {
@@ -471,7 +471,7 @@ class AuthorizationServiceTest extends TestCase
                 return 'foo';
             }
 
-            public function scopeIndex(IdentityInterface $user, QueryInterface $query)
+            public function scopeIndex(IdentityInterface $user, QueryInterface $query): never
             {
                 throw new ExpectationFailedException('This method should not be called');
             }
@@ -491,7 +491,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertEquals('foo', $result);
     }
 
-    public function testBeforeScopeNull()
+    public function testBeforeScopeNull(): void
     {
         $entity = new Article();
         $policy = new class implements BeforeScopeInterface {
@@ -500,7 +500,7 @@ class AuthorizationServiceTest extends TestCase
                 return null;
             }
 
-            public function scopeIndex(IdentityInterface $user, EntityInterface $entity)
+            public function scopeIndex(IdentityInterface $user, EntityInterface $entity): string
             {
                 return 'bar';
             }
@@ -520,7 +520,7 @@ class AuthorizationServiceTest extends TestCase
         $this->assertEquals('bar', $result);
     }
 
-    public function testMissingMethod()
+    public function testMissingMethod(): void
     {
         $entity = new Article();
 

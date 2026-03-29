@@ -15,16 +15,12 @@ class MagicCallPolicy
      * @param array $arguments Arguments
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         if ($name === 'canDoThat') {
             return true;
         }
 
-        if ($name === 'scopeThis') {
-            return true;
-        }
-
-        return false;
+        return $name === 'scopeThis';
     }
 }

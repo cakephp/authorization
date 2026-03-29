@@ -17,7 +17,7 @@ use TestApp\Model\Entity\Article;
  */
 class IdentityDecoratorTest extends TestCase
 {
-    public static function constructorDataProvider()
+    public static function constructorDataProvider(): array
     {
         return [
             'array' => [
@@ -33,14 +33,14 @@ class IdentityDecoratorTest extends TestCase
     }
 
     #[DataProvider('constructorDataProvider')]
-    public function testConstructorAccepted($data)
+    public function testConstructorAccepted(ArrayObject|Article|array $data): void
     {
         $auth = $this->createStub(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($auth, $data);
         $this->assertSame($data['id'], $identity['id']);
     }
 
-    public function testCanDelegation()
+    public function testCanDelegation(): void
     {
         $resource = new stdClass();
         $auth = $this->createMock(AuthorizationServiceInterface::class);
@@ -53,7 +53,7 @@ class IdentityDecoratorTest extends TestCase
         $this->assertTrue($identity->can('update', $resource));
     }
 
-    public function testApplyScopeDelegation()
+    public function testApplyScopeDelegation(): void
     {
         $resource = new stdClass();
         $auth = $this->createMock(AuthorizationServiceInterface::class);
@@ -66,7 +66,7 @@ class IdentityDecoratorTest extends TestCase
         $this->assertTrue($identity->applyScope('update', $resource));
     }
 
-    public function testApplyScopeAdditionalParams()
+    public function testApplyScopeAdditionalParams(): void
     {
         $resource = new stdClass();
         $auth = $this->createMock(AuthorizationServiceInterface::class);
@@ -79,7 +79,7 @@ class IdentityDecoratorTest extends TestCase
         $this->assertTrue($identity->applyScope('update', $resource, 'first argument', false));
     }
 
-    public function testCall()
+    public function testCall(): void
     {
         $data = new Article(['id' => 1]);
         $auth = $this->createStub(AuthorizationServiceInterface::class);
@@ -88,7 +88,7 @@ class IdentityDecoratorTest extends TestCase
         $this->assertTrue($identity->isDirty('id'), 'method is callable though.');
     }
 
-    public function testCallArray()
+    public function testCallArray(): void
     {
         $this->expectException(BadMethodCallException::class);
         $data = ['id' => 1];
@@ -97,7 +97,7 @@ class IdentityDecoratorTest extends TestCase
         $identity->boom();
     }
 
-    public function testArrayAccessImplementation()
+    public function testArrayAccessImplementation(): void
     {
         $data = new ArrayObject(['id' => 1]);
         $auth = $this->createStub(AuthorizationServiceInterface::class);
@@ -114,7 +114,7 @@ class IdentityDecoratorTest extends TestCase
         $this->assertSame(99, $identity['id'], 'Properties can be set.');
     }
 
-    public function testGetOriginalData()
+    public function testGetOriginalData(): void
     {
         $data = ['id' => 2];
         $auth = $this->createStub(AuthorizationServiceInterface::class);
@@ -122,7 +122,7 @@ class IdentityDecoratorTest extends TestCase
         $this->assertSame($data, $identity->getOriginalData());
     }
 
-    public function testGetOriginalDataWrappedObjectHasOriginalData()
+    public function testGetOriginalDataWrappedObjectHasOriginalData(): void
     {
         $data = ['id' => 2];
         $auth = $this->createStub(AuthorizationServiceInterface::class);
@@ -131,7 +131,7 @@ class IdentityDecoratorTest extends TestCase
         $this->assertSame($data, $identity->getOriginalData());
     }
 
-    public function testGetProperty()
+    public function testGetProperty(): void
     {
         $data = new Article(['id' => 2]);
         $auth = $this->createStub(AuthorizationServiceInterface::class);

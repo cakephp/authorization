@@ -23,13 +23,13 @@ use TestApp\Middleware\UnauthorizedHandler\SuppressHandler;
 
 class HandlerFactoryTest extends TestCase
 {
-    public function testCreate()
+    public function testCreate(): void
     {
         $handler = HandlerFactory::create('Suppress');
         $this->assertInstanceOf(SuppressHandler::class, $handler);
     }
 
-    public function testCreateMissing()
+    public function testCreateMissing(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Handler `Foo` does not exist.');
@@ -37,7 +37,7 @@ class HandlerFactoryTest extends TestCase
         HandlerFactory::create('Foo');
     }
 
-    public function testCreateInvalid()
+    public function testCreateInvalid(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Handler should implement `Authorization\Middleware\UnauthorizedHandler\HandlerInterface`, got `stdClass`.');

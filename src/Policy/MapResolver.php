@@ -35,8 +35,6 @@ class MapResolver implements ResolverInterface
 
     /**
      * The DIC instance from the application
-     *
-     * @var \Cake\Core\ContainerInterface|null
      */
     protected ?ContainerInterface $container;
 
@@ -101,7 +99,7 @@ class MapResolver implements ResolverInterface
             throw new InvalidArgumentException($message);
         }
 
-        $class = get_class($resource);
+        $class = $resource::class;
 
         if (!isset($this->map[$class])) {
             throw new MissingPolicyException($resource);
@@ -117,7 +115,7 @@ class MapResolver implements ResolverInterface
             return $policy;
         }
 
-        if ($this->container && $this->container->has($policy)) {
+        if ($this->container instanceof ContainerInterface && $this->container->has($policy)) {
             return $this->container->get($policy);
         }
 

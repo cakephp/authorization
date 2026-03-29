@@ -40,11 +40,11 @@ use TestApp\Identity;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
-    public function testInvokeService()
+    public function testInvokeService(): void
     {
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $request = new ServerRequest();
-        $handler = new TestRequestHandler(function ($request) use ($service) {
+        $handler = new TestRequestHandler(function ($request) use ($service): Response {
             $this->assertInstanceOf(ServerRequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
             $this->assertNull($request->getAttribute('identity'));
@@ -56,7 +56,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testInvokeAuthorizationRequiredError()
+    public function testInvokeAuthorizationRequiredError(): void
     {
         $this->expectException(AuthorizationRequiredException::class);
 
@@ -78,7 +78,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->assertSame($service, $request->getAttribute('authorization'));
     }
 
-    public function testInvokeApp()
+    public function testInvokeApp(): void
     {
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $provider = $this->createMock(AuthorizationServiceProviderInterface::class);
@@ -91,7 +91,7 @@ class AuthorizationMiddlewareTest extends TestCase
             ->willReturn($service);
 
         $request = new ServerRequest();
-        $handler = new TestRequestHandler(function ($request) use ($service) {
+        $handler = new TestRequestHandler(function ($request) use ($service): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
             $this->assertNull($request->getAttribute('identity'));
@@ -103,7 +103,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testInvokeServiceWithIdentity()
+    public function testInvokeServiceWithIdentity(): void
     {
         // phpcs:ignore
         $identity = new \Authentication\Identity([
@@ -112,7 +112,7 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $request = (new ServerRequest())->withAttribute('identity', $identity);
-        $handler = new TestRequestHandler(function ($request) use ($service) {
+        $handler = new TestRequestHandler(function ($request) use ($service): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
             $identity = $request->getAttribute('identity');
@@ -128,7 +128,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testIdentityInstance()
+    public function testIdentityInstance(): void
     {
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($service, [
@@ -136,7 +136,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ]);
 
         $request = (new ServerRequest())->withAttribute('identity', $identity);
-        $handler = new TestRequestHandler(function ($request) use ($service, $identity) {
+        $handler = new TestRequestHandler(function ($request) use ($service, $identity): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
             $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('identity'));
@@ -149,7 +149,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testCustomIdentity()
+    public function testCustomIdentity(): void
     {
         $identity = [
             'id' => 1,
@@ -157,7 +157,7 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $request = (new ServerRequest())->withAttribute('user', $identity);
-        $handler = new TestRequestHandler(function ($request) use ($service) {
+        $handler = new TestRequestHandler(function ($request) use ($service): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
             $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('user'));
@@ -167,7 +167,7 @@ class AuthorizationMiddlewareTest extends TestCase
         });
 
         $middleware = new AuthorizationMiddleware($service, [
-            'identityDecorator' => function ($service, $identity) {
+            'identityDecorator' => function ($service, $identity): IdentityDecorator {
                 return new IdentityDecorator($service, $identity);
             },
             'identityAttribute' => 'user',
@@ -177,7 +177,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testCustomIdentityDecorator()
+    public function testCustomIdentityDecorator(): void
     {
         $identity = new Identity([
             'id' => 1,
@@ -185,7 +185,7 @@ class AuthorizationMiddlewareTest extends TestCase
 
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $request = (new ServerRequest())->withAttribute('identity', $identity);
-        $handler = new TestRequestHandler(function ($request) use ($service, $identity) {
+        $handler = new TestRequestHandler(function ($request) use ($service, $identity): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
             $this->assertInstanceOf(IdentityInterface::class, $request->getAttribute('identity'));
@@ -206,7 +206,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testInvalidIdentity()
+    public function testInvalidIdentity(): void
     {
         $identity = [
             'id' => 1,
@@ -227,11 +227,11 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testUnauthorizedHandler()
+    public function testUnauthorizedHandler(): void
     {
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $request = new ServerRequest();
-        $handler = new TestRequestHandler(function () {
+        $handler = new TestRequestHandler(function (): void {
             throw new Exception();
         });
 
@@ -241,11 +241,11 @@ class AuthorizationMiddlewareTest extends TestCase
         $middleware->process($request, $handler);
     }
 
-    public function testUnauthorizedHandlerSuppress()
+    public function testUnauthorizedHandlerSuppress(): void
     {
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $request = new ServerRequest();
-        $handler = new TestRequestHandler(function () {
+        $handler = new TestRequestHandler(function (): void {
             throw new Exception();
         });
 
@@ -258,11 +258,11 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->assertSame(200, $result->getStatusCode());
     }
 
-    public function testUnauthorizedHandlerRequireAuthz()
+    public function testUnauthorizedHandlerRequireAuthz(): void
     {
         $service = $this->createStub(AuthorizationServiceInterface::class);
         $request = new ServerRequest();
-        $handler = new TestRequestHandler(function () {
+        $handler = new TestRequestHandler(function (): void {
             throw new Exception();
         });
 
@@ -275,7 +275,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->assertSame(200, $result->getStatusCode());
     }
 
-    public function testMiddlewareInjectsServiceIntoDIC()
+    public function testMiddlewareInjectsServiceIntoDIC(): void
     {
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
@@ -292,7 +292,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->assertInstanceOf(AuthorizationService::class, $container->get(AuthorizationService::class));
     }
 
-    public function testMiddlewareInjectsServiceIntoDICViaCustomContainerInstance()
+    public function testMiddlewareInjectsServiceIntoDICViaCustomContainerInstance(): void
     {
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],

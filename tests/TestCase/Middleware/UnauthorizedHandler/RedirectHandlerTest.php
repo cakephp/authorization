@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class RedirectHandlerTest extends TestCase
 {
-    public function testHandleRedirection()
+    public function testHandleRedirection(): void
     {
         $handler = new RedirectHandler();
 
@@ -46,7 +46,7 @@ class RedirectHandlerTest extends TestCase
         $this->assertSame('/login?redirect=%2F', $response->getHeaderLine('Location'));
     }
 
-    public function testHandleRedirectionWithQuery()
+    public function testHandleRedirectionWithQuery(): void
     {
         $handler = new RedirectHandler();
 
@@ -70,7 +70,7 @@ class RedirectHandlerTest extends TestCase
         $this->assertSame('/login?foo=bar&redirect=%2Fpath%3Fkey%3Dvalue', $response->getHeaderLine('Location'));
     }
 
-    public function testHandleRedirectionNoQuery()
+    public function testHandleRedirectionNoQuery(): void
     {
         $handler = new RedirectHandler();
 
@@ -91,7 +91,7 @@ class RedirectHandlerTest extends TestCase
         $this->assertSame('/users/login', $response->getHeaderLine('Location'));
     }
 
-    public static function httpMethodProvider()
+    public static function httpMethodProvider(): array
     {
         return [
             ['POST'],
@@ -104,7 +104,7 @@ class RedirectHandlerTest extends TestCase
     }
 
     #[DataProvider('httpMethodProvider')]
-    public function testHandleRedirectionIgnoreNonIdempotentMethods($method)
+    public function testHandleRedirectionIgnoreNonIdempotentMethods(string $method): void
     {
         $handler = new RedirectHandler();
 
@@ -128,7 +128,7 @@ class RedirectHandlerTest extends TestCase
         $this->assertSame('/login?foo=bar', $response->getHeaderLine('Location'));
     }
 
-    public function testHandleRedirectWithBasePath()
+    public function testHandleRedirectWithBasePath(): void
     {
         $handler = new RedirectHandler();
         $exception = new Exception();
@@ -152,7 +152,7 @@ class RedirectHandlerTest extends TestCase
         );
     }
 
-    public function testHandleException()
+    public function testHandleException(): void
     {
         $handler = new RedirectHandler();
 

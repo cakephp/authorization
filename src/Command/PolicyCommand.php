@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace Authorization\Command;
 
+use Authorization\IdentityInterface;
 use Bake\Command\SimpleBakeCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Utility\Inflector;
 use RuntimeException;
 
@@ -30,14 +32,9 @@ class PolicyCommand extends SimpleBakeCommand
 {
     /**
      * Path to Policy directory
-     *
-     * @var string
      */
     public string $pathFragment = 'Policy/';
 
-    /**
-     * @var string
-     */
     protected string $type;
 
     /**
@@ -91,13 +88,13 @@ class PolicyCommand extends SimpleBakeCommand
         $imports = [];
         $className = $data['namespace'] . '\\' . $name;
         if ($type === 'table') {
-            $className = "{$data['namespace']}\Model\\Table\\{$name}{$suffix}";
-            $imports[] = 'Cake\ORM\Query\SelectQuery';
+            $className = sprintf('%s\Model\Table\%s%s', $data['namespace'], $name, $suffix);
+            $imports[] = SelectQuery::class;
         } elseif ($type === 'entity') {
-            $className = "{$data['namespace']}\Model\\Entity\\{$name}";
+            $className = sprintf('%s\Model\Entity\%s', $data['namespace'], $name);
             $imports[] = $className;
         }
-        $imports[] = 'Authorization\\IdentityInterface';
+        $imports[] = IdentityInterface::class;
 
         $variable = Inflector::variable($name);
         if ($variable === 'user') {

@@ -23,7 +23,7 @@ use Cake\TestSuite\TestCase;
 
 class ExceptionHandlerTest extends TestCase
 {
-    public function testHandle()
+    public function testHandle(): void
     {
         $handler = new ExceptionHandler();
 

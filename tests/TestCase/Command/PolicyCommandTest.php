@@ -45,16 +45,16 @@ class PolicyCommandTest extends TestCase
      *
      * @return void
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         Router::reload();
 
-        $this->comparisonDir = dirname(dirname(__DIR__)) . DS . 'comparisons' . DS;
+        $this->comparisonDir = dirname(__DIR__, 2) . DS . 'comparisons' . DS;
         $this->loadPlugins(['TestPlugin']);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -64,7 +64,7 @@ class PolicyCommandTest extends TestCase
         }
     }
 
-    public function testMainDefaultToEntity()
+    public function testMainDefaultToEntity(): void
     {
         $this->generatedFile = APP . 'Policy/BookmarkPolicy.php';
 
@@ -74,7 +74,7 @@ class PolicyCommandTest extends TestCase
         $this->assertOutputContains('Creating file ' . $this->generatedFile);
     }
 
-    public function testMainEntityType()
+    public function testMainEntityType(): void
     {
         $this->generatedFile = APP . 'Policy/BookmarkPolicy.php';
 
@@ -88,7 +88,7 @@ class PolicyCommandTest extends TestCase
         );
     }
 
-    public function testMainObjectType()
+    public function testMainObjectType(): void
     {
         $this->generatedFile = APP . 'Policy/ThingPolicy.php';
 
@@ -102,7 +102,7 @@ class PolicyCommandTest extends TestCase
         );
     }
 
-    public function testMainTableType()
+    public function testMainTableType(): void
     {
         $this->generatedFile = APP . 'Policy/BookmarksTablePolicy.php';
 
@@ -116,7 +116,7 @@ class PolicyCommandTest extends TestCase
         );
     }
 
-    public function testMainPluginEntity()
+    public function testMainPluginEntity(): void
     {
         $this->generatedFile = ROOT . 'Plugin/TestPlugin/src/Policy/UserPolicy.php';
 
@@ -130,7 +130,7 @@ class PolicyCommandTest extends TestCase
         );
     }
 
-    public function testMainPluginTable()
+    public function testMainPluginTable(): void
     {
         $this->generatedFile = ROOT . 'Plugin/TestPlugin/src/Policy/UsersTablePolicy.php';
 

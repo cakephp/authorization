@@ -69,15 +69,11 @@ class AuthorizationMiddleware implements MiddlewareInterface
 
     /**
      * Authorization service or application instance.
-     *
-     * @var \Authorization\AuthorizationServiceInterface|\Authorization\AuthorizationServiceProviderInterface
      */
     protected AuthorizationServiceInterface|AuthorizationServiceProviderInterface $subject;
 
     /**
      * The container instance from the application
-     *
-     * @var \Cake\Core\ContainerInterface|null
      */
     protected ?ContainerInterface $container = null;
 
@@ -190,10 +186,8 @@ class AuthorizationMiddleware implements MiddlewareInterface
 
         if (is_callable($class)) {
             $identity = $class($service, $identity);
-        } else {
-            if (!$identity instanceof IdentityInterface) {
-                $identity = new $class($service, $identity);
-            }
+        } elseif (!$identity instanceof IdentityInterface) {
+            $identity = new $class($service, $identity);
         }
 
         if (!$identity instanceof IdentityInterface) {

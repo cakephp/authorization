@@ -108,12 +108,8 @@ class RedirectHandler implements HandlerInterface
             if ($uri->getQuery()) {
                 $redirect .= '?' . $uri->getQuery();
             }
-            $query = urlencode($options['queryParam']) . '=' . urlencode($redirect);
-            if (str_contains($url, '?')) {
-                $query = '&' . $query;
-            } else {
-                $query = '?' . $query;
-            }
+            $query = urlencode((string)$options['queryParam']) . '=' . urlencode($redirect);
+            $query = str_contains((string)$url, '?') ? '&' . $query : '?' . $query;
 
             $url .= $query;
         }
@@ -122,7 +118,6 @@ class RedirectHandler implements HandlerInterface
     }
 
     /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param array<string, mixed> $options
      * @return bool
      */

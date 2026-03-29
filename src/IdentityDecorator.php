@@ -39,8 +39,6 @@ class IdentityDecorator implements IdentityInterface
 
     /**
      * Authorization Service
-     *
-     * @var \Authorization\AuthorizationServiceInterface
      */
     protected AuthorizationServiceInterface $authorization;
 
@@ -105,7 +103,7 @@ class IdentityDecorator implements IdentityInterface
     public function __call(string $method, array $args): mixed
     {
         if (!is_object($this->identity)) {
-            throw new BadMethodCallException("Cannot call `{$method}`. Identity data is not an object.");
+            throw new BadMethodCallException(sprintf('Cannot call `%s`. Identity data is not an object.', $method));
         }
 
         if (!method_exists($this->identity, $method)) {
@@ -163,11 +161,7 @@ class IdentityDecorator implements IdentityInterface
      */
     public function offsetGet(mixed $offset): mixed
     {
-        if (isset($this->identity[$offset])) {
-            return $this->identity[$offset];
-        }
-
-        return null;
+        return $this->identity[$offset] ?? null;
     }
 
     /**
