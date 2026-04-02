@@ -24,14 +24,14 @@ A basic example would be::
 
     class Application extends BaseApplication implements AuthorizationServiceProviderInterface
     {
-        public function getAuthorizationService(ServerRequestInterface $request, ResponseInterface $response)
+        public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
         {
             $resolver = new OrmResolver();
 
             return new AuthorizationService($resolver);
         }
 
-        public function middleware($middlewareQueue)
+        public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
         {
             // other middleware
             $middlewareQueue->add(new AuthorizationMiddleware($this));
@@ -114,7 +114,7 @@ implementing the ``Authorization\IdentityInterface`` and using the
         /**
          * Setter to be used by the middleware.
          */
-        public function setAuthorization(AuthorizationServiceInterface $service)
+        public function setAuthorization(AuthorizationServiceInterface $service): static
         {
             $this->authorization = $service;
 
@@ -150,10 +150,8 @@ If you also use the Authentication plugin make sure to implement both interfaces
 
         /**
          * Authentication\IdentityInterface method
-         *
-         * @return string
          */
-        public function getIdentifier()
+        public function getIdentifier(): int|string|null
         {
             return $this->id;
         }
@@ -254,7 +252,7 @@ How to create a custom UnauthorizedHandler
 #. Create this file ``src/Middleware/UnauthorizedHandler/CustomRedirectHandler.php``::
 
     <?php
-    declare( strict_types = 1 );
+    declare(strict_types=1);
 
     namespace App\Middleware\UnauthorizedHandler;
 

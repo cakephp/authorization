@@ -56,8 +56,6 @@ Next, map the request class to the policy inside
     use Authorization\Middleware\AuthorizationMiddleware;
     use Authorization\Middleware\RequestAuthorizationMiddleware;
     use Authorization\Policy\MapResolver;
-    use Authorization\Policy\OrmResolver;
-    use Psr\Http\Message\ResponseInterface;
     use Cake\Http\ServerRequest;
 
 
@@ -77,6 +75,8 @@ AuthorizationMiddleware::
         // Add authorization (after authentication if you are using that plugin too).
         $middlewareQueue->add(new AuthorizationMiddleware($this));
         $middlewareQueue->add(new RequestAuthorizationMiddleware());
+
+        return $middlewareQueue;
     }
 
 Controller Usage

@@ -76,7 +76,7 @@ The OrmResolver supports customization through its constructor::
     $overrides = [
         'Blog' => 'Cms',
     ];
-    $resolver = new OrmResolver($appNamespace, $overrides)
+    $resolver = new OrmResolver($appNamespace, $overrides);
 
 Using Multiple Resolvers
 ========================

@@ -22,7 +22,7 @@ Getting Started
 ===============
 
 The Authorization plugin integrates into your application as a middleware layer
-and optionally a component to make checking authorization easier. First, lets
+and optionally a component to make checking authorization easier. First, let's
 apply the middleware. In **src/Application.php** add the following to the class
 imports::
 
@@ -31,7 +31,6 @@ imports::
     use Authorization\AuthorizationServiceProviderInterface;
     use Authorization\Middleware\AuthorizationMiddleware;
     use Authorization\Policy\OrmResolver;
-    use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
 
 Add the ``AuthorizationServiceProviderInterface`` to the implemented interfaces
@@ -56,7 +55,7 @@ Then make your application's ``middleware()`` method look like::
             // and authentication middleware.
             ->add(new AuthorizationMiddleware($this));
 
-        return $middlewareQueue();
+        return $middlewareQueue;
     }
 
 The placement of the ``AuthorizationMiddleware`` is important and must be added
@@ -78,7 +77,7 @@ define the ``AuthorizationService`` it wants to use. Add the following method yo
 This configures basic :doc:`/policy-resolvers` that will match
 ORM entities with their policy classes.
 
-Next, lets add the ``AuthorizationComponent`` to ``AppController``. In
+Next, let's add the ``AuthorizationComponent`` to ``AppController``. In
 **src/Controller/AppController.php** add the following to the ``initialize()``
 method::
 
@@ -89,7 +88,7 @@ authorization on a per-action basis more easily. For example, we can do::
 
     public function edit($id = null)
     {
-        $article = $this->Article->get($id);
+        $article = $this->Articles->get($id);
         $this->Authorization->authorize($article, 'update');
 
         // Rest of action

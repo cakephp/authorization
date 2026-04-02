@@ -8,7 +8,7 @@ requires use of the Middleware, so make sure it is applied as well. To use the
 component, first load it::
 
     // In your AppController
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadComponent('Authorization.Authorization');
