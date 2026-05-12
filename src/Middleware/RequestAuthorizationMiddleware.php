@@ -98,8 +98,8 @@ class RequestAuthorizationMiddleware implements MiddlewareInterface
         $service = $this->getServiceFromRequest($request);
         $identity = $request->getAttribute($this->getConfig('identityAttribute'));
 
-        $result = $service->canResult($identity, $this->getConfig('method'), $request);
         try {
+            $result = $service->canResult($identity, $this->getConfig('method'), $request);
             if (!$result->getStatus()) {
                 throw new ForbiddenException($result, [$this->getConfig('method'), $request->getRequestTarget()]);
             }

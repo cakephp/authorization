@@ -146,4 +146,32 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
         $this->assertSame(200, $result->getStatusCode());
     }
+
+    public function testPolicyExceptionRoutedThroughUnauthorizedHandler(): void
+    {
+        $request = (new ServerRequest([
+                'url' => '/articles/index',
+            ]))
+            ->withParam('action', 'index')
+            ->withParam('controller', 'Articles');
+
+        $handler = new TestRequestHandler();
+
+        $resolver = new MapResolver([
+            ServerRequest::class => new RequestPolicy(),
+        ]);
+
+        $authService = new AuthorizationService($resolver);
+        $request = $request->withAttribute('authorization', $authService);
+
+        // `doesNotExist` triggers MissingMethodException inside canResult();
+        // the middleware should route it through the configured handler instead of letting it bubble.
+        $middleware = new RequestAuthorizationMiddleware([
+            'method' => 'doesNotExist',
+            'unauthorizedHandler' => 'Suppress',
+        ]);
+        $result = $middleware->process($request, $handler);
+
+        $this->assertSame(200, $result->getStatusCode());
+    }
 }
