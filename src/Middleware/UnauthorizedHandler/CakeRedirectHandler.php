@@ -68,7 +68,7 @@ class CakeRedirectHandler extends RedirectHandler
     protected function getUrl(ServerRequestInterface $request, array $options): string
     {
         $url = $options['url'];
-        if ($options['queryParam'] !== null) {
+        if ($options['queryParam'] !== null && $request->getMethod() === 'GET') {
             $uri = $request->getUri();
             $redirect = $uri->getPath();
             if ($uri->getQuery()) {

@@ -22,6 +22,7 @@ use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CakeRedirectHandlerTest extends TestCase
 {
@@ -149,5 +150,40 @@ class CakeRedirectHandlerTest extends TestCase
             '/basedir/login?redirect=%2Fadmin%2Fdashboard',
             $response->getHeaderLine('Location'),
         );
+    }
+
+    public static function httpMethodProvider(): array
+    {
+        return [
+            ['POST'],
+            ['PUT'],
+            ['DELETE'],
+            ['PATCH'],
+            ['OPTIONS'],
+            ['HEAD'],
+        ];
+    }
+
+    #[DataProvider('httpMethodProvider')]
+    public function testHandleRedirectionIgnoreNonIdempotentMethods(string $method): void
+    {
+        $handler = new CakeRedirectHandler();
+
+        $exception = new Exception();
+        $request = ServerRequestFactory::fromGlobals(
+            [
+                'REQUEST_METHOD' => $method,
+                'REQUEST_URI' => '/admin/dashboard',
+            ],
+        );
+
+        $response = $handler->handle($exception, $request, [
+            'exceptions' => [
+                Exception::class,
+            ],
+        ]);
+
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('/login', $response->getHeaderLine('Location'));
     }
 }
