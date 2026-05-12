@@ -32,7 +32,7 @@
     },
     "require-dev": {
         "cakephp/authentication": "^3.0 || ^4.0",
-        "cakephp/bake": "^3.6.4",
+        "cakephp/bake": "^3.2",
         "cakephp/cakephp": "^5.1",
         "cakephp/cakephp-codesniffer": "^5.1",
         "phpunit/phpunit": "^10.5.58 || ^11.5.3 || ^12.4 || ^13.0"

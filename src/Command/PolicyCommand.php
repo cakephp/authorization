@@ -119,7 +119,7 @@ class PolicyCommand extends SimpleBakeCommand
      * @param \Cake\Console\ConsoleOptionParser $parser The parser to update.
      * @return \Cake\Console\ConsoleOptionParser
      */
-    protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         $parser = $this->_setCommonOptions($parser);
 
