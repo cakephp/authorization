@@ -141,4 +141,13 @@ class ArticlePolicy
     {
         return $this->service->serviceLogic();
     }
+
+    /**
+     * Returns an invalid type (not bool, not ResultInterface) to exercise the
+     * defensive type guard in AuthorizationService::performCheck().
+     */
+    public function canInvalidReturnType($user, Article $article): string
+    {
+        return 'not a bool nor a Result';
+    }
 }

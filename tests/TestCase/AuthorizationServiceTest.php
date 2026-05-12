@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Authorization\Test\TestCase;
 
 use Authorization\AuthorizationService;
+use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Policy\BeforePolicyInterface;
@@ -538,5 +539,23 @@ class AuthorizationServiceTest extends TestCase
         $this->expectExceptionMessage('Method `canDisable` for invoking action `disable` has not been defined in `TestApp\Policy\ArticlePolicy`.');
 
         $service->can($user, 'disable', $entity);
+    }
+
+    public function testCanThrowsWhenPolicyReturnsInvalidType(): void
+    {
+        $resolver = new MapResolver([
+            Article::class => ArticlePolicy::class,
+        ]);
+        $service = new AuthorizationService($resolver);
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            'Authorization check method must return `Authorization\Policy\ResultInterface` or `bool`.',
+        );
+
+        $service->can($user, 'invalidReturnType', new Article());
     }
 }
