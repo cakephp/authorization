@@ -94,13 +94,12 @@ class AuthorizationService implements AuthorizationServiceInterface
         $handler = $this->getCanHandler($policy, $action);
         $result = $handler($user, $resource, ...$optionalArgs);
 
-        assert(
-            is_bool($result) || $result instanceof ResultInterface,
-            new Exception(sprintf(
+        if (!is_bool($result) && !$result instanceof ResultInterface) {
+            throw new Exception(sprintf(
                 'Authorization check method must return `%s` or `bool`.',
                 ResultInterface::class,
-            )),
-        );
+            ));
+        }
 
         return $result;
     }
@@ -138,10 +137,9 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $method = 'can' . ucfirst($action);
 
-        assert(
-            method_exists($policy, $method) || method_exists($policy, '__call'),
-            new MissingMethodException([$method, $action, $policy::class]),
-        );
+        if (!method_exists($policy, $method) && !method_exists($policy, '__call')) {
+            throw new MissingMethodException([$method, $action, $policy::class]);
+        }
 
         /** @phpstan-ignore callable.nonCallable */
         return [$policy, $method](...);
@@ -159,10 +157,9 @@ class AuthorizationService implements AuthorizationServiceInterface
     {
         $method = 'scope' . ucfirst($action);
 
-        assert(
-            method_exists($policy, $method) || method_exists($policy, '__call'),
-            new MissingMethodException([$method, $action, $policy::class]),
-        );
+        if (!method_exists($policy, $method) && !method_exists($policy, '__call')) {
+            throw new MissingMethodException([$method, $action, $policy::class]);
+        }
 
         /** @phpstan-ignore callable.nonCallable */
         return [$policy, $method](...);
