@@ -550,6 +550,72 @@ class AuthorizationComponentTest extends TestCase
         $this->assertEquals(['foo', 'bar', 'baz'], $this->Auth->getConfig('authorizeModel'));
     }
 
+    public function testSkipAuthorizationActions(): void
+    {
+        $this->Auth->skipAuthorizationActions('foo', 'bar');
+        $this->assertEquals(['foo', 'bar'], $this->Auth->getConfig('skipAuthorization'));
+
+        $this->Auth->skipAuthorizationActions('baz');
+        $this->assertEquals(['foo', 'bar', 'baz'], $this->Auth->getConfig('skipAuthorization'));
+    }
+
+    public function testSkipAuthorizationActionsAppliedOnAuthorizeAction(): void
+    {
+        $service = $this->Controller->getRequest()->getAttribute('authorization');
+
+        $this->Auth->skipAuthorizationActions('edit');
+        $this->Auth->authorizeAction();
+        $this->assertTrue($service->authorizationChecked());
+    }
+
+    public function testSkipAuthorizationActionsAppliedOnCan(): void
+    {
+        $service = $this->Controller->getRequest()->getAttribute('authorization');
+        $article = new Article(['user_id' => 99]);
+        $this->assertFalse($this->Auth->can($article));
+
+        $this->Auth->skipAuthorizationActions('edit');
+        $this->assertTrue($this->Auth->can($article));
+        $this->assertTrue($service->authorizationChecked());
+    }
+
+    public function testSkipAuthorizationActionsAppliedOnCanResult(): void
+    {
+        $this->Auth->skipAuthorizationActions('edit');
+
+        $result = $this->Auth->canResult(new Article(['user_id' => 99]));
+        $this->assertInstanceOf(ResultInterface::class, $result);
+        $this->assertTrue($result->getStatus());
+    }
+
+    public function testSkipAuthorizationActionsAppliedOnAuthorize(): void
+    {
+        $this->Auth->skipAuthorizationActions('edit');
+
+        $this->Auth->authorize(new Article(['user_id' => 99]));
+        $this->assertTrue($this->Controller->getRequest()->getAttribute('authorization')->authorizationChecked());
+    }
+
+    public function testSkipAuthorizationActionsIgnoredForExplicitAction(): void
+    {
+        $article = new Article(['user_id' => 99]);
+        $this->Auth->skipAuthorizationActions('delete');
+
+        $this->assertFalse($this->Auth->can($article, 'delete'));
+    }
+
+    public function testSkipAuthorizationActionsUsesControllerAction(): void
+    {
+        $service = $this->Controller->getRequest()->getAttribute('authorization');
+        $this->Auth->mapAction('edit', 'modify');
+        $this->Auth->skipAuthorizationActions('edit');
+
+        $this->assertTrue($this->Auth->can(new Article(['user_id' => 99])));
+
+        $this->Auth->authorizeAction();
+        $this->assertTrue($service->authorizationChecked());
+    }
+
     public function testMapAction(): void
     {
         $this->Auth->mapAction('foo', 'bar');

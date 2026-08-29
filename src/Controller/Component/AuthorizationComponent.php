@@ -19,6 +19,7 @@ namespace Authorization\Controller\Component;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
 use Authorization\IdentityInterface;
+use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
 use Cake\Http\ServerRequest;
@@ -64,6 +65,12 @@ class AuthorizationComponent extends Component
     {
         if ($action === null) {
             $request = $this->getController()->getRequest();
+            if ($this->isSkippedAction($request)) {
+                $this->skipAuthorization();
+
+                return;
+            }
+
             $action = $this->getDefaultAction($request);
         }
 
@@ -127,6 +134,16 @@ class AuthorizationComponent extends Component
     ): ResultInterface|bool {
         $request = $this->getController()->getRequest();
         if ($action === null) {
+            if ($this->isSkippedAction($request)) {
+                $this->skipAuthorization();
+
+                if ($method === 'can') {
+                    return true;
+                }
+
+                return new Result(true);
+            }
+
             $action = $this->getDefaultAction($request);
         }
 
@@ -174,6 +191,22 @@ class AuthorizationComponent extends Component
         $service = $this->getService($request);
 
         $service->skipAuthorization();
+
+        return $this;
+    }
+
+    /**
+     * Adds actions that should skip the automatic authorization check.
+     *
+     * Actions registered here are marked as authorized in `authorizeAction()`,
+     * which runs on the configured `authorizationEvent`.
+     *
+     * @param string ...$actions Controller actions to skip authorization for.
+     * @return $this
+     */
+    public function skipAuthorizationActions(string ...$actions)
+    {
+        $this->_config['skipAuthorization'] = array_merge($this->_config['skipAuthorization'], $actions);
 
         return $this;
     }
@@ -296,6 +329,21 @@ class AuthorizationComponent extends Component
         if ($authorizeModel) {
             $this->authorize($this->getController()->fetchTable());
         }
+    }
+
+    /**
+     * Whether the current controller action is configured to skip authorization.
+     *
+     * Only an implicit check refers to the current controller action, so only that one can
+     * be skipped. The raw action name is matched, the same key `authorizeAction()` uses,
+     * so both paths agree when `actionMap` is in play.
+     *
+     * @param \Cake\Http\ServerRequest $request Server request.
+     * @return bool
+     */
+    protected function isSkippedAction(ServerRequest $request): bool
+    {
+        return $this->checkAction((string)$request->getParam('action'), 'skipAuthorization');
     }
 
     /**

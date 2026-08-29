@@ -24,15 +24,8 @@ controller's default model class and the current action:
 $this->Authorization->authorizeModel('index', 'add');
 ```
 
-You can also mark actions as public by skipping authorization:
-
-```php
-$this->loadComponent('Authorization.Authorization', [
-    'skipAuthorization' => [
-        'login',
-    ],
-]);
-```
+You can also mark actions as public by skipping authorization. See
+[Skipping Authorization](#skipping-authorization) below.
 
 By default, every action requires authorization when authorization checking is
 enabled.
@@ -121,7 +114,62 @@ public function add()
 
 ## Skipping Authorization
 
-You can also skip authorization inside an action:
+By default every action requires an authorization check, and the middleware
+raises an exception when an action performs none. Marking an action as public is
+therefore explicit. There are three ways to do it, which differ in where the
+knowledge about the action lives.
+
+### For the whole application
+
+Pass the action names when loading the component, usually in `AppController`:
+
+```php
+$this->loadComponent('Authorization.Authorization', [
+    'skipAuthorization' => [
+        'login',
+    ],
+]);
+```
+
+Use this for actions that are public everywhere, such as a login action on a
+controller every other controller inherits from.
+
+### Per controller
+
+`skipAuthorizationActions()` appends to the same list at runtime, so a controller
+can declare its own public actions without `AppController` knowing about them:
+
+```php
+public function beforeFilter(\Cake\Event\EventInterface $event)
+{
+    parent::beforeFilter($event);
+
+    $this->Authorization->skipAuthorizationActions('verifyEmail', 'webhook');
+}
+```
+
+Actions listed here are skipped by the automatic check, and `can()`,
+`canResult()` and `authorize()` treat the current action as authorized, so a
+manual check in `beforeFilter()` does not have to special-case them:
+
+```php
+public function beforeFilter(\Cake\Event\EventInterface $event)
+{
+    parent::beforeFilter($event);
+
+    $this->Authorization->skipAuthorizationActions('login', 'logout');
+
+    if (!$this->Authorization->can($this)) {
+        return $this->redirect('/');
+    }
+}
+```
+
+This applies only to a check on the current action. An explicit action always
+runs its policy, so `can($article, 'delete')` is unaffected by `delete` being in
+the list.
+
+### Inside a single action
 
 ```php
 public function view($id)
@@ -129,3 +177,6 @@ public function view($id)
     $this->Authorization->skipAuthorization();
 }
 ```
+
+Use this when whether the action needs authorization depends on something you
+only know once the action runs.
