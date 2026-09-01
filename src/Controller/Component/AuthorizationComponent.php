@@ -19,6 +19,7 @@ namespace Authorization\Controller\Component;
 use Authorization\AuthorizationServiceInterface;
 use Authorization\Exception\ForbiddenException;
 use Authorization\IdentityInterface;
+use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
 use Cake\Controller\Component;
 use Cake\Http\ServerRequest;
@@ -130,6 +131,16 @@ class AuthorizationComponent extends Component
             $action = $this->getDefaultAction($request);
         }
 
+        $skipAuthorization = $this->checkAction($action, 'skipAuthorization');
+        if ($skipAuthorization) {
+            $this->skipAuthorization();
+
+            return match ($method) {
+                'can' => true,
+                'canResult' => new Result(true),
+            };
+        }
+
         $identity = $this->getIdentity($request);
         if (!$identity instanceof IdentityInterface) {
             return $this->getService($request)->{$method}(null, $action, $resource);
@@ -174,6 +185,22 @@ class AuthorizationComponent extends Component
         $service = $this->getService($request);
 
         $service->skipAuthorization();
+
+        return $this;
+    }
+
+    /**
+     * Adds actions that should skip the automatic authorization check.
+     *
+     * Actions registered here are marked as authorized in `authorizeAction()`,
+     * which runs on the configured `authorizationEvent`.
+     *
+     * @param string ...$actions Controller actions to skip authorization for.
+     * @return $this
+     */
+    public function skipAuthorizationActions(string ...$actions)
+    {
+        $this->_config['skipAuthorization'] = array_merge($this->_config['skipAuthorization'], $actions);
 
         return $this;
     }

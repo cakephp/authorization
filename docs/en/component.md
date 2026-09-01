@@ -34,6 +34,12 @@ $this->loadComponent('Authorization.Authorization', [
 ]);
 ```
 
+The same can be done at runtime, for example in `beforeFilter()`:
+
+```php
+$this->Authorization->skipAuthorizationActions('login', 'logout');
+```
+
 By default, every action requires authorization when authorization checking is
 enabled.
 

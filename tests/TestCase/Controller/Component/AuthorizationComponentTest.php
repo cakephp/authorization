@@ -550,6 +550,24 @@ class AuthorizationComponentTest extends TestCase
         $this->assertEquals(['foo', 'bar', 'baz'], $this->Auth->getConfig('authorizeModel'));
     }
 
+    public function testSkipAuthorizationActions(): void
+    {
+        $this->Auth->skipAuthorizationActions('foo', 'bar');
+        $this->assertEquals(['foo', 'bar'], $this->Auth->getConfig('skipAuthorization'));
+
+        $this->Auth->skipAuthorizationActions('baz');
+        $this->assertEquals(['foo', 'bar', 'baz'], $this->Auth->getConfig('skipAuthorization'));
+    }
+
+    public function testSkipAuthorizationActionsAppliedOnAuthorizeAction(): void
+    {
+        $service = $this->Controller->getRequest()->getAttribute('authorization');
+
+        $this->Auth->skipAuthorizationActions('edit');
+        $this->Auth->authorizeAction();
+        $this->assertTrue($service->authorizationChecked());
+    }
+
     public function testMapAction(): void
     {
         $this->Auth->mapAction('foo', 'bar');
