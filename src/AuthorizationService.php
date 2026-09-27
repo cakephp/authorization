@@ -28,11 +28,6 @@ use Closure;
 class AuthorizationService implements AuthorizationServiceInterface
 {
     /**
-     * Authorization policy resolver.
-     */
-    protected ResolverInterface $resolver;
-
-    /**
      * Track whether authorization was checked.
      */
     protected bool $authorizationChecked = false;
@@ -40,9 +35,8 @@ class AuthorizationService implements AuthorizationServiceInterface
     /**
      * @param \Authorization\Policy\ResolverInterface $resolver Authorization policy resolver.
      */
-    public function __construct(ResolverInterface $resolver)
+    public function __construct(protected ResolverInterface $resolver)
     {
-        $this->resolver = $resolver;
     }
 
     /**

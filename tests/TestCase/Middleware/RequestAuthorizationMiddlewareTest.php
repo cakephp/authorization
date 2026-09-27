@@ -45,9 +45,9 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
     public function testInvokeService(): void
     {
-        $request = (new ServerRequest([
+        $request = new ServerRequest([
                 'url' => '/articles/index',
-            ]))
+            ])
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
 
@@ -79,9 +79,9 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
     public function testInvokeServiceWithResult(): void
     {
-        $request = (new ServerRequest([
+        $request = new ServerRequest([
                 'url' => '/articles/index',
-            ]))
+            ])
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
 
@@ -124,9 +124,9 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
     public function testUnauthorizedHandlerSuppress(): void
     {
-        $request = (new ServerRequest([
+        $request = new ServerRequest([
                 'url' => '/articles/index',
-            ]))
+            ])
             ->withParam('action', 'add')
             ->withParam('controller', 'Articles');
 
@@ -149,9 +149,9 @@ class RequestAuthorizationMiddlewareTest extends TestCase
 
     public function testPolicyExceptionRoutedThroughUnauthorizedHandler(): void
     {
-        $request = (new ServerRequest([
+        $request = new ServerRequest([
                 'url' => '/articles/index',
-            ]))
+            ])
             ->withParam('action', 'index')
             ->withParam('controller', 'Articles');
 

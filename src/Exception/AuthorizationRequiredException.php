@@ -24,5 +24,5 @@ class AuthorizationRequiredException extends Exception
     /**
      * @inheritDoc
      */
-    protected string $_messageTemplate = 'The request to `%s` did not apply any authorization checks.';
+    protected string $messageTemplate = 'The request to `%s` did not apply any authorization checks.';
 }

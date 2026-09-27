@@ -6,10 +6,10 @@ CakePHP プロジェクトのルートディレクトリで
 [Composer](https://getcomposer.org/) を使ってプラグインを追加します。
 
 ```bash
-php composer.phar require "cakephp/authorization:^3.0"
+php composer.phar require "cakephp/authorization:^4.0"
 ```
 
-Authorization 3.x は CakePHP 5 に対応しています。
+Authorization 4.x は CakePHP 6 に対応しています。
 
 `src/Application.php` でプラグインを読み込みます。
 

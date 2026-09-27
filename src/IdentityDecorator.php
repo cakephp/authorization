@@ -31,27 +31,15 @@ use BadMethodCallException;
 class IdentityDecorator implements IdentityInterface
 {
     /**
-     * Identity data
-     *
-     * @var \ArrayAccess<string, mixed>|array<string, mixed>
-     */
-    protected ArrayAccess|array $identity;
-
-    /**
-     * Authorization Service
-     */
-    protected AuthorizationServiceInterface $authorization;
-
-    /**
      * Constructor
      *
-     * @param \Authorization\AuthorizationServiceInterface $service The authorization service.
+     * @param \Authorization\AuthorizationServiceInterface $authorization The authorization service.
      * @param \ArrayAccess<string, mixed>|array<string, mixed> $identity Identity data
      */
-    public function __construct(AuthorizationServiceInterface $service, ArrayAccess|array $identity)
-    {
-        $this->authorization = $service;
-        $this->identity = $identity;
+    public function __construct(
+        protected AuthorizationServiceInterface $authorization,
+        protected ArrayAccess|array $identity,
+    ) {
     }
 
     /**

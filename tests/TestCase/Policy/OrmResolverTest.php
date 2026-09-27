@@ -20,7 +20,7 @@ use Authorization\AuthorizationService;
 use Authorization\IdentityDecorator;
 use Authorization\Policy\Exception\MissingPolicyException;
 use Authorization\Policy\OrmResolver;
-use Cake\Core\Container;
+use Cake\Container\Container;
 use Cake\Datasource\RepositoryInterface;
 use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;

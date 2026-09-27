@@ -32,4 +32,4 @@ bin/cake plugin load Authorization
 ## Documentation
 
 Documentation for this plugin can be found in the [CakePHP
-Cookbook](https://book.cakephp.org/authorization/3/en/)
+Cookbook](https://book.cakephp.org/authorization/4/)

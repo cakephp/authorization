@@ -24,7 +24,7 @@ use Authorization\Exception\Exception;
 use Authorization\IdentityDecorator;
 use Authorization\IdentityInterface;
 use Authorization\Middleware\AuthorizationMiddleware;
-use Cake\Core\Container;
+use Cake\Container\Container;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
@@ -65,7 +65,7 @@ class AuthorizationMiddlewareTest extends TestCase
             ->method('authorizationChecked')
             ->willReturn(false);
 
-        $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
+        $request = new ServerRequest()->withAttribute('identity', ['id' => 1]);
         $handler = new TestRequestHandler();
 
         $middleware = new AuthorizationMiddleware($service, [
@@ -111,7 +111,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ]);
 
         $service = $this->createStub(AuthorizationServiceInterface::class);
-        $request = (new ServerRequest())->withAttribute('identity', $identity);
+        $request = new ServerRequest()->withAttribute('identity', $identity);
         $handler = new TestRequestHandler(function ($request) use ($service): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
@@ -135,7 +135,7 @@ class AuthorizationMiddlewareTest extends TestCase
             'id' => 1,
         ]);
 
-        $request = (new ServerRequest())->withAttribute('identity', $identity);
+        $request = new ServerRequest()->withAttribute('identity', $identity);
         $handler = new TestRequestHandler(function ($request) use ($service, $identity): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
@@ -156,7 +156,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ];
 
         $service = $this->createStub(AuthorizationServiceInterface::class);
-        $request = (new ServerRequest())->withAttribute('user', $identity);
+        $request = new ServerRequest()->withAttribute('user', $identity);
         $handler = new TestRequestHandler(function ($request) use ($service): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
@@ -184,7 +184,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ]);
 
         $service = $this->createStub(AuthorizationServiceInterface::class);
-        $request = (new ServerRequest())->withAttribute('identity', $identity);
+        $request = new ServerRequest()->withAttribute('identity', $identity);
         $handler = new TestRequestHandler(function ($request) use ($service, $identity): Response {
             $this->assertInstanceOf(RequestInterface::class, $request);
             $this->assertSame($service, $request->getAttribute('authorization'));
@@ -213,7 +213,7 @@ class AuthorizationMiddlewareTest extends TestCase
         ];
 
         $service = $this->createStub(AuthorizationServiceInterface::class);
-        $request = (new ServerRequest())->withAttribute('identity', $identity);
+        $request = new ServerRequest()->withAttribute('identity', $identity);
         $handler = new TestRequestHandler();
 
         $middleware = new AuthorizationMiddleware($service, [
@@ -326,7 +326,7 @@ class AuthorizationMiddlewareTest extends TestCase
             ->method('authorizationChecked')
             ->willReturn(false);
 
-        $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
+        $request = new ServerRequest()->withAttribute('identity', ['id' => 1]);
         $handler = new TestRequestHandler();
 
         $middleware = new AuthorizationMiddleware($service, [
@@ -344,7 +344,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $service->expects($this->never())
             ->method('authorizationChecked');
 
-        $request = (new ServerRequest())->withAttribute('identity', ['id' => 1]);
+        $request = new ServerRequest()->withAttribute('identity', ['id' => 1]);
         $handler = new TestRequestHandler();
 
         $middleware = new AuthorizationMiddleware($service, [

@@ -40,7 +40,7 @@ class AuthorizationComponent extends Component
      *
      * @var array<string, mixed>
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'identityAttribute' => 'identity',
         'serviceAttribute' => 'authorization',
         'authorizationEvent' => 'Controller.startup',
@@ -126,9 +126,7 @@ class AuthorizationComponent extends Component
         string $method = 'can',
     ): ResultInterface|bool {
         $request = $this->getController()->getRequest();
-        if ($action === null) {
-            $action = $this->getDefaultAction($request);
-        }
+        $action ??= $this->getDefaultAction($request);
 
         $identity = $this->getIdentity($request);
         if (!$identity instanceof IdentityInterface) {
@@ -152,9 +150,7 @@ class AuthorizationComponent extends Component
     public function applyScope(mixed $resource, ?string $action = null, mixed ...$optionalArgs): mixed
     {
         $request = $this->getController()->getRequest();
-        if ($action === null) {
-            $action = $this->getDefaultAction($request);
-        }
+        $action ??= $this->getDefaultAction($request);
         $identity = $this->getIdentity($request);
         if (!$identity instanceof IdentityInterface) {
             return $this->getService($request)->applyScope(null, $action, $resource);
@@ -168,7 +164,7 @@ class AuthorizationComponent extends Component
      *
      * @return $this
      */
-    public function skipAuthorization()
+    public function skipAuthorization(): static
     {
         $request = $this->getController()->getRequest();
         $service = $this->getService($request);
@@ -187,9 +183,9 @@ class AuthorizationComponent extends Component
      * @param string $policyAction Policy action.
      * @return $this
      */
-    public function mapAction(string $controllerAction, string $policyAction)
+    public function mapAction(string $controllerAction, string $policyAction): static
     {
-        $this->_config['actionMap'][$controllerAction] = $policyAction;
+        $this->config['actionMap'][$controllerAction] = $policyAction;
 
         return $this;
     }
@@ -201,7 +197,7 @@ class AuthorizationComponent extends Component
      * @param bool $overwrite Set to true to override configuration. False will merge with current configuration.
      * @return $this
      */
-    public function mapActions(array $actions, bool $overwrite = false)
+    public function mapActions(array $actions, bool $overwrite = false): static
     {
         $this->setConfig('actionMap', $actions, !$overwrite);
 
@@ -214,9 +210,9 @@ class AuthorizationComponent extends Component
      * @param string ...$actions Controller action to authorize against table policy.
      * @return $this
      */
-    public function authorizeModel(string ...$actions)
+    public function authorizeModel(string ...$actions): static
     {
-        $this->_config['authorizeModel'] = array_merge($this->_config['authorizeModel'], $actions);
+        $this->config['authorizeModel'] = array_merge($this->config['authorizeModel'], $actions);
 
         return $this;
     }
