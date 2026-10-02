@@ -92,9 +92,28 @@ class MapResolverTest extends TestCase
         $resolver = new MapResolver();
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Resource must be an object, `string` given.');
+        $this->expectExceptionMessage('Resource must be an object or fully-qualified class name, `Foo` given.');
 
         $resolver->getPolicy('Foo');
+    }
+
+    public function testGetPolicyClassNameAsResource(): void
+    {
+        $resolver = new MapResolver();
+        $resolver->map(Article::class, ArticlePolicy::class);
+
+        $result = $resolver->getPolicy(Article::class);
+        $this->assertInstanceOf(ArticlePolicy::class, $result);
+    }
+
+    public function testGetPolicyUnregisteredClassString(): void
+    {
+        $resolver = new MapResolver();
+
+        $this->expectException(MissingPolicyException::class);
+        $this->expectExceptionMessage('Policy for `TestApp\Model\Entity\Article` has not been defined.');
+
+        $resolver->getPolicy(Article::class);
     }
 
     public function testGetPolicyMissing(): void

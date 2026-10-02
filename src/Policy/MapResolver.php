@@ -89,20 +89,29 @@ class MapResolver implements ResolverInterface
     /**
      * {@inheritDoc}
      *
-     * @throws \InvalidArgumentException When a resource is not an object.
+     * Accepts either an object instance or a fully-qualified class name registered in
+     * the map. Strings that are not valid class names continue to raise
+     * InvalidArgumentException.
+     *
+     * @throws \InvalidArgumentException When a resource is neither an object nor a fully-qualified class name.
      * @throws \Authorization\Policy\Exception\MissingPolicyException When a policy for a resource has not been defined.
      */
     public function getPolicy($resource): mixed
     {
-        if (!is_object($resource)) {
-            $message = sprintf('Resource must be an object, `%s` given.', gettype($resource));
+        if (is_object($resource)) {
+            $class = $resource::class;
+        } elseif (is_string($resource) && class_exists($resource)) {
+            $class = $resource;
+        } else {
+            $message = sprintf(
+                'Resource must be an object or fully-qualified class name, `%s` given.',
+                is_string($resource) ? $resource : gettype($resource),
+            );
             throw new InvalidArgumentException($message);
         }
 
-        $class = $resource::class;
-
         if (!isset($this->map[$class])) {
-            throw new MissingPolicyException($resource);
+            throw new MissingPolicyException(is_object($resource) ? $resource : [$class]);
         }
 
         $policy = $this->map[$class];
