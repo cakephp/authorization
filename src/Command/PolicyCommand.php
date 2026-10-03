@@ -18,8 +18,6 @@ namespace Authorization\Command;
 
 use Authorization\IdentityInterface;
 use Bake\Command\SimpleBakeCommand;
-use Cake\Console\Arguments;
-use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\Query\SelectQuery;
 use Cake\Utility\Inflector;
@@ -68,17 +66,18 @@ class PolicyCommand extends SimpleBakeCommand
     /**
      * @inheritDoc
      */
-    public function templateData(Arguments $arguments): array
+    public function templateData(): array
     {
-        $data = parent::templateData($arguments);
+        $data = parent::templateData();
 
-        $name = $arguments->getArgument('name');
+        $name = $this->args->getArgument('name');
         if (!$name) {
             throw new RuntimeException('You must specify name of policy to create.');
         }
 
-        $name = $this->_getName($name);
-        $type = $this->type = (string)$arguments->getOption('type');
+        $name = $this->getNameWithoutPrefix($name);
+        $this->type = (string)$this->args->getOption('type');
+        $type = $this->type;
 
         $suffix = '';
         if ($type === 'table') {
@@ -119,9 +118,9 @@ class PolicyCommand extends SimpleBakeCommand
      * @param \Cake\Console\ConsoleOptionParser $parser The parser to update.
      * @return \Cake\Console\ConsoleOptionParser
      */
-    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser = $this->_setCommonOptions($parser);
+        $parser = $this->setCommonOptions($parser);
 
         return $parser
             ->setDescription('Bake policy classes for various supported object types.')
@@ -140,11 +139,9 @@ class PolicyCommand extends SimpleBakeCommand
      * Do nothing (for now)
      *
      * @param string $className The class to bake a test for.
-     * @param \Cake\Console\Arguments $args The arguments object
-     * @param \Cake\Console\ConsoleIo $io The consoleio object
      * @return void
      */
-    public function bakeTest(string $className, Arguments $args, ConsoleIo $io): void
+    public function bakeTest(string $className): void
     {
     }
 }

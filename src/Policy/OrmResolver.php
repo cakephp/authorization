@@ -17,8 +17,8 @@ declare(strict_types=1);
 namespace Authorization\Policy;
 
 use Authorization\Policy\Exception\MissingPolicyException;
+use Cake\Container\ContainerInterface;
 use Cake\Core\App;
-use Cake\Core\ContainerInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\RepositoryInterface;
@@ -31,37 +31,17 @@ use RuntimeException;
 class OrmResolver implements ResolverInterface
 {
     /**
-     * Application namespace.
-     */
-    protected string $appNamespace = 'App';
-
-    /**
-     * Plugin name overrides.
-     *
-     * @var array<string, string>
-     */
-    protected array $overrides = [];
-
-    /**
-     * The DIC instance from the application
-     */
-    protected ?ContainerInterface $container;
-
-    /**
      * Constructor
      *
      * @param string $appNamespace The application namespace
      * @param array<string, string> $overrides A list of plugin name overrides.
-     * @param \Cake\Core\ContainerInterface|null $container The DIC instance from the application
+     * @param \Cake\Container\ContainerInterface|null $container The DIC instance from the application
      */
     public function __construct(
-        string $appNamespace = 'App',
-        array $overrides = [],
-        ?ContainerInterface $container = null,
+        protected string $appNamespace = 'App',
+        protected array $overrides = [],
+        protected ?ContainerInterface $container = null,
     ) {
-        $this->appNamespace = $appNamespace;
-        $this->overrides = $overrides;
-        $this->container = $container;
     }
 
     /**
@@ -116,7 +96,14 @@ class OrmResolver implements ResolverInterface
     {
         $entityNamespace = '\Model\Entity\\';
         $namespace = str_replace('\\', '/', substr($class, 0, (int)strpos($class, $entityNamespace)));
-        $name = str_replace('\\', '/', substr($class, (int)strpos($class, $entityNamespace) + strlen($entityNamespace)));
+        $name = str_replace(
+            '\\',
+            '/',
+            substr(
+                $class,
+                (int)strpos($class, $entityNamespace) + strlen($entityNamespace),
+            ),
+        );
 
         return $this->findPolicy($class, $name, $namespace);
     }
@@ -157,9 +144,7 @@ class OrmResolver implements ResolverInterface
         }
 
         // Check the application/plugin.
-        if ($policyClass === null) {
-            $policyClass = App::className($namespace . '.' . $name, 'Policy', 'Policy');
-        }
+        $policyClass ??= App::className($namespace . '.' . $name, 'Policy', 'Policy');
 
         if ($policyClass === null) {
             throw new MissingPolicyException([$class]);

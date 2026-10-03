@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Authorization\Policy;
 
 use Authorization\Policy\Exception\MissingPolicyException;
-use Cake\Core\ContainerInterface;
+use Cake\Container\ContainerInterface;
 use InvalidArgumentException;
 
 /**
@@ -34,11 +34,6 @@ class MapResolver implements ResolverInterface
     protected array $map = [];
 
     /**
-     * The DIC instance from the application
-     */
-    protected ?ContainerInterface $container;
-
-    /**
      * Constructor.
      *
      * Takes a resource class name as a key and a policy as a value, for example:
@@ -51,11 +46,10 @@ class MapResolver implements ResolverInterface
      * ```
      *
      * @param array<string, callable|object|string> $map Resource class name to policy map.
-     * @param \Cake\Core\ContainerInterface|null $container The DIC instance from the application
+     * @param \Cake\Container\ContainerInterface|null $container The DIC instance from the application
      */
-    public function __construct(array $map = [], ?ContainerInterface $container = null)
+    public function __construct(array $map = [], protected ?ContainerInterface $container = null)
     {
-        $this->container = $container;
         foreach ($map as $resourceClass => $policy) {
             $this->map($resourceClass, $policy);
         }
@@ -69,7 +63,7 @@ class MapResolver implements ResolverInterface
      * @return $this
      * @throws \InvalidArgumentException When a resource class does not exist or policy is invalid.
      */
-    public function map(string $resourceClass, callable|object|string $policy)
+    public function map(string $resourceClass, callable|object|string $policy): static
     {
         if (!class_exists($resourceClass)) {
             $message = sprintf('Resource class `%s` does not exist.', $resourceClass);

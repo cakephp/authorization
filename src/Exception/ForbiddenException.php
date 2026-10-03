@@ -24,35 +24,28 @@ class ForbiddenException extends Exception
     /**
      * @inheritDoc
      */
-    protected int $_defaultCode = 403;
+    protected int $defaultCode = 403;
 
     /**
      * @inheritDoc
      */
-    protected string $_messageTemplate = 'Identity is not authorized to perform `%s` on `%s`.';
-
-    /**
-     * Policy check result.
-     */
-    protected ?ResultInterface $result = null;
+    protected string $messageTemplate = 'Identity is not authorized to perform `%s` on `%s`.';
 
     /**
      * Constructor
      *
      * @param \Authorization\Policy\ResultInterface|null $result Policy check result.
      * @param array<string>|string $message Either the string of the error message, or an array of attributes
-     *   that are made available in the view, and sprintf()'d into Exception::$_messageTemplate
+     *   that are made available in the view, and sprintf()'d into Exception::$messageTemplate
      * @param int|null $code The code of the error, is also the HTTP status code for the error.
      * @param \Throwable|null $previous the previous exception.
      */
     public function __construct(
-        ?ResultInterface $result = null,
+        protected ?ResultInterface $result = null,
         string|array $message = '',
         ?int $code = null,
         ?Throwable $previous = null,
     ) {
-        $this->result = $result;
-
         parent::__construct($message, $code, $previous);
     }
 

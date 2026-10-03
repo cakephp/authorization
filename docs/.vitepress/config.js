@@ -8,9 +8,10 @@ const tocFr = require('./toc_fr.json')
 const tocJa = require('./toc_ja.json')
 
 const versions = {
-  text: '3.x',
+  text: '4.x',
   items: [
-    { text: '3.x (current)', link: 'https://book.cakephp.org/authorization/3/', target: '_self' },
+    { text: '4.x (current)', link: 'https://book.cakephp.org/authorization/4/', target: '_self' },
+    { text: '3.x', link: 'https://book.cakephp.org/authorization/3/', target: '_self' },
     { text: '2.x', link: 'https://book.cakephp.org/authorization/2/en/', target: '_self' },
   ],
 }
@@ -20,12 +21,12 @@ export default {
   srcDir: '.',
   title: 'Authorization',
   description: 'CakePHP Authorization Documentation',
-  base: '/authorization/3/',
+  base: '/authorization/4/',
   rewrites: {
     'en/:slug*': ':slug*',
   },
   sitemap: {
-    hostname: 'https://book.cakephp.org/authorization/3/',
+    hostname: 'https://book.cakephp.org/authorization/4/',
   },
   themeConfig: {
     siteTitle: false,
@@ -34,7 +35,7 @@ export default {
       { icon: 'github', link: 'https://github.com/cakephp/authorization' },
     ],
     editLink: {
-      pattern: 'https://github.com/cakephp/authorization/edit/3.x/docs/:path',
+      pattern: 'https://github.com/cakephp/authorization/edit/4.x/docs/:path',
       text: 'Edit this page on GitHub',
     },
     sidebar: tocEn,

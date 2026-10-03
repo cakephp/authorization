@@ -67,7 +67,7 @@ class ResolverCollection implements ResolverInterface
      * @param \Authorization\Policy\ResolverInterface $resolver Resolver instance.
      * @return $this
      */
-    public function add(ResolverInterface $resolver)
+    public function add(ResolverInterface $resolver): static
     {
         $this->resolvers[] = $resolver;
 

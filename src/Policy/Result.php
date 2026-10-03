@@ -22,11 +22,6 @@ namespace Authorization\Policy;
 class Result implements ResultInterface
 {
     /**
-     * Check status.
-     */
-    protected bool $status;
-
-    /**
      * Failure reason.
      */
     protected ?string $reason = null;
@@ -37,9 +32,8 @@ class Result implements ResultInterface
      * @param bool $status Check status.
      * @param string|null $reason Failure reason.
      */
-    public function __construct(bool $status, ?string $reason = null)
+    public function __construct(protected bool $status, ?string $reason = null)
     {
-        $this->status = $status;
         if ($reason !== null) {
             $this->reason = $reason;
         }

@@ -6,7 +6,7 @@ Instale el plugin con [Composer](https://getcomposer.org/) desde el directorio
 raíz de su proyecto CakePHP:
 
 ```bash
-php composer.phar require "cakephp/authorization:^3.0"
+php composer.phar require "cakephp/authorization:^4.0"
 ```
 
 Cargue el plugin en `src/Application.php`:

@@ -18,7 +18,8 @@
       "collapsed": false,
       "items": [
         { "text": "2.0 Migration Guide", "link": "/2-0-migration-guide" },
-        { "text": "3.0 Migration Guide", "link": "/3-0-migration-guide" }
+        { "text": "3.0 Migration Guide", "link": "/3-0-migration-guide" },
+        { "text": "4.0 Migration Guide", "link": "/4-0-migration-guide" }
       ]
     }
   ]

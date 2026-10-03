@@ -23,5 +23,5 @@ class MissingMethodException extends Exception
     /**
      * Template string that has attributes sprintf()'ed into it.
      */
-    protected string $_messageTemplate = 'Method `%s` for invoking action `%s` has not been defined in `%s`.';
+    protected string $messageTemplate = 'Method `%s` for invoking action `%s` has not been defined in `%s`.';
 }
