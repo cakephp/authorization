@@ -37,7 +37,7 @@ class ArticlePolicy
      * @param \Authorization\IdentityInterface $user
      * @return bool
      */
-    public function canEdit($user, Article $article)
+    public function canEdit($user, Article $article): bool
     {
         if ($user === null) {
             return false;
@@ -56,7 +56,7 @@ class ArticlePolicy
      * @param \Authorization\IdentityInterface $user
      * @return bool
      */
-    public function canModify($user, Article $article)
+    public function canModify($user, Article $article): bool
     {
         if (in_array($user['role'], ['admin', 'author'])) {
             return true;
@@ -71,7 +71,7 @@ class ArticlePolicy
      * @param \Authorization\IdentityInterface $user
      * @return bool
      */
-    public function canDelete($user, Article $article)
+    public function canDelete($user, Article $article): bool
     {
         if ($user['role'] === 'admin') {
             return true;
@@ -84,7 +84,6 @@ class ArticlePolicy
      * Scope method for index
      *
      * @param \Authorization\IdentityInterface $user
-     * @return bool
      */
     public function scopeIndex($user, Article $article): Article
     {
