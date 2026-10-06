@@ -126,9 +126,7 @@ class AuthorizationComponent extends Component
         string $method = 'can',
     ): ResultInterface|bool {
         $request = $this->getController()->getRequest();
-        if ($action === null) {
-            $action = $this->getDefaultAction($request);
-        }
+        $action ??= $this->getDefaultAction($request);
 
         $identity = $this->getIdentity($request);
         if (!$identity instanceof IdentityInterface) {
@@ -152,9 +150,7 @@ class AuthorizationComponent extends Component
     public function applyScope(mixed $resource, ?string $action = null, mixed ...$optionalArgs): mixed
     {
         $request = $this->getController()->getRequest();
-        if ($action === null) {
-            $action = $this->getDefaultAction($request);
-        }
+        $action ??= $this->getDefaultAction($request);
         $identity = $this->getIdentity($request);
         if (!$identity instanceof IdentityInterface) {
             return $this->getService($request)->applyScope(null, $action, $resource);

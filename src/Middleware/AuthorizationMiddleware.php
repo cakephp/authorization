@@ -90,11 +90,9 @@ class AuthorizationMiddleware implements MiddlewareInterface
         array $config = [],
         ?ContainerInterface $container = null,
     ) {
-        if ($this->_defaultConfig['identityDecorator'] === null) {
-            $this->_defaultConfig['identityDecorator'] = interface_exists(AuthenIdentityInterface::class)
-                ? Identity::class
-                : IdentityDecorator::class;
-        }
+        $this->_defaultConfig['identityDecorator'] ??= interface_exists(AuthenIdentityInterface::class)
+            ? Identity::class
+            : IdentityDecorator::class;
 
         $this->subject = $subject;
         $this->container = $container;
