@@ -558,4 +558,39 @@ class AuthorizationServiceTest extends TestCase
 
         $service->can($user, 'invalidReturnType', new Article());
     }
+
+    public function testAddResolver(): void
+    {
+        $policy1 = new class {
+            public function canUsePolicy() {
+                return new Result(true, 'policy1');
+            }
+        };
+
+        $resolver = new MapResolver([
+            Article::class => $policy1,
+        ]);
+
+        $service = new AuthorizationService($resolver);
+
+        $user = new IdentityDecorator($service, [
+            'role' => 'admin',
+        ]);
+
+        $this->assertEquals('policy1', $service->canResult($user, 'usePolicy', new Article())->getReason());
+
+        // add another policy
+        $policy2 = new class {
+            public function canUsePolicy() {
+                return new Result(true, 'policy2');
+            }
+        };
+
+        $service->addResolver(new MapResolver([
+            ArticlesTable::class => $policy2,
+        ]));
+
+        $this->assertEquals('policy1', $service->canResult($user, 'usePolicy', new Article())->getReason());
+        $this->assertEquals('policy2', $service->canResult($user, 'usePolicy', new ArticlesTable())->getReason());
+    }
 }
