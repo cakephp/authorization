@@ -157,9 +157,7 @@ class OrmResolver implements ResolverInterface
         }
 
         // Check the application/plugin.
-        if ($policyClass === null) {
-            $policyClass = App::className($namespace . '.' . $name, 'Policy', 'Policy');
-        }
+        $policyClass ??= App::className($namespace . '.' . $name, 'Policy', 'Policy');
 
         if ($policyClass === null) {
             throw new MissingPolicyException([$class]);
