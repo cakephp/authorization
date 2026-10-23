@@ -562,7 +562,7 @@ class AuthorizationServiceTest extends TestCase
     public function testAddResolver(): void
     {
         $policy1 = new class {
-            public function canUsePolicy()
+            public function canUsePolicy(): Result
             {
                 return new Result(true, 'policy1');
             }
@@ -582,7 +582,7 @@ class AuthorizationServiceTest extends TestCase
 
         // add another policy
         $policy2 = new class {
-            public function canUsePolicy()
+            public function canUsePolicy(): Result
             {
                 return new Result(true, 'policy2');
             }

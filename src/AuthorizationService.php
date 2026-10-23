@@ -51,7 +51,7 @@ class AuthorizationService implements AuthorizationServiceInterface
      *
      * If the current resolver is not a `\Authorization\Policy\ResolverCollection`, it will be wrapped in one.
      *
-     * @param \Authorization\Policy\ResolverInterface $resolver
+     * @param \Authorization\Policy\ResolverInterface $resolver Authorization policy resolver to add.
      * @return void
      */
     public function addResolver(ResolverInterface $resolver): void
