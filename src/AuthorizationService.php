@@ -20,6 +20,7 @@ use Authorization\Exception\Exception;
 use Authorization\Policy\BeforePolicyInterface;
 use Authorization\Policy\BeforeScopeInterface;
 use Authorization\Policy\Exception\MissingMethodException;
+use Authorization\Policy\ResolverCollection;
 use Authorization\Policy\ResolverInterface;
 use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
@@ -43,6 +44,23 @@ class AuthorizationService implements AuthorizationServiceInterface
     public function __construct(ResolverInterface $resolver)
     {
         $this->resolver = $resolver;
+    }
+
+    /**
+     * Add an authorization policy resolver to the existing resolver.
+     *
+     * If the current resolver is not a `\Authorization\Policy\ResolverCollection`, it will be wrapped in one.
+     *
+     * @param \Authorization\Policy\ResolverInterface $resolver Authorization policy resolver to add.
+     * @return void
+     */
+    public function addResolver(ResolverInterface $resolver): void
+    {
+        if (!$this->resolver instanceof ResolverCollection) {
+            $this->resolver = new ResolverCollection([$this->resolver]);
+        }
+
+        $this->resolver->add($resolver);
     }
 
     /**
