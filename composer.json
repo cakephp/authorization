@@ -23,7 +23,7 @@
         "docs": "https://cakephp.org/authorization/2/en/"
     },
     "require": {
-        "php": ">=8.4",
+        "php": ">=8.5",
         "cakephp/http": "^6.0",
         "psr/http-client": "^1.0",
         "psr/http-message": "^1.1 || ^2.0",
