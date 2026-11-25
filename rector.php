@@ -32,6 +32,7 @@ use Rector\DeadCode\Rector\Ternary\RemoveUselessTernaryRector;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php80\Rector\NotIdentical\MbStrContainsRector;
+use Rector\Php85\Rector\Property\AddOverrideAttributeToOverriddenPropertiesRector;
 use Rector\Set\ValueObject\SetList;
 use Rector\TypeDeclaration\Rector\Class_\TypedPropertyFromCreateMockAssignRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeFromAssertInstanceOfRector;
@@ -107,4 +108,5 @@ return RectorConfig::configure()
         ClosureReturnTypeFromAssertInstanceOfRector::class,
         AddClosureParamTypeFromVariableCallRector::class,
         RemoveUselessReturnTagRector::class,
+        AddOverrideAttributeToOverriddenPropertiesRector::class,
     ]);
