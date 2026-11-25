@@ -83,7 +83,7 @@ class RedirectHandler implements HandlerInterface
      */
     protected function checkException(Exception $exception, array $exceptions): bool
     {
-        return array_any($exceptions, fn(string $class) => $exception instanceof $class);
+        return array_any($exceptions, fn(string $class): bool => $exception instanceof $class);
     }
 
     /**

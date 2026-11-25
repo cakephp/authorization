@@ -85,6 +85,9 @@ class AuthorizationMiddleware implements MiddlewareInterface
         $this->defaultConfig['identityDecorator'] ??= interface_exists(AuthenIdentityInterface::class)
             ? Identity::class
             : IdentityDecorator::class;
+
+        $this->subject = $subject;
+        $this->container = $container;
         $this->setConfig($config);
     }
 

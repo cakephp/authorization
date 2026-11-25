@@ -167,9 +167,7 @@ class AuthorizationMiddlewareTest extends TestCase
         });
 
         $middleware = new AuthorizationMiddleware($service, [
-            'identityDecorator' => function ($service, $identity): IdentityDecorator {
-                return new IdentityDecorator($service, $identity);
-            },
+            'identityDecorator' => fn($service, $identity): IdentityDecorator => new IdentityDecorator($service, $identity),
             'identityAttribute' => 'user',
             'requireAuthorizationCheck' => false,
         ]);
@@ -330,9 +328,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $handler = new TestRequestHandler();
 
         $middleware = new AuthorizationMiddleware($service, [
-            'requireAuthorizationCheck' => function (ServerRequestInterface $request): bool {
-                return true;
-            },
+            'requireAuthorizationCheck' => fn(ServerRequestInterface $request): bool => true,
             'identityDecorator' => IdentityDecorator::class,
         ]);
         $middleware->process($request, $handler);
@@ -348,9 +344,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $handler = new TestRequestHandler();
 
         $middleware = new AuthorizationMiddleware($service, [
-            'requireAuthorizationCheck' => function (ServerRequestInterface $request): bool {
-                return false;
-            },
+            'requireAuthorizationCheck' => fn(ServerRequestInterface $request): bool => false,
             'identityDecorator' => IdentityDecorator::class,
         ]);
         $result = $middleware->process($request, $handler);
