@@ -83,9 +83,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $innerService = function (): bool {
-            return true;
-        };
+        $innerService = (fn(): bool => true);
 
         $result = $service->can($user, 'withService', new Article(), $innerService);
         $this->assertTrue($result);
@@ -103,13 +101,9 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $innerService1 = function (): bool {
-            return true;
-        };
+        $innerService1 = (fn(): bool => true);
 
-        $innerService2 = function (): bool {
-            return false;
-        };
+        $innerService2 = (fn(): bool => false);
 
         $result = $service->can(user: $user, action: 'withMultipleServices', resource: new Article(), service2: $innerService2, service1: $innerService1);
         $this->assertFalse($result);
@@ -143,9 +137,7 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $innerService = function (): bool {
-            return true;
-        };
+        $innerService = (fn(): bool => true);
 
         $result = $service->canResult($user, 'withService', new Article(), $innerService);
         $this->assertInstanceOf(ResultInterface::class, $result);
@@ -163,13 +155,9 @@ class AuthorizationServiceTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $innerService1 = function (): bool {
-            return true;
-        };
+        $innerService1 = (fn(): bool => true);
 
-        $innerService2 = function (): bool {
-            return false;
-        };
+        $innerService2 = (fn(): bool => false);
 
         $result = $service->canResult(user: $user, action: 'withMultipleServices', resource: new Article(), service2: $innerService2, service1: $innerService1);
         $this->assertInstanceOf(ResultInterface::class, $result);

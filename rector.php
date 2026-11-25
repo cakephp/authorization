@@ -4,16 +4,13 @@ declare(strict_types=1);
 use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\CodeQuality\Rector\BooleanNot\NegatedAndsToPositiveOrsRector;
 use Rector\CodeQuality\Rector\Catch_\ThrowWithPreviousExceptionRector;
-use Rector\CodeQuality\Rector\Class_\CompleteDynamicPropertiesRector;
 use Rector\CodeQuality\Rector\ClassMethod\ExplicitReturnNullRector;
 use Rector\CodeQuality\Rector\ClassMethod\OptionalParametersAfterRequiredRector;
 use Rector\CodeQuality\Rector\Equal\UseIdenticalOverEqualWithSameTypeRector;
 use Rector\CodeQuality\Rector\Foreach_\ForeachToInArrayRector;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
-use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodeQuality\Rector\If_\ArrayExplicitBoolCompareRector;
 use Rector\CodeQuality\Rector\If_\ConsecutiveNullCompareReturnsToNullCoalesceQueueRector;
-use Rector\CodeQuality\Rector\If_\ObjectExplicitBoolCompareRector;
 use Rector\CodeQuality\Rector\If_\SimplifyIfReturnBoolRector;
 use Rector\CodeQuality\Rector\Include_\AbsolutizeRequireAndIncludePathRector;
 use Rector\CodeQuality\Rector\Isset_\IssetOnPropertyObjectToPropertyExistsRector;
@@ -24,11 +21,8 @@ use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
 use Rector\CodingStyle\Rector\FuncCall\FunctionFirstClassCallableRector;
 use Rector\CodingStyle\Rector\FuncCall\StrictArraySearchRector;
 use Rector\CodingStyle\Rector\FuncCall\VersionCompareFuncCallToConstantRector;
-use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
-use Rector\DeadCode\Rector\ClassMethod\RemoveDuplicatedReturnSelfDocblockRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveMixedDocblockOverruledByNativeTypeRector;
-use Rector\DeadCode\Rector\ClassMethod\RemoveParentDelegatingClassMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveReturnTagIncompatibleWithNativeTypeRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessUnionReturnDocblockRector;
@@ -40,10 +34,7 @@ use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php80\Rector\NotIdentical\MbStrContainsRector;
 use Rector\Set\ValueObject\SetList;
 use Rector\TypeDeclaration\Rector\Class_\TypedPropertyFromCreateMockAssignRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\ArrayParamTypeByMethodCallTypeRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\ScalarParamTypeByMethodCallTypeRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeFromAssertInstanceOfRector;
-use Rector\TypeDeclaration\Rector\FunctionLike\AddClosureParamTypeForArrayMapRector;
 use Rector\TypeDeclaration\Rector\FunctionLike\AddClosureParamTypeFromVariableCallRector;
 use Rector\TypeDeclaration\Rector\StmtsAwareInterface\SafeDeclareStrictTypesRector;
 
@@ -74,10 +65,8 @@ return RectorConfig::configure()
         ThrowWithPreviousExceptionRector::class,
         ExplicitReturnNullRector::class,
         OptionalParametersAfterRequiredRector::class,
-        CompleteDynamicPropertiesRector::class,
         ForeachToInArrayRector::class,
         CompactToVariablesRector::class,
-        FlipTypeControlToUseExclusiveTypeRector::class,
         ConsecutiveNullCompareReturnsToNullCoalesceQueueRector::class,
         SimplifyIfReturnBoolRector::class,
         AbsolutizeRequireAndIncludePathRector::class,
@@ -88,10 +77,8 @@ return RectorConfig::configure()
         StrictArraySearchRector::class,
         VersionCompareFuncCallToConstantRector::class,
         FunctionFirstClassCallableRector::class,
-        NewlineAfterStatementRector::class,
         TypedPropertyFromCreateMockAssignRector::class,
         ArrayExplicitBoolCompareRector::class,
-        ObjectExplicitBoolCompareRector::class,
         RemoveUselessUnionReturnDocblockRector::class,
         RemoveMixedDocblockOverruledByNativeTypeRector::class,
 
@@ -111,18 +98,13 @@ return RectorConfig::configure()
         // separate decision from getting CI green again.
         NegatedAndsToPositiveOrsRector::class,
         FixClassCaseSensitivityVarDocblockRector::class,
-        RemoveDuplicatedReturnSelfDocblockRector::class,
         RemoveMixedDocblockOverruledByNativeTypeRector::class,
-        RemoveParentDelegatingClassMethodRector::class,
         RemoveReturnTagIncompatibleWithNativeTypeRector::class,
         RemoveUselessUnionReturnDocblockRector::class,
         RemoveDefaultValueFromAssignedPropertyRector::class,
         RemoveDeadInstanceOfAssertRector::class,
         MbStrContainsRector::class,
-        ArrayParamTypeByMethodCallTypeRector::class,
-        ScalarParamTypeByMethodCallTypeRector::class,
         ClosureReturnTypeFromAssertInstanceOfRector::class,
-        AddClosureParamTypeForArrayMapRector::class,
         AddClosureParamTypeFromVariableCallRector::class,
         RemoveUselessReturnTagRector::class,
     ]);
